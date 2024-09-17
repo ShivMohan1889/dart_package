@@ -143,10 +143,10 @@ class TbAuditPdfGenerator {
       );
     }
 
-    String aPath = pathToWritePDF;
-    final file = File(aPath);
+    // String aPath = pathToWritePDF;
+    // final file = File(aPath);
     var data = await pdf.save();
-    file.writeAsBytesSync(data);
+    // file.writeAsBytesSync(data);
     return data;
   }
 
