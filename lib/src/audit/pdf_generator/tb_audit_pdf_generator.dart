@@ -56,7 +56,7 @@ class TbAuditPdfGenerator {
   /// this list holds the  AuditImage for the given Audit Assessment
   final List<AuditImageDto> auditImageList = List.empty(growable: true);
 
-  Future<void> generatePDF() async {
+  Future<pw.Document> generatePDF() async {
     await preparePdfs(auditAssessmentEntity!);
     final pdf = pw.Document();
 
@@ -146,7 +146,7 @@ class TbAuditPdfGenerator {
     final file = File(aPath);
     var data = await pdf.save();
     file.writeAsBytesSync(data);
-    return;
+    return pdf;
   }
 
   // void generate({
