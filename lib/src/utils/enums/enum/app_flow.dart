@@ -1,0 +1,4 @@
+enum AppFlow {
+  registration,
+  login,
+}
