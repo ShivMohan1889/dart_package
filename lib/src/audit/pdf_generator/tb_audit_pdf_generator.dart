@@ -36,7 +36,6 @@ class TbAuditPdfGenerator {
   final AuditAssessmentDto? auditAssessmentEntity;
 
   late TbPdfHelper pdfHelper;
-  late String pathToWritePDF;
 
   final String platFormLocaleName;
 
@@ -44,7 +43,6 @@ class TbAuditPdfGenerator {
     required this.pdfHelper,
     required this.auditAssessmentEntity,
     required this.platFormLocaleName,
-    required this.pathToWritePDF,
   });
 
   /// holds options of the pdf to show on the last page report

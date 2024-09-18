@@ -91,7 +91,7 @@ class TbMsPdfGenerator {
     var list = (msAssessmentDto?.listMsTemplateValues ?? [])
         .where((element) => element.keyName == "Created On")
         .toList();
-    if ((list ?? []).isEmpty) {
+    if ((list).isEmpty) {
       updateTemplateFields(
         msAssessmentDto: msAssessmentDto,
       );
@@ -309,8 +309,7 @@ class TbMsPdfGenerator {
             )
             .toList();
         if (statementList.isNotEmpty) {
-
-          // 
+          //
           tempList.remove(msAssessmentStatementDto);
           if (statementList.first.templateCloudId != null) {
             statementList.first.statementName =
