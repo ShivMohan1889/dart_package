@@ -867,11 +867,11 @@ class TbAuditPdfGenerator {
     //         imagePath: auditAssessmentEntity.companyDto?.companyLogo ?? "");
 
     auditAssessmentEntity.companyDto?.companyLogoMemoryImage =
-        await generateMemoryImageForPath(
+        await TbPdfHelper().generateMemoryImageForPath(
             auditAssessmentEntity.companyDto?.imagePath ?? "");
 
-    auditAssessmentEntity.userDto?.signatureMemoryImage =
-        await generateMemoryImageForPath(
+    auditAssessmentEntity.userDto?.signatureMemoryImage = await TbPdfHelper()
+        .generateMemoryImageForPath(
             auditAssessmentEntity.userDto?.imagePath ?? "");
 
     // Section Images
@@ -884,8 +884,8 @@ class TbAuditPdfGenerator {
         (imageEntity) async {
           SectionImageDto sectionImageDto = imageEntity;
 
-          sectionImageDto.memoryImage =
-              await generateMemoryImageForPath(sectionImageDto.imagePath ?? "");
+          sectionImageDto.memoryImage = await TbPdfHelper()
+              .generateMemoryImageForPath(sectionImageDto.imagePath ?? "");
 
           // String sectionImagePath = .auditSectionImagePath(
           //     sectionImageUrl: sectionImageEntity.imagePath ?? '');
@@ -903,20 +903,12 @@ class TbAuditPdfGenerator {
       AuditAssessmentQuestionDto qe = question;
       await Future.forEach(qe.listAuditImageDto, (imageEntity) async {
         if ((imageEntity.imagePath ?? "").isNotEmpty) {
-          imageEntity.memoryImage =
-              await generateMemoryImageForPath(imageEntity.imagePath ?? "");
+          imageEntity.memoryImage = await TbPdfHelper()
+              .generateMemoryImageForPath(imageEntity.imagePath ?? "");
         }
       });
     });
 
     return auditAssessmentEntity;
-  }
-
-  Future<pw.MemoryImage?> generateMemoryImageForPath(String path) async {
-    if (path.contains("http")) {
-      return await TbDownloadManager.downloadFile(urlPath: path);
-    } else {
-      return await TbPdfHelper().image(imagePath: path);
-    }
   }
 }
