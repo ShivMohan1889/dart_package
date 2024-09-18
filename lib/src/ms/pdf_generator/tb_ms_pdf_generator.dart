@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dart_pdf_package/src/audit/dto/user_dto.dart';
 import 'package:dart_pdf_package/src/ms/dto/ms_assessment_statement_dto.dart';
@@ -36,7 +37,6 @@ import 'ms_pdf_widget/ms_statement_hazard_icons_row.dart';
 class TbMsPdfGenerator {
   /// holds the Ms Assessment Dto
   final MsAssessmentDto? msAssessmentDto;
-  String pathToWritePDF;
 
   Document? pdfDocumentFromRa;
   late TbPdfHelper pdfHelper;
@@ -48,7 +48,6 @@ class TbMsPdfGenerator {
     required this.pdfHelper,
     this.pdfDocumentFromRa,
     required this.platFormLocaleName,
-    required this.pathToWritePDF,
   });
 
   final msPdfTextStyle = TbMsPdfTextStyles();
@@ -65,7 +64,7 @@ class TbMsPdfGenerator {
   // holds the memory image of company logo
   MemoryImage? companyLogo;
 
-  Future<void> generatePDF() async {
+  Future<Uint8List?> generatePDF() async {
     Document pdf = Document();
     if (pdfDocumentFromRa != null) {
       pdf = pdfDocumentFromRa!;
@@ -205,25 +204,24 @@ class TbMsPdfGenerator {
     // String msPdfPath = FileManager.msPdfPath(
     //      msAssessmentUniqueKey: msAssessmentDto?.uniqueKey ?? "");
 
-    String aPath = pathToWritePDF;
-
-    print(aPath);
-
     if (msAssessmentDto?.uniqueKey != null &&
         msAssessmentDto?.uniqueKey != "") {
       if (pdfDocumentFromRa == null) {
-        final file = File(aPath);
+        // final file = File(aPath);
 
         var data = await pdf.save();
-        file.writeAsBytesSync(data);
-        return;
+        // file.writeAsBytesSync(data);
+        return data;
 
         // await FileManager.saveAssessmentPdfFile(
         //   pdf: pdf,
         //   pdfPath: msPdfPath,
         // );
       }
+    } else {
+      return null;
     }
+    return null;
   }
 
   /* ************************************** */
