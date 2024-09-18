@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dart_pdf_package/src/audit/dto/audit_assessment_dto.dart';
 import 'package:dart_pdf_package/src/audit/dto/audit_assessment_question_dto.dart';
@@ -56,7 +57,7 @@ class TbAuditPdfGenerator {
   /// this list holds the  AuditImage for the given Audit Assessment
   final List<AuditImageDto> auditImageList = List.empty(growable: true);
 
-  Future<void> generatePDF() async {
+  Future<Uint8List> generatePDF() async {
     await preparePdfs(auditAssessmentEntity!);
     final pdf = pw.Document();
 
@@ -149,11 +150,14 @@ class TbAuditPdfGenerator {
       );
     }
 
-    String aPath = pathToWritePDF;
-    final file = File(aPath);
+    // String aPath = pathToWritePDF;
+    // final file = File(aPath);
+    // var data = await pdf.save();
+    // file.writeAsBytesSync(data);
+    // return;
     var data = await pdf.save();
-    file.writeAsBytesSync(data);
-    return;
+    // file.writeAsBytesSync(data);
+    return data;
   }
 
   // void generate({
