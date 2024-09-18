@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:dart_pdf_package/src/audit/dto/audit_assessment_dto.dart';
 import 'package:dart_pdf_package/src/audit/dto/audit_assessment_question_dto.dart';
@@ -57,9 +56,16 @@ class TbAuditPdfGenerator {
   /// this list holds the  AuditImage for the given Audit Assessment
   final List<AuditImageDto> auditImageList = List.empty(growable: true);
 
-  Future<Uint8List> generatePDF() async {
+  Future<void> generatePDF() async {
     await preparePdfs(auditAssessmentEntity!);
     final pdf = pw.Document();
+
+    for (SectionDto sectionDto
+        in auditAssessmentEntity?.auditTemplateDto?.sectionsDto ?? []) {
+      for (QuestionDto questionDto in sectionDto.questionsDto ?? []) {
+        questionDto.sectionEntity = sectionDto;
+      }
+    }
 
     updateTemplateEntity(auditAssessmentEntity: auditAssessmentEntity);
 
@@ -143,11 +149,11 @@ class TbAuditPdfGenerator {
       );
     }
 
-    // String aPath = pathToWritePDF;
-    // final file = File(aPath);
+    String aPath = pathToWritePDF;
+    final file = File(aPath);
     var data = await pdf.save();
-    // file.writeAsBytesSync(data);
-    return data;
+    file.writeAsBytesSync(data);
+    return;
   }
 
   // void generate({
@@ -858,26 +864,35 @@ class TbAuditPdfGenerator {
     //     await TbPdfHelper().image(
     //         imagePath: auditAssessmentEntity.companyDto?.companyLogo ?? "");
 
-    // auditAssessmentEntity.userEntity?.signatureMemoryImage = await PdfHelper()
-    // .userSignaturePath(userEntity: auditAssessmentEntity.userEntity);
+    auditAssessmentEntity.companyDto?.companyLogoMemoryImage =
+        await generateMemoryImageForPath(
+            auditAssessmentEntity.companyDto?.imagePath ?? "");
+
+    auditAssessmentEntity.userDto?.signatureMemoryImage =
+        await generateMemoryImageForPath(
+            auditAssessmentEntity.userDto?.imagePath ?? "");
 
     // Section Images
-    // await Future.forEach(
-    //     auditAssessmentEntity.auditTemplateEntity?.sections ?? [],
-    //     (element) async {
-    //   SectionEntity sectionEntity = element;
-    //   await Future.forEach(
-    //     sectionEntity.image ?? [],
-    //     (imageEntity) async {
-    //       SectionImageEntity sectionImageEntity = imageEntity;
-    //       String sectionImagePath = FileManager.auditSectionImagePath(
-    //           sectionImageUrl: sectionImageEntity.imagePath ?? '');
+    await Future.forEach(
+        auditAssessmentEntity.auditTemplateDto?.sectionsDto ?? [],
+        (element) async {
+      SectionDto sectionEntity = element;
+      await Future.forEach(
+        sectionEntity.image ?? [],
+        (imageEntity) async {
+          SectionImageDto sectionImageDto = imageEntity;
 
-    //       sectionImageEntity.memoryImage =
-    //           await PdfHelper().image(sectionImagePath);
-    //     },
-    //   );
-    // });
+          sectionImageDto.memoryImage =
+              await generateMemoryImageForPath(sectionImageDto.imagePath ?? "");
+
+          // String sectionImagePath = .auditSectionImagePath(
+          //     sectionImageUrl: sectionImageEntity.imagePath ?? '');
+
+          // sectionImageEntity.memoryImage =
+          //     await PdfHelper().image(sectionImagePath);
+        },
+      );
+    });
 
     // question images
     await Future.forEach(
@@ -896,7 +911,7 @@ class TbAuditPdfGenerator {
   }
 
   Future<pw.MemoryImage?> generateMemoryImageForPath(String path) async {
-    if (path.contains("www")) {
+    if (path.contains("http")) {
       return await TbDownloadManager.downloadFile(urlPath: path);
     } else {
       return await TbPdfHelper().image(imagePath: path);

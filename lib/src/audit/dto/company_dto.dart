@@ -58,6 +58,7 @@ class CompanyDto {
   int? isCloud;
 
   int? isSelected = 0;
+  String? imagePath;
 
   CompanyDto({
     this.id,
@@ -115,6 +116,7 @@ class CompanyDto {
     this.isSelected = 0,
     this.companyLogoImageName,
     this.companyLogoMemoryImage,
+    this.imagePath,
   });
 
   // Factory constructor to create an instance from JSON
@@ -175,6 +177,7 @@ class CompanyDto {
       isSelected: json['is_selected'],
       companyLogoImageName: json['company_logo_image_name'],
       companyLogoMemoryImage: json['memory_image'],
+      imagePath: json["image_path"],
     );
   }
 

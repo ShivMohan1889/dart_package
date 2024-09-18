@@ -10,3 +10,5 @@ export 'src/audit/pdf_generator/tb_audit_pdf_generator.dart';
 export 'src/audit/dto/audit_assessment_dto.dart';
 
 export 'src/utils/pdf/tb_pdf_helper.dart';
+export 'src/ms/pdf_generator/tb_ms_pdf_generator.dart';
+export 'src/ms/dto/ms_assessment_dto.dart';

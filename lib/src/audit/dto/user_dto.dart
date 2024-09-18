@@ -17,6 +17,8 @@ class UserDto {
   int? subscriptionType;
   String? email;
 
+  String? imagePath;
+
   UserDto({
     this.userName,
     this.uniqueKey,
@@ -31,24 +33,27 @@ class UserDto {
     this.isTermApp,
     this.email,
     this.subscriptionType,
+    this.imagePath,
   });
 
   factory UserDto.fromJson(Map<String, dynamic> json) {
     return UserDto(
-        userName: json['userName'],
-        uniqueKey: json['unique_key'],
-        position: json['position'],
-        signature: json['signature'],
-        // Note: signatureMemoryImage cannot be created from JSON
-        isCloud: json['isCloud'],
-        isSelected: json['isSelected'],
-        cloudUserId: json['cloudUserId'],
-        cloudCompanyId: json['cloudCompanyId'],
-        id: json['id'],
-        isTermApp: json['isTermApp'],
-        email: json['email'],
-        subscriptionType: json['subscriptionType'],
-        signatureMemoryImage: json["memory_image"]);
+      userName: json['userName'],
+      uniqueKey: json['unique_key'],
+      position: json['position'],
+      signature: json['signature'],
+      // Note: signatureMemoryImage cannot be created from JSON
+      isCloud: json['isCloud'],
+      isSelected: json['isSelected'],
+      cloudUserId: json['cloudUserId'],
+      cloudCompanyId: json['cloudCompanyId'],
+      id: json['id'],
+      isTermApp: json['isTermApp'],
+      email: json['email'],
+      subscriptionType: json['subscriptionType'],
+      signatureMemoryImage: json["memory_image"],
+      imagePath: json["image_path"],
+    );
   }
 
   Map<String, dynamic> toJson() {

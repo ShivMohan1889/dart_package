@@ -2,13 +2,27 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:dart_pdf_package/src/utils/pdf/fonts/arial_1.dart';
-import 'package:dart_pdf_package/src/utils/pdf/images.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial_1.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial_italic.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/hurme_geomatric_sans4.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/hurme_geomatric_sans4_light.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_300.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_700.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_900.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_italic_900.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/images/blank_checkbox.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/images/check_box.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/images/ra_fade_water_image.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/images/ra_watermark.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/images/right_checkbox.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/images/uncheck_box.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../date/tb_date_time.dart';
+import '../download_manager/tb_download_manager.dart';
 import '../enums/enum/locale_type.dart';
 
 class TbPdfHelper {
@@ -61,9 +75,9 @@ class TbPdfHelper {
   }
 
   Future<void> loadPdfMemoryImages() async {
-    checkImage = loadImageFromBase64(uncheckImageString);
-    uncheckImage = loadImageFromBase64(uncheckImageString);
-    raWaterMarkImage = loadImageFromBase64(uncheckImageString);
+    checkImage = loadImageFromBase64(checkBoxString);
+    uncheckImage = loadImageFromBase64(unCheckBox);
+    raWaterMarkImage = loadImageFromBase64(raWaterMarkString);
 
     raTheme = ThemeData.withFont(
       base: loadFont(arial_1),
@@ -74,30 +88,30 @@ class TbPdfHelper {
       ],
     );
 
-    msWaterMarkImage = loadImageFromBase64(uncheckImageString);
+    msWaterMarkImage = loadImageFromBase64(raFadeWarkImageString);
 
     msTheme = ThemeData.withFont(
       base: loadFont(arial_1),
-      bold: loadFont(arial_1),
-      italic: loadFont(arial_1),
+      bold: loadFont(arialBd),
+      italic: loadFont(arialItalic),
       fontFallback: [
-        loadFont(arial_1),
+        loadFont(hurmeGeometricSans4LightString),
       ],
     );
 
-    auditCheckImage = loadImageFromBase64(uncheckImageString);
+    auditCheckImage = loadImageFromBase64(rightCheckBoxString);
 
-    aduitUncheckImage = loadImageFromBase64(uncheckImageString);
+    aduitUncheckImage = loadImageFromBase64(blankCheckBoxString);
 
     // here we are creating a theme for fonts
     auditTheme = ThemeData.withFont(
-      base: loadFont(arial_1),
-      bold: loadFont(arial_1),
-      italic: loadFont(arial_1),
-      boldItalic: loadFont(arial_1),
-      icons: loadFont(arial_1),
+      base: loadFont(museoSansRounded300String),
+      bold: loadFont(museoSansRounded900String),
+      italic: loadFont(museoSansRoundedItalic300String),
+      boldItalic: loadFont(museoSansRounded700String),
+      icons: loadFont(hurmeGeometricSans4String),
       fontFallback: [
-        loadFont(arial_1),
+        loadFont(hurmeGeometricSans4LightString),
       ],
     );
 
@@ -402,6 +416,14 @@ class TbPdfHelper {
         return Container();
       },
     );
+  }
+
+  Future<pw.MemoryImage?> generateMemoryImageForPath(String path) async {
+    if (path.contains("http")) {
+      return await TbDownloadManager.downloadFile(urlPath: path);
+    } else {
+      return await image(imagePath: path);
+    }
   }
 
   /* ************************************* / 
