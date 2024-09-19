@@ -419,6 +419,9 @@ class TbPdfHelper {
   }
 
   Future<pw.MemoryImage?> generateMemoryImageForPath(String path) async {
+    if (path.isEmpty) {
+      return null;
+    }
     if (path.contains("http")) {
       return await TbDownloadManager.downloadFile(urlPath: path);
     } else {
