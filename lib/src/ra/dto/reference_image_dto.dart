@@ -9,6 +9,7 @@ class ReferenceImageDto {
     String? uniqueKey,
     String? image,
     MemoryImage? memoryImage,
+    String? referenceImagePath,
   }) : super() {
     this.imagePath = imagePath;
     this.order = order;
@@ -16,6 +17,7 @@ class ReferenceImageDto {
     this.uniqueKey = uniqueKey;
     this.image = image;
     this.memoryImage = memoryImage;
+    this.referenceImagePath = referenceImagePath;
   }
 
   String? imagePath;
@@ -24,6 +26,7 @@ class ReferenceImageDto {
   String? uniqueKey;
   String? image;
   MemoryImage? memoryImage;
+  String? referenceImagePath;
 
   /// this feild is only used when we are uploading assessments
   String? uniqueKeyToUpload;
@@ -37,6 +40,7 @@ class ReferenceImageDto {
       uniqueKey: json['uniqueKey'] as String?, // Can be null
       image:
           json['image'], // Depending on its type, it can be handled accordingly
+      referenceImagePath: json["image_path"],
     );
   }
 }

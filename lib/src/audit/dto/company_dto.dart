@@ -122,7 +122,7 @@ class CompanyDto {
   // Factory constructor to create an instance from JSON
   factory CompanyDto.fromJson(Map<String, dynamic> json) {
     return CompanyDto(
-      id: json['id'],
+      id: json["id"],
       name: json['companyName'],
       houseNo: json['house_no'],
       address1: json['address1'],

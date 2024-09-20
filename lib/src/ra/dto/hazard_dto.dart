@@ -1,10 +1,7 @@
-
 import 'package:dart_pdf_package/src/ra/dto/hazard_control_dto.dart';
 import 'package:pdf/widgets.dart' as w;
 
 class HazardDto {
-  
-
   int? id;
   String? name;
   String? liklihood;
@@ -65,18 +62,18 @@ class HazardDto {
   /// this property
   int? isSelectedHazards = 0;
 
-  List<HazardControlDto>? listHazardControlDto =
-      List.empty(growable: true);
+  List<HazardControlDto>? listHazardControlDto = List.empty(growable: true);
 
   int isStandard = 0;
 
+  String? hazardIconPath;
 
   HazardDto({
     this.id,
     this.name,
     this.liklihood,
     this.worstcase,
-    this.imagePath,
+    this.hazardIconPath,
     this.rating,
     this.score = 0,
     this.uniqueKey,
@@ -100,9 +97,9 @@ class HazardDto {
     this.cellRiskNumber = 0,
     this.assessmentHazardUniqueKey,
     this.isStandard = 0,
+    this.imagePath,
     this.isUpdatedHazard = 0,
   });
-
 
   /* ************************************** */
   // UPDATE HAZARD FOR SCORE AND RATINGS
@@ -202,45 +199,43 @@ class HazardDto {
   //   return dict;
   // }
 
-factory HazardDto.fromJson(Map<String, dynamic> json) {
-  var listControls = (json['listHazardControlEntity'] as List)
-      .map((control) => HazardControlDto.fromJson(control))
-      .toList();
+  factory HazardDto.fromJson(Map<String, dynamic> json) {
+    var listControls = (json['listHazardControlEntity'] as List)
+        .map((control) => HazardControlDto.fromJson(control))
+        .toList();
 
-  return HazardDto(
-    id: json['id'],
-    name: json['name'],
-    liklihood: json['liklihood'],
-    worstcase: json['worstcase'],
-    imagePath: json['imagePath'],
-    rating: json['rating'],
-    score: json['score'],
-    uniqueKey: json['uniqueKey'],
-    isFavourite: json['isFavourite'],
-    isOld: json['isOld'],
-    companyId: json['companyId'],
-    timestamp: json['timestamp'],
-    order: json['order'],
-    libraryId: json['libraryId'],
-    cloudCompanyId: json['cloudCompanyId'],
-    isSelected: json['isSelected'],
-    isRequired: json['isRequired'],
-    isUpdatedHazard: json['isUpdatedHazard'],
-    additionalLiklihood: json['additionalLiklihood'],
-    additionalScore: json['additionalScore'],
-    additionalRating: json['additionalRating'],
-    cellPosition: json['cellPosition'],
-    cellRiskNumber: json['cellRiskNumber'],
-    assessmentHazardUniqueKey: json['assessmentHazardUniqueKey'],
-    isSelectedHazards: json['isSelectedHazards'],
-    listHazardControlDto: listControls,
-    isStandard: json['isStandard'],
-    harm: json['harm'],
-  );
-}
-
-
-
+    return HazardDto(
+      id: json['id'],
+      name: json['name'],
+      liklihood: json['liklihood'],
+      worstcase: json['worstcase'],
+      imagePath: json['imagePath'],
+      rating: json['rating'],
+      score: json['score'],
+      uniqueKey: json['uniqueKey'],
+      isFavourite: json['isFavourite'],
+      isOld: json['isOld'],
+      companyId: json['companyId'],
+      timestamp: json['timestamp'],
+      order: json['order'],
+      libraryId: json['libraryId'],
+      cloudCompanyId: json['cloudCompanyId'],
+      isSelected: json['isSelected'],
+      isRequired: json['isRequired'],
+      isUpdatedHazard: json['isUpdatedHazard'],
+      additionalLiklihood: json['additionalLiklihood'],
+      additionalScore: json['additionalScore'],
+      additionalRating: json['additionalRating'],
+      cellPosition: json['cellPosition'],
+      cellRiskNumber: json['cellRiskNumber'],
+      assessmentHazardUniqueKey: json['assessmentHazardUniqueKey'],
+      isSelectedHazards: json['isSelectedHazards'],
+      listHazardControlDto: listControls,
+      isStandard: json['isStandard'],
+      harm: json['harm'],
+      hazardIconPath: json['image_path'],
+    );
+  }
 }
 
 bool isNumeric(String? str) {

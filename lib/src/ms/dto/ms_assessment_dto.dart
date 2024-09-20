@@ -186,7 +186,6 @@ class MsAssessmentDto {
       templateDto: json['template'] != null
           ? MsTemplateDto.fromJson(json['template'])
           : null,
-
       referenceNumber: json['referenceNumber'],
       projectName: json['projectName'],
       projectReference: json['projectReference'],
@@ -237,7 +236,7 @@ class MsAssessmentDto {
       userUniqueKey: json['userUniqueKey'],
       user: json['user'],
       isSelected: json['isSelected'],
-      isBeingEdited: json['isBeingEdited'],
+
       companyDto:
           json['company'] != null ? CompanyDto.fromJson(json['company']) : null,
       userDto: json['userEntity'] != null
@@ -270,14 +269,14 @@ class MsAssessmentDto {
               .map((e) => MsAssessmentStatementDto.fromJson(e))
               .toList(),
       listMsAssessmentImageDto:
-          (json['listMsAssessmentImageEntity'] as List<dynamic>)
-              .map((e) => MsAssessmentImageDto.fromJson(e))
+          (json['listMsAssessmentImageEntity'] as List<dynamic>?)
+              ?.map((e) => MsAssessmentImageDto.fromJson(e))
               .toList(),
       msAssessmentIconList: (json['msAssessmentIconList'] as List<dynamic>)
           .map((e) => MsAssessmentHazardIconDto.fromJson(e))
           .toList(),
-      listReviewSignOffUsers: (json['listReviewSignOffUsers'] as List<dynamic>)
-          .map((e) => ReviewSignOffUserDto.fromJson(e))
+       listReviewSignOffUsers: (json['listReviewSignOffUsers'] as List<dynamic>?)
+          ?.map((e) => ReviewSignOffUserDto.fromJson(e))
           .toList(),
     );
   }

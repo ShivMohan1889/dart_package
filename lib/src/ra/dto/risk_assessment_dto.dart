@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/audit/dto/company_dto.dart';
 import 'package:dart_pdf_package/src/audit/dto/user_dto.dart';
 import 'package:dart_pdf_package/src/ms/dto/ms_assessment_dto.dart';
@@ -396,11 +397,12 @@ class RiskAssessmentDto {
       reminderDate: json['reminderDate'],
       startTime: json['startTime'],
       endTime: json['endTime'],
-      averageAssessmentTime: json['averageAssessmentTime'].toDouble(),
+      averageAssessmentTime: json['averageAssessmentTime'] as double?,
       folderId: json['folderId'],
       hazardLibraryId: json['hazardLibraryId'],
       uniqueKey: json['uniqueKey'],
-      mapImagePath: json['mapImagePath'],
+      // mapImagePath: json['mapImagePath'],
+      mapImagePath: json["map_image_path"],
       lattitude: json['lattitude'].toDouble(),
       longitude: json['longitude'].toDouble(),
       location: json['location'],
@@ -474,5 +476,53 @@ class RiskAssessmentDto {
     return RiskAssessmentDto.fromJson(jsonMap);
   }
 
+  Future<void> prepareEntityForPDF() async {
+    companyDto?.companyLogoMemoryImage = await TbPdfHelper()
+        .generateMemoryImageForPath(companyDto?.imagePath ?? "");
 
+    userDto?.signatureMemoryImage = await TbPdfHelper()
+        .generateMemoryImageForPath(userDto?.imagePath ?? "");
+
+    if (((mapImagePath ?? "").isNotEmpty)) {
+      mapMemoryImage =
+          await TbPdfHelper().generateMemoryImageForPath(mapImagePath ?? "");
+    }
+
+    // update memory image list assessment image
+    await Future.forEach(listAssessmentImage ?? [], (element) async {
+      AssessmentImageDto assessmentImageDto = element;
+
+      assessmentImageDto.memoryImage = await TbPdfHelper()
+          .generateMemoryImageForPath(
+              assessmentImageDto.assessmentImagePath ?? "");
+    });
+
+    // update the memory image in listReferenceImage
+
+    await Future.forEach(listReferenceImage ?? [], (element) async {
+      ReferenceImageDto referImageEntity = element;
+
+      referImageEntity.memoryImage = await TbPdfHelper()
+          .generateMemoryImageForPath(referImageEntity.referenceImagePath ?? "");
+    });
+
+    // update the memory image in list hazards
+    await Future.forEach(listHazards ?? [], (element) async {
+      HazardDto hazardEntity = element;
+
+      hazardEntity.memoryImage = await TbPdfHelper()
+          .generateMemoryImageForPath(hazardEntity.hazardIconPath ?? "");
+    });
+
+    // update the memory image in review sign off users
+    await Future.forEach(
+      listReviewSignOffUsers ?? [],
+      (element) async {
+        ReviewSignOffUserDto reviewUserDto = element;
+
+        reviewUserDto.memoryImage = await TbPdfHelper()
+            .generateMemoryImageForPath(reviewUserDto.imagePath ?? "");
+      },
+    );
+  }
 }

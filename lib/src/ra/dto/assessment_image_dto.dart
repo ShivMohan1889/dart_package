@@ -10,6 +10,7 @@ class AssessmentImageDto {
     String? uniqueKey,
     String? image,
     MemoryImage? memoryImage,
+    String? assessmentImagePath
   }) : super() {
     this.imagePath = imagePath;
     this.order = order;
@@ -18,6 +19,8 @@ class AssessmentImageDto {
     this.uniqueKey = uniqueKey;
     this.image = image;
     this.memoryImage = memoryImage;
+    this.assessmentImagePath  =assessmentImagePath;
+    
   }
 
   //
@@ -32,6 +35,9 @@ class AssessmentImageDto {
   /// this feild is only used when we are uploading assessments
   String? uniqueKeyToUpload;
 
+  String? assessmentImagePath;
+
+
 
 factory AssessmentImageDto.fromJson(Map<String, dynamic> json) {
   return AssessmentImageDto(
@@ -40,6 +46,7 @@ factory AssessmentImageDto.fromJson(Map<String, dynamic> json) {
     assessmentUniqueKey: json['assessmentUniqueKey'] as String?, // Can be null
     uniqueKey: json['uniqueKey'] as String?, // Can be null
     image: json['image'] as String?, // Can be null
+    assessmentImagePath : json['image_path'] as String?,
     // memoryImage is not handled here because it's not included in the provided `toJson` method
   );
 }

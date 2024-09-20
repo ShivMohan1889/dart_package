@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:typed_data';
+
 import 'package:dart_pdf_package/src/ra/dto/assessment_image_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/harm_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/hazard_dto.dart';
@@ -30,12 +33,10 @@ class TbRaPdfGenerator {
   TbRaPdfGenerator({
     required this.theRiskAssessmentDto,
     required this.pdfHelper,
-    required this.documentsDirPath,
     this.pdfDocumentFromMs,
     required this.platFormLocaleName,
   });
 
-  String documentsDirPath;
   Document? pdfDocumentFromMs;
   TbPdfHelper pdfHelper;
   String platFormLocaleName;
@@ -68,11 +69,13 @@ class TbRaPdfGenerator {
   /* ************************************** */
   // GENERATE PDF
   /* ************************************** */
-  Future<void> generatePDF() async {
+  Future<Uint8List> generatePDF() async {
     Document pdf = Document();
     if (pdfDocumentFromMs != null) {
       pdf = pdfDocumentFromMs!;
     }
+
+    await theRiskAssessmentDto.prepareEntityForPDF();
 
     // here we are adding all the assessments in the list
     // first add the main one and then all of the children
@@ -117,6 +120,10 @@ class TbRaPdfGenerator {
     // if (pdfDocumentFromMs == null) {
     //   await FileManager.saveAssessmentPdfFile(pdf: pdf, pdfPath: raPdfPath);
     // }
+
+    var data = await pdf.save();
+
+    return data;
   }
 
 /* ************************************** */
@@ -768,7 +775,7 @@ class TbRaPdfGenerator {
   }) {
     List<Widget> list = List.empty(growable: true);
     List<AssessmentImageDto> assessmentImageList =
-        riskAssessmentEntity.listAssessmentImage ??  [];
+        riskAssessmentEntity.listAssessmentImage ?? [];
 
     if (assessmentImageList.isNotEmpty) {
       // here we first filtered it so we can get the selected image
@@ -870,7 +877,7 @@ class TbRaPdfGenerator {
     int index = 0;
     List<Widget> list = List.empty(growable: true);
     List<ReferenceImageDto> referenceImageList =
-        riskAssessmentEntity.listReferenceImage ??  [];
+        riskAssessmentEntity.listReferenceImage ?? [];
     if (referenceImageList.isNotEmpty) {
       for (ReferenceImageDto imageEntity in referenceImageList) {
         MemoryImage? referenceImage = imageEntity.memoryImage;

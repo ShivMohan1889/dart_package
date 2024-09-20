@@ -81,10 +81,10 @@ class TbPdfHelper {
 
     raTheme = ThemeData.withFont(
       base: loadFont(arial_1),
-      bold: loadFont(arial_1),
-      italic: loadFont(arial_1),
+      bold: loadFont(arialBd),
+      italic: loadFont(arialItalic),
       fontFallback: [
-        loadFont(arial_1),
+        loadFont(hurmeGeometricSans4LightString),
       ],
     );
 
