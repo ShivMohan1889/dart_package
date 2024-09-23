@@ -69,7 +69,7 @@ class TbRaPdfGenerator {
   /* ************************************** */
   // GENERATE PDF
   /* ************************************** */
-  Future<Uint8List> generatePDF() async {
+  Future<Uint8List?> generatePDF() async {
     Document pdf = Document();
     if (pdfDocumentFromMs != null) {
       pdf = pdfDocumentFromMs!;
@@ -95,35 +95,38 @@ class TbRaPdfGenerator {
     // here we are workign for linked RAMS
     // if risk assessment is avaialbe generate its pdf
 
-    // if (theRiskAssessmentDto.msAssessmentEntity != null) {
-    //   MsAssessmentEntity msAssessmentEntity =
-    //       theRiskAssessmentDto.msAssessmentEntity!;
+    if (theRiskAssessmentDto.msAssessmentDto != null) {
+      MsAssessmentDto msAssessmentEntity =
+          theRiskAssessmentDto.msAssessmentDto!;
 
-    //   // String msPdfPath = FileManager.msPdfPath(
-    //   //     msAssessmentUniqueKey: msAssessmentEntity.uniqueKey ?? "");
+      // String msPdfPath = FileManager.msPdfPath(
+      //     msAssessmentUniqueKey: msAssessmentEntity.uniqueKey ?? "");
 
-    //   MsPdfGenerator msPdfGenerator = MsPdfGenerator(
-    //     msAssessmentEntity: msAssessmentEntity,
-    //     documentsDirPath: documentsDirPath,
-    //     pdfDocumentFromRa: pdf,
-    //     pdfHelper: pdfHelper,
-    //     // localeName: platFormLocaleName,
-    //     platFormLocaleName: platFormLocaleName,
-    //   );
-    //   await msPdfGenerator.generatePDF();
-    // await FileManager.mergePDf(
-    //   msPath: msPdfPath,
-    //   raPath: raPdfPath,
-    //   documentsDirectoryPath: documentsDirPath,
-    // );
-    // }
+      TbMsPdfGenerator msPdfGenerator = TbMsPdfGenerator(
+        msAssessmentDto: msAssessmentEntity,
+        // documentsDirPath: documentsDirPath,
+        pdfDocumentFromRa: pdf,
+        pdfHelper: pdfHelper,
+        // localeName: platFormLocaleName,
+        platFormLocaleName: platFormLocaleName,
+      );
+      await msPdfGenerator.generatePDF();
+      //  await FileManager.mergePDf(
+      //    msPath: msPdfPath,
+      //   raPath: raPdfPath,
+      //   documentsDirectoryPath: documentsDirPath,
+      //  );
+    }
     // if (pdfDocumentFromMs == null) {
     //   await FileManager.saveAssessmentPdfFile(pdf: pdf, pdfPath: raPdfPath);
     // }
 
-    var data = await pdf.save();
-
-    return data;
+    if (pdfDocumentFromMs == null) {
+      var data = await pdf.save();
+      return data;
+    } else {
+      return null;
+    }
   }
 
 /* ************************************** */

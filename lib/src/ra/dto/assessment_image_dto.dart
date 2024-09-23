@@ -47,6 +47,7 @@ factory AssessmentImageDto.fromJson(Map<String, dynamic> json) {
     uniqueKey: json['uniqueKey'] as String?, // Can be null
     image: json['image'] as String?, // Can be null
     assessmentImagePath : json['image_path'] as String?,
+    isSelected:   json["isSelected"] as int?
     // memoryImage is not handled here because it's not included in the provided `toJson` method
   );
 }

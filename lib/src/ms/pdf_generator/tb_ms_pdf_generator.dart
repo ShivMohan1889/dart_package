@@ -10,6 +10,8 @@ import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_pdf_custo
 import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_project_details_section.dart';
 import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_statement_row.dart';
 import 'package:dart_pdf_package/src/ms/pdf_generator/tb_ms_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ra/dto/risk_assessment_dto.dart';
+import 'package:dart_pdf_package/src/ra/pdf_generator/tb_ra_pdf_generator.dart';
 import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart';
@@ -57,7 +59,7 @@ class TbMsPdfGenerator {
 
   // this list holds the Ms Assessment Image
   List<MsAssessmentImageDto> listImage = List.empty(growable: true);
-
+  
   // list of widgets that show Detials related to ms Assessment in pdf
   List<Widget> msPdfItems = List.empty(growable: true);
 
@@ -117,20 +119,18 @@ class TbMsPdfGenerator {
       listMsAssessmentIconList: msAssessmentDto?.msAssessmentIconList ?? [],
     );
 
-    // if (msAssessmentDto?.riskAssessmentDto != null) {
-    //   RiskAssessmentDto riskAssessmentDto =
-    //       msAssessmentDto!.riskAssessmentDto!;
+    if (msAssessmentDto?.riskAssessmentDto != null) {
+      RiskAssessmentDto riskAssessmentDto = msAssessmentDto!.riskAssessmentDto!;
 
-    //   RaPdfGenerator raPdfGenerator = RaPdfGenerator(
-    //     platFormLocaleName: platFormLocaleName,
-    //     theRiskAssessmentDto: riskAssessmentDto,
-    //     documentsDirPath: documentsDirPath,
-    //     pdfDocumentFromMs: pdf,
-    //     pdfHelper: pdfHelper,
-    //   );
+      TbRaPdfGenerator raPdfGenerator = TbRaPdfGenerator(
+        platFormLocaleName: platFormLocaleName,
+        theRiskAssessmentDto: riskAssessmentDto,
+        pdfDocumentFromMs: pdf,
+        pdfHelper: pdfHelper,
+      );
 
-    //   await raPdfGenerator.generatePDF();
-    // }
+      await raPdfGenerator.generatePDF();
+    }
 
     pdf.addPage(
       MultiPage(
@@ -935,7 +935,6 @@ class TbMsPdfGenerator {
 
         reviewUserDto.memoryImage = await TbPdfHelper()
             .generateMemoryImageForPath(reviewUserDto.imagePath ?? "");
-     
       },
     );
   }
