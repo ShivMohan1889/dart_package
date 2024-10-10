@@ -75,7 +75,7 @@ class TbRaPdfGenerator {
       pdf = pdfDocumentFromMs!;
     }
 
-    await theRiskAssessmentDto.prepareEntityForPDF();
+    // await theRiskAssessmentDto.prepareEntityForPDF();
 
     // here we are adding all the assessments in the list
     // first add the main one and then all of the children
@@ -84,10 +84,16 @@ class TbRaPdfGenerator {
     l.addAll(theRiskAssessmentDto.listChildren ?? []);
 
     // here we are calling generatePDf method for each entity
+    
+    await Future.forEach(l, (raEntity)async{ 
+        
+          await raEntity.prepareEntityForPDF();
+       generatePdfFor(pdf, raEntity);
 
-    for (RiskAssessmentDto raEntity in l) {
-      generatePdfFor(pdf, raEntity);
-    }
+    });
+    // for (RiskAssessmentDto raEntity in l) {
+    //  
+    // }
 
     // String raPdfPath = TbFileManager.raPdfPath(
     //     raAssessmentUniqueKey: theRiskAssessmentDto.uniqueKey ?? "");

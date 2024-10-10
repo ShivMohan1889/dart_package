@@ -23,7 +23,7 @@ class QuestionDto {
 
   List<ChainOptionDto>? chainOptionsForPdf;
   String? chainOptionsString;
-  List<AuditImageDto> listAuditImageDto = List.empty(growable: true);
+  List<AuditImageDto> ?listAuditImageDto = List.empty(growable: true);
   String? questionNumber;
   int? questionNumberForPdf;
   int? isQuestionSelected = 0;
@@ -46,7 +46,7 @@ class QuestionDto {
     this.cloudUserId,
     this.templateCloudId,
     this.parent,
-    required this.listAuditImageDto,
+     this.listAuditImageDto,
     this.comment,
     this.questionNumber,
     this.isQuestionSelected = 0,
@@ -58,6 +58,7 @@ class QuestionDto {
 
   factory QuestionDto.fromJson(Map<String, dynamic> json) {
     var questionDto = QuestionDto(
+
       id: json['id'],
       question: json['question'],
       isDelete: json['is_delete'],
@@ -88,8 +89,9 @@ class QuestionDto {
           .toList(),
 
       chainOptionsString: json['chain_options_string'],
-      listAuditImageDto: (json['list_audit_image_entity'] as List<dynamic>)
-          .map((e) => AuditImageDto.fromJson(e as Map<String, dynamic>))
+  
+      listAuditImageDto: (json['list_audit_image_entity'] as List<dynamic>?)
+          ?.map((e) => AuditImageDto.fromJson(e as Map<String, dynamic>))
           .toList(),
       questionNumber: json['question_number'],
       questionNumberForPdf: json['question_number_for_pdf'],
@@ -131,7 +133,7 @@ class QuestionDto {
           chainOptionsForPdf?.map((e) => e.toJson()).toList(),
       'chain_options_string': chainOptionsString,
       'list_audit_image_entity':
-          listAuditImageDto.map((e) => e.toJson()).toList(),
+          listAuditImageDto?.map((e) => e.toJson()).toList(),
       'question_number': questionNumber,
       'question_number_for_pdf': questionNumberForPdf,
       'is_question_selected': isQuestionSelected,

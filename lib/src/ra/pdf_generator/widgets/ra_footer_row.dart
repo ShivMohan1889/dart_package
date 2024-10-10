@@ -1,5 +1,3 @@
-
-
 import 'package:dart_pdf_package/src/ra/dto/review_sign_off_user_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/risk_assessment_dto.dart';
 import 'package:dart_pdf_package/src/ra/pdf_generator/tb_ra_pdf_constants.dart';
@@ -41,6 +39,8 @@ class RaFooterRow extends StatelessWidget {
 
   @override
   Widget build(Context context) {
+
+
     if (isSignOffFooter == true) {
       return Container(
         padding: const EdgeInsets.only(bottom: 6),
@@ -114,7 +114,9 @@ class RaFooterRow extends StatelessWidget {
   Widget buildBody({
     required Context context,
   }) {
-    List< ReviewSignOffUserDto> listUser = (riskAssessmentEntity.listReviewSignOffUsers ??  [])
+    List<ReviewSignOffUserDto> listUser = (riskAssessmentEntity
+                .listReviewSignOffUsers ??
+            [])
         .where((element) => element.userType == ReviewSignOffUserType.review)
         .toList();
     if (riskAssessmentEntity.approvalMode == ReviewSignOffMode.manual) {
@@ -134,30 +136,32 @@ class RaFooterRow extends StatelessWidget {
         ],
       );
     } else {
-      return Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildGuide(
-            context: context,
-          ),
-          SizedBox(
-            width: 30.0,
-          ),
-          userSignature(
-            context: context,
-          ),
-          SizedBox(height: 40.0, width: 40.0),
-          listUser.isNotEmpty
-              ? reviewSignature(
-              
-                  listUser.first,
-                  context,
-                )
-              : Container(),
-        ],
+      return Container(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildGuide(
+              context: context,
+            ),
+            SizedBox(
+              width: 30.0,
+            ),
+            userSignature(
+              context: context,
+            ),
+            SizedBox(height: 40.0, width: 40.0),
+            listUser.isNotEmpty
+                ? reviewSignature(
+                    listUser.first,
+                    context,
+                  )
+                : Container(),
+          ],
+        ),
       );
     }
   }
+  
 
   Widget userSignature({required Context context}) {
     return Container(
@@ -223,14 +227,18 @@ class RaFooterRow extends StatelessWidget {
               fontSize: 8,
             ),
           ),
-          Expanded(
-              child: Container(
-                  // color: PdfColors.green,
-                  child: signatureImage != null
-                      ? Image(
-                          signatureImage!,
-                        )
-                      : Container())),
+          Container(
+              color: PdfColors.red,
+              height: 80,
+              width: 80,
+              // color: PdfColors.green,
+              child: signatureImage != null
+                  ? Image(
+                      height: 60,
+                      width: 80,
+                      signatureImage!,
+                    )
+                  : Container()),
           SizedBox(height: 4.0),
           Row(
             children: [

@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
+import 'package:dart_pdf_package/src/utils/enums/enum/incident_report_enum.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial_1.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial_italic.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/hurme_geomatric_sans4.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/hurme_geomatric_sans4_light.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_100.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_300.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_700.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_900.dart';
@@ -117,9 +120,9 @@ class TbPdfHelper {
 
     // here we are creating a theme for fonts
     irTheme = ThemeData.withFont(
-      base: loadFont(arial_1),
-      bold: loadFont(arial_1),
-      italic: loadFont(arial_1),
+      base: loadFont(museoSansRounded300String),
+      bold: loadFont(museoSansRounded700String),
+      italic: loadFont(museoSansRounded100),
     );
   }
 
@@ -136,6 +139,33 @@ class TbPdfHelper {
     await file.writeAsBytes(image.bytes);
 
     print("Image saved at: ${file.path}");
+  }
+
+  /* ************************************** */
+  // RETURN TEXT FOR INCIDENT REPORT TYPE
+  /// this method is responsible for returning the text for
+  /// the given [incidentReportEntity.reportingType]
+  /* ************************************** */
+  String returnTextForIncidentReportType({
+    required IncidentReportDto? incidentReportEntity,
+    required String injuryTypeText,
+    required String illHealthTypeText,
+    required String nearMissType,
+  }) {
+    var reportType = incidentReportEntity?.reportingType ?? 0;
+    switch (reportType) {
+      case IncidentReport.injuryType:
+        return injuryTypeText;
+
+      case IncidentReport.illHealthType:
+        return illHealthTypeText;
+
+      case IncidentReport.nearMissType:
+        return nearMissType;
+
+      default:
+        return "";
+    }
   }
 
   // /* ************************************** */

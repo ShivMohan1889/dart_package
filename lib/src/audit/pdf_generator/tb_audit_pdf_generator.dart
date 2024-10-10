@@ -201,7 +201,7 @@ class TbAuditPdfGenerator {
 
     Widget summeryTableRow = AuditSummaryTable(chainOptionMap: chainOptionMap);
 
-    listWidget.add(summeryTableRow);
+  listWidget.add(summeryTableRow);
 
     pdf.addPage(
       pw.MultiPage(
@@ -772,11 +772,11 @@ class TbAuditPdfGenerator {
       auditPdfItems.add(questionCommentWidget);
     }
 
-    if (questionEntity.listAuditImageDto.isNotEmpty) {
+    if ((questionEntity.listAuditImageDto ??  []).isNotEmpty) {
       // list of image related to  question entity
       var list = questionEntity.listAuditImageDto;
 
-      for (var image in list) {
+      for (var image in list ?? []) {
         auditImageList.add(image);
 
         Widget questionImageIndexWidget = AuditPdfCustomText(
