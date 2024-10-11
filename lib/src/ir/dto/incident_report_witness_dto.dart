@@ -37,6 +37,21 @@ class IncidentReportWitnessDto {
           postcode == other.postcode &&
           email == other.email;
 
+  factory IncidentReportWitnessDto.fromJson(Map<String, dynamic> json) {
+    return IncidentReportWitnessDto(
+      id: json['id'] as int?,
+      address1: json['address1'] as String?,
+      address2: json['address2'] as String?,
+      address3: json['address3'] as String?,
+      email: json['email'] as String?,
+      jobTitle: json['jobTitle'] as String?,
+      name: json['name'] as String?,
+      postcode: json['postcode'] as String?,
+      telephone: json['telephone'] as String?,
+      incidentUniqueKey: json['incidentUniqueKey'] as String?,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

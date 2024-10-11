@@ -14,7 +14,11 @@ class IncidentReportImageDto {
     this.incidentUniqueKey,
   });
 
+
+
   Map<String, dynamic> toJson() {
+
+
     return {
       'id': id,
       'accidentReportId': accidentReportId,
@@ -23,4 +27,8 @@ class IncidentReportImageDto {
       'incidentUniqueKey': incidentUniqueKey,
     };
   }
+
+  
+
+  
 }

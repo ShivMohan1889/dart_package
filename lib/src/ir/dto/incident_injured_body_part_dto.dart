@@ -1,8 +1,8 @@
-class IncidentInjuredBodyPartEntity {
+class IncidentInjuredBodyPartDto {
   String? injuredBodyName;
   int? isSelected = 0;
 
-  IncidentInjuredBodyPartEntity({
+  IncidentInjuredBodyPartDto({
     this.injuredBodyName,
     this.isSelected = 0,
   });
@@ -12,5 +12,12 @@ class IncidentInjuredBodyPartEntity {
       'injuredBodyName': injuredBodyName,
       'isSelected': isSelected,
     };
+  }
+
+  factory IncidentInjuredBodyPartDto.fromJson(Map<String, dynamic> json) {
+    return IncidentInjuredBodyPartDto(
+      injuredBodyName: json['injuredBodyName'] as String?,
+      isSelected: json['isSelected'] as int?,
+    );
   }
 }

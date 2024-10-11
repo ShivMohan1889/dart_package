@@ -21,6 +21,21 @@ class IncidentReportManagerDto  {
     this.companyId,
   });
 
+
+  factory IncidentReportManagerDto.fromJson(Map<String, dynamic> json) {
+    return IncidentReportManagerDto(
+      id: json['id'] as int?,
+      email: json['email'] as String?,
+      managerCloudId: json['managerCloudId'] as String?,
+      jobTitle: json['jobTitle'] as String?,
+      createdBy: json['createdBy'] as int?,
+      isDeleted: json['isDeleted'] as int?,
+      userId: json['userId'] as int?,
+      name: json['name'] as String?,
+      companyId: json['companyId'] as int?,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

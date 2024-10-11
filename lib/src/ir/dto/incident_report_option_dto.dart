@@ -14,6 +14,17 @@ class IncidentReportOptionDto {
     this.isSelected = 0,
   });
 
+
+  factory IncidentReportOptionDto.fromJson(Map<String, dynamic> json) {
+    return IncidentReportOptionDto(
+      id: json['id'] as int?,
+      type: json['type'] as int?,
+      name: json['name'] as String?,
+      incidentUniqueKey: json['incidentUniqueKey'] as String?,
+      isSelected: json['isSelected'] as int? ?? 0,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,

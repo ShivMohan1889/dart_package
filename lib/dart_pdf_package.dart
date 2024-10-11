@@ -15,3 +15,6 @@ export 'src/ms/dto/ms_assessment_dto.dart';
 
 export 'src/ra/pdf_generator/tb_ra_pdf_generator.dart';
 export 'src/ra/dto/risk_assessment_dto.dart';
+
+export 'src/ir/dto/incident_report_dto.dart';
+export 'src/ir/ir_pdf/tb_ir_pdf_generator.dart';

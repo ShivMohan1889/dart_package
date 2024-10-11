@@ -16,6 +16,7 @@ import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_9
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/museo_sans_rounded_italic_900.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/images/blank_checkbox.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/images/check_box.dart';
+import 'package:dart_pdf_package/src/utils/pdf/assets/images/ir_logo.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/images/ra_fade_water_image.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/images/ra_watermark.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/images/right_checkbox.dart';
@@ -50,6 +51,7 @@ class TbPdfHelper {
   late ThemeData raTheme;
   late ThemeData msTheme;
   late ThemeData auditTheme;
+  late MemoryImage irLogoImage;
 
   late ThemeData irTheme;
 
@@ -81,6 +83,8 @@ class TbPdfHelper {
     checkImage = loadImageFromBase64(checkBoxString);
     uncheckImage = loadImageFromBase64(unCheckBox);
     raWaterMarkImage = loadImageFromBase64(raWaterMarkString);
+
+    irLogoImage = loadImageFromBase64(irLogoImageString);
 
     raTheme = ThemeData.withFont(
       base: loadFont(arial_1),

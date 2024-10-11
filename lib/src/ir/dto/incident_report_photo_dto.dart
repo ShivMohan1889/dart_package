@@ -9,6 +9,8 @@ class IncidentInjuryPhotoDto {
     String? uniqueKey,
     String? imagePath,
     MemoryImage? memoryImage,
+    String? irImagePath,
+
   }) : super() {
     this.id = id;
     this.name = name;
@@ -17,6 +19,7 @@ class IncidentInjuryPhotoDto {
     this.uniqueKey = uniqueKey;
     this.imagePath = imagePath;
     this.memoryImage = memoryImage;
+    this.irImagePath = irImagePath;
   }
 
   int? id;
@@ -27,6 +30,25 @@ class IncidentInjuryPhotoDto {
 
   String? imagePath;
   MemoryImage? memoryImage;   
+  String ? irImagePath;
+
+
+   
+
+
+
+
+  factory IncidentInjuryPhotoDto.fromJson(Map<String, dynamic> json) {
+    return IncidentInjuryPhotoDto(
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      order: json['order'] as int?,
+      incidentUniqueKey: json['incidentUniqueKey'] as String?,
+      uniqueKey: json['uniqueKey'] as String?,
+      imagePath: json['imagePath'] as String?,
+      irImagePath: json['image_path'] as String?,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

@@ -41,4 +41,22 @@ class IncidentInjuryPersonDto {
       'jobTitle': jobTitle,
     };
   }
+
+  factory IncidentInjuryPersonDto.fromJson(Map<String, dynamic> json) {
+    return IncidentInjuryPersonDto(
+      id: json['id'] as int?,
+      address1: json['address1'] as String?,
+      address2: json['address2'] as String?,
+      address3: json['address3'] as String?,
+      email: json['email'] as String?,
+      name: json['name'] as String?,
+      position: json['position'] as String?,
+      postcode: json['postcode'] as String?,
+      telephone: json['telephone'] as String?,
+      incidentUniqueKey: json['incidentUniqueKey'] as String?,
+      jobTitle: json['jobTitle'] as String?,
+    );
+  }
+
+  
 }

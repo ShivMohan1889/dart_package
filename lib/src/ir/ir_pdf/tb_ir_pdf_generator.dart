@@ -1,3 +1,6 @@
+
+import 'dart:typed_data';
+
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_injury_option_dto.dart';
@@ -31,17 +34,12 @@ class TbIrPdfGenerator {
   final String platFormLocaleName;
   final IncidentReportDto? incidentReportDto;
 
-  final MemoryImage incidentLogoImage;
   final TbPdfHelper pdfHelper;
-
-  String path;
 
   TbIrPdfGenerator({
     this.incidentReportDto,
-    required this.incidentLogoImage,
-    required this.platFormLocaleName,
-    required this.path,
     required this.pdfHelper,
+    required this.platFormLocaleName,
   });
 
   final incidentReportPdfTextStyle = TbIncidentReportPdfTextStyle();
@@ -56,11 +54,13 @@ class TbIrPdfGenerator {
   // GENERATOR
   /* ************************************** */
 
-  Future<void> generatePDF() async {
+  Future<Uint8List> generatePDF() async {
     final pdf = Document();
 
     // IMAGES
-    final MemoryImage irLogoImage = incidentLogoImage;
+    final MemoryImage irLogoImage = TbPdfHelper().irLogoImage;
+
+   await preparePdfs(incidentReportDto: incidentReportDto!);
 
     MemoryImage? logoImage =
         incidentReportDto?.companyDto?.companyLogoMemoryImage;
@@ -364,6 +364,10 @@ class TbIrPdfGenerator {
         },
       ),
     );
+
+    var data = pdf.save();
+
+    return data;
 
     // await TbFileManager.saveAssessmentPdfFile(pdf: pdf, pdfPath: path);
   }
@@ -1119,8 +1123,23 @@ class TbIrPdfGenerator {
             incidentReportDto.companyDto?.imagePath ?? "");
     incidentReportDto.userDto?.signatureMemoryImage = await TbPdfHelper()
         .generateMemoryImageForPath(incidentReportDto.userDto?.imagePath ?? "");
-    
-    return  incidentReportDto;
+
+    incidentReportDto.memoryLocationMapImage = await TbPdfHelper()
+        .generateMemoryImageForPath(
+            incidentReportDto.locationMapImagePath ?? "");
+
+    incidentReportDto.memorySketchImage = await TbPdfHelper()
+        .generateMemoryImageForPath(
+            incidentReportDto.bodySketchImagePath ?? "");
+    // Section Images
+    await Future.forEach(incidentReportDto.listIncidentInjuryPhoto ?? [],
+        (element) async {
+      IncidentInjuryPhotoDto incidentInjuryPhoto = element;
+      incidentInjuryPhoto.memoryImage = await TbPdfHelper()
+          .generateMemoryImageForPath(incidentInjuryPhoto.irImagePath ?? "");
+    });
+
+    return incidentReportDto;
     // Section Images
     // await Future.forEach(incidentReportDto.listIncidentInjuryPhoto ?? [],
     //     (element) async {
