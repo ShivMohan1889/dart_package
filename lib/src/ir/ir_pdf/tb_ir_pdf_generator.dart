@@ -1,4 +1,3 @@
-
 import 'dart:typed_data';
 
 import 'package:dart_pdf_package/dart_pdf_package.dart';
@@ -60,7 +59,7 @@ class TbIrPdfGenerator {
     // IMAGES
     final MemoryImage irLogoImage = TbPdfHelper().irLogoImage;
 
-   await preparePdfs(incidentReportDto: incidentReportDto!);
+    await preparePdfs(incidentReportDto: incidentReportDto!);
 
     MemoryImage? logoImage =
         incidentReportDto?.companyDto?.companyLogoMemoryImage;

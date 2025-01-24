@@ -1,12 +1,10 @@
+import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ra/dto/review_sign_off_user_dto.dart';
-import 'package:dart_pdf_package/src/ra/dto/risk_assessment_dto.dart';
 import 'package:dart_pdf_package/src/ra/pdf_generator/tb_ra_pdf_constants.dart';
 import 'package:dart_pdf_package/src/utils/enums/enum/review_sign_off_mode.dart';
-import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
+import 'package:dart_pdf_package/src/utils/enums/enum/review_sign_off_user_type.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
-
-import '../../../utils/enums/enum/review_sign_off_user_type.dart';
 
 class RaFooterRow extends StatelessWidget {
   final int? pageNo;
@@ -39,10 +37,10 @@ class RaFooterRow extends StatelessWidget {
 
   @override
   Widget build(Context context) {
-
-
-    if (isSignOffFooter == true) {
+    if (pageNo != 1) {
       return Container(
+        height: TbRaPdfSectionHeights.SECOND_PAGE_FOOTER_HEIGHT,
+        // color: TbRaPdfColors.green,
         padding: const EdgeInsets.only(bottom: 6),
         child: drawPageNoRow(
           isForSignOff: true,
@@ -50,64 +48,45 @@ class RaFooterRow extends StatelessWidget {
         ),
       );
     } else {
-      if (pageNo == 1) {
-        String followUp =
-            "Is a follow up assessment required? ${riskAssessmentEntity.anotherAssessmentRequired == 1 ? "Yes" : "No"}";
-        if ((riskAssessmentEntity.anotherAssessmentDate ?? "").isNotEmpty) {
-          followUp +=
-              "       Further assessment date :${TbPdfHelper.dateStringForLocaleInPdf(date: riskAssessmentEntity.anotherAssessmentDate ?? "", localeName: localeName)}";
-        }
-        return Container(
-          padding: const EdgeInsets.only(top: 5),
-          height: TbRaPdfSectionHeights.FIRST_PAGE_FOOTER_HEIGHT,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 23,
-                width: double.infinity,
-                color: TbRaPdfColors.darkGreyFollowUpBackground,
-                child: Center(
-                  child: Text(
-                    followUp,
-                    // style: raPdfTextStyles.boldWhite15(),
-                    style: TbPdfHelper().textStyleGenerator(
-                      color: TbRaPdfColors.white,
-                      font: Theme.of(context).header0.fontBold,
-                      fontSize: 15,
-                    ),
+      String followUp =
+          "Is a follow up assessment required? ${riskAssessmentEntity.anotherAssessmentRequired == 1 ? "Yes" : "No"}";
+      if ((riskAssessmentEntity.anotherAssessmentDate ?? "").isNotEmpty) {
+        followUp +=
+            "       Further assessment date :${TbPdfHelper.dateStringForLocaleInPdf(date: riskAssessmentEntity.anotherAssessmentDate ?? "", localeName: localeName)}";
+      }
+      return Container(
+        padding: const EdgeInsets.only(top: 5),
+        height: TbRaPdfSectionHeights.FIRST_PAGE_FOOTER_HEIGHT,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 23,
+              width: double.infinity,
+              color: TbRaPdfColors.darkGreyFollowUpBackground,
+              child: Center(
+                child: Text(
+                  followUp,
+                  // style: raPdfTextStyles.boldWhite15(),
+                  style: TbPdfHelper().textStyleGenerator(
+                    color: TbRaPdfColors.white,
+                    font: Theme.of(context).header0.fontBold,
+                    fontSize: 15,
                   ),
                 ),
               ),
-              Container(
-                child: buildBody(
-                  context: context,
-                ),
-              ),
-              drawPageNoRow(
-                context: context,
-              )
-            ],
-          ),
-        );
-      } else {
-        return Container(
-          height: TbRaPdfSectionHeights.SECOND_PAGE_FOOTER_HEIGHT,
-          child: Column(children: [
+            ),
             Container(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: buildGuide(
-                  context: context,
-                ),
+              child: buildBody(
+                context: context,
               ),
             ),
             drawPageNoRow(
               context: context,
             )
-          ]),
-        );
-      }
+          ],
+        ),
+      );
     }
   }
 
@@ -136,32 +115,29 @@ class RaFooterRow extends StatelessWidget {
         ],
       );
     } else {
-      return Container(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildGuide(
-              context: context,
-            ),
-            SizedBox(
-              width: 30.0,
-            ),
-            userSignature(
-              context: context,
-            ),
-            SizedBox(height: 40.0, width: 40.0),
-            listUser.isNotEmpty
-                ? reviewSignature(
-                    listUser.first,
-                    context,
-                  )
-                : Container(),
-          ],
-        ),
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildGuide(
+            context: context,
+          ),
+          SizedBox(
+            width: 30.0,
+          ),
+          userSignature(
+            context: context,
+          ),
+          SizedBox(height: 40.0, width: 40.0),
+          listUser.isNotEmpty
+              ? reviewSignature(
+                  listUser.first,
+                  context,
+                )
+              : Container(),
+        ],
       );
     }
   }
-  
 
   Widget userSignature({required Context context}) {
     return Container(
@@ -227,18 +203,14 @@ class RaFooterRow extends StatelessWidget {
               fontSize: 8,
             ),
           ),
-          Container(
-              color: PdfColors.red,
-              height: 80,
-              width: 80,
-              // color: PdfColors.green,
-              child: signatureImage != null
-                  ? Image(
-                      height: 60,
-                      width: 80,
-                      signatureImage!,
-                    )
-                  : Container()),
+          Expanded(
+              child: Container(
+                  // color: PdfColors.green,
+                  child: signatureImage != null
+                      ? Image(
+                          signatureImage!,
+                        )
+                      : Container())),
           SizedBox(height: 4.0),
           Row(
             children: [
@@ -383,7 +355,7 @@ class RaFooterRow extends StatelessWidget {
     );
     // return Container(
     //   color: TbRaPdfColors.green,
-    //   height: TbRaPdfSectionHeights.FIRST_PAGE_FOOTER_HEIGHT - 61,
+    //   height: RaPdfSectionHeights.FIRST_PAGE_FOOTER_HEIGHT - 61,
     //   padding: const EdgeInsets.only(top: 9),
     //   child: Column(
     //     crossAxisAlignment: CrossAxisAlignment.start,
@@ -817,6 +789,7 @@ class RaFooterRow extends StatelessWidget {
   }) {
     return Container(
       padding: const EdgeInsets.only(left: 15, top: 3, right: 15),
+      alignment: Alignment.bottomLeft,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
           padding: const EdgeInsets.only(top: 0),

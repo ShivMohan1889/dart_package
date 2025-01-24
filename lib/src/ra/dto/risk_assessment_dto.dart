@@ -265,12 +265,19 @@ class RiskAssessmentDto {
   /// Contains review user
   ReviewSignOffUserDto? reviewUser;
 
+  int? hazardIconOpacity;
+
   /// list that will contain all the child assessments
   List<RiskAssessmentDto>? listChildren = List.empty(growable: true);
 
   MemoryImage? mapMemoryImage;
 
   String? documentsDirPath;
+
+  int ?  linkingPreference;
+  
+
+  
   RiskAssessmentDto({
     this.id,
     this.name,
@@ -348,6 +355,9 @@ class RiskAssessmentDto {
     this.startTime,
     this.workEndDate,
     this.workStartDate,
+    this.hazardIconOpacity,
+    this.linkingPreference,
+
   });
 
   // CLONE
@@ -365,111 +375,115 @@ class RiskAssessmentDto {
 
   factory RiskAssessmentDto.fromJson(Map<String, dynamic> json) {
     return RiskAssessmentDto(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      user: json['user'],
-      fire: json['fire'],
-      coshh: json['coshh'],
-      manualHandling: json['manualHandling'],
-      displayHandling: json['displayHandling'],
-      youngPerson: json['youngPerson'],
-      employees: json['employees'],
-      visistors: json['visitors'],
-      contractors: json['contractors'],
-      referenceNumber: json['referenceNumber'],
-      membersOfPublic: json['membersOfPublic'],
-      others: json['others'],
-      nursingExpectantMums: json['nursingExpectantMums'],
-      youngPerson2: json['youngPerson2'],
-      disabled: json['disabled'],
-      serviceUsers: json['serviceUsers'],
-      anotherAssessmentRequired: json['anotherAssessmentRequired'],
-      isApprovalRequired: json['isApprovalRequired'],
-      isSignoffRequired: json['isSignoffRequired'],
-      approvalMode: json['approvalMode'],
-      signoffMode: json['signoffMode'],
-      assessmentType: json['assessmentType'],
-      assessmentDate: json['assessmentDate'],
-      workStartDate: json['workStartDate'],
-      workEndDate: json['workEndDate'],
-      anotherAssessmentDate: json['anotherAssessmentDate'],
-      reminderDate: json['reminderDate'],
-      startTime: json['startTime'],
-      endTime: json['endTime'],
-      averageAssessmentTime: json['averageAssessmentTime'] as double?,
-      folderId: json['folderId'],
-      hazardLibraryId: json['hazardLibraryId'],
-      uniqueKey: json['uniqueKey'],
-      // mapImagePath: json['mapImagePath'],
-      mapImagePath: json["map_image_path"],
-      lattitude: json['lattitude'],
-      longitude: json['longitude'],
-      location: json['location'],
-      zipcode: json['zipcode'],
-      isSubscribed: json['isSubscribed'],
-      rootId: json['rootId'],
-      parentId: json['parentId'],
-      msUniqueKey: json['msUniqueKey'],
-      msCloudId: json['msCloudId'],
-      cloudUserId: json['cloudUserId'],
-      access: json['access'],
-      cloudId: json['cloudId'],
-      companyId: json['companyId'],
-      cloudCompanyId: json['cloudCompanyId'],
-      numberOfSigneeRequired: json['numberOfSigneeRequired'],
-      isCompleted: json['isCompleted'],
-      procoreFileId: json['procoreFileId'],
-      dropboxFileId: json['dropboxFileId'],
-      boxFileId: json['boxFileId'],
-      googleDriveFileId: json['googleDriveFileId'],
-      oneDriveFileId: json['oneDriveFileId'],
-      isSelected: json['isSelected'],
-      isDraft: json['isDraft'],
-      listHazards: (json['listHazards'] as List<dynamic>)
-          .map((e) => HazardDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      listKeyStaff: (json['listKeyStaff'] as List<dynamic>)
-          .map((e) => KeyStaffDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      listReferenceImage: (json['listReferenceImage'] as List<dynamic>)
-          .map((e) => ReferenceImageDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      listAssessmentImage: (json['listAssessmentImage'] as List<dynamic>)
-          .map((e) => AssessmentImageDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      listReviewSignOffUsers: (json['listReviewSignOffUsers'] as List<dynamic>)
-          .map((e) => ReviewSignOffUserDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      listTimeLogs: (json['listTimeLogs'] as List<dynamic>)
-          .map((e) => TimeLogsDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      listWeatherDto: (json['listWeatherEntity'] as List<dynamic>)
-          .map((e) => WeatherDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      listHarmDto: (json['listHarmEntity'] as List<dynamic>)
-          .map((e) => HarmDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      userDto: json['userEntity'] != null
-          ? UserDto.fromJson(json['userEntity'] as Map<String, dynamic>)
-          : null,
-      companyDto: json['company'] != null
-          ? CompanyDto.fromJson(json['company'] as Map<String, dynamic>)
-          : null,
-      msAssessmentDto: json['msAssessmentEntity'] != null
-          ? MsAssessmentDto.fromJson(
-              json['msAssessmentEntity'] as Map<String, dynamic>)
-          : null,
-      assessmentHarm: json["assessmentHarm"],
-      reviewUser: json['reviewUser'] != null
-          ? ReviewSignOffUserDto.fromJson(
-              json['reviewUser'] as Map<String, dynamic>)
-          : null,
-      listChildren: (json['listChildren'] as List<dynamic>)
-          .map((e) => RiskAssessmentDto.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      documentsDirPath: json['documentsDirPath'],
-    );
+        id: json['id'],
+        name: json['name'],
+        description: json['description'],
+        user: json['user'],
+        fire: json['fire'],
+        coshh: json['coshh'],
+        manualHandling: json['manualHandling'],
+        displayHandling: json['displayHandling'],
+        youngPerson: json['youngPerson'],
+        employees: json['employees'],
+        visistors: json['visitors'],
+        contractors: json['contractors'],
+        referenceNumber: json['referenceNumber'],
+        membersOfPublic: json['membersOfPublic'],
+        others: json['others'],
+        nursingExpectantMums: json['nursingExpectantMums'],
+        youngPerson2: json['youngPerson2'],
+        disabled: json['disabled'],
+        serviceUsers: json['serviceUsers'],
+        anotherAssessmentRequired: json['anotherAssessmentRequired'],
+        isApprovalRequired: json['isApprovalRequired'],
+        isSignoffRequired: json['isSignoffRequired'],
+        approvalMode: json['approvalMode'],
+        signoffMode: json['signoffMode'],
+        assessmentType: json['assessmentType'],
+        assessmentDate: json['assessmentDate'],
+        workStartDate: json['workStartDate'],
+        workEndDate: json['workEndDate'],
+        anotherAssessmentDate: json['anotherAssessmentDate'],
+        reminderDate: json['reminderDate'],
+        startTime: json['startTime'],
+        endTime: json['endTime'],
+        averageAssessmentTime: json['averageAssessmentTime'] as double?,
+        folderId: json['folderId'],
+        hazardLibraryId: json['hazardLibraryId'],
+        uniqueKey: json['uniqueKey'],
+        // mapImagePath: json['mapImagePath'],
+        mapImagePath: json["map_image_path"],
+        lattitude: json['lattitude'],
+        longitude: json['longitude'],
+        location: json['location'],
+        zipcode: json['zipcode'],
+        isSubscribed: json['isSubscribed'],
+        rootId: json['rootId'],
+        // parentId: json['parentId'],
+        msUniqueKey: json['msUniqueKey'],
+        msCloudId: json['msCloudId'],
+        cloudUserId: json['cloudUserId'],
+        access: json['access'],
+        cloudId: json['cloudId'],
+        companyId: json['companyId'],
+        cloudCompanyId: json['cloudCompanyId'],
+        numberOfSigneeRequired: json['numberOfSigneeRequired'],
+        isCompleted: json['isCompleted'],
+        procoreFileId: json['procoreFileId'],
+        dropboxFileId: json['dropboxFileId'],
+        boxFileId: json['boxFileId'],
+        googleDriveFileId: json['googleDriveFileId'],
+        oneDriveFileId: json['oneDriveFileId'],
+        isSelected: json['isSelected'],
+        isDraft: json['isDraft'],
+        listHazards: (json['listHazards'] as List<dynamic>)
+            .map((e) => HazardDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        listKeyStaff: (json['listKeyStaff'] as List<dynamic>)
+            .map((e) => KeyStaffDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        listReferenceImage: (json['listReferenceImage'] as List<dynamic>)
+            .map((e) => ReferenceImageDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        listAssessmentImage: (json['listAssessmentImage'] as List<dynamic>)
+            .map((e) => AssessmentImageDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        listReviewSignOffUsers: (json['listReviewSignOffUsers']
+                as List<dynamic>)
+            .map(
+                (e) => ReviewSignOffUserDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        listTimeLogs: (json['listTimeLogs'] as List<dynamic>)
+            .map((e) => TimeLogsDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        listWeatherDto: (json['listWeatherEntity'] as List<dynamic>)
+            .map((e) => WeatherDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        listHarmDto: (json['listHarmEntity'] as List<dynamic>)
+            .map((e) => HarmDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        userDto: json['userEntity'] != null
+            ? UserDto.fromJson(json['userEntity'] as Map<String, dynamic>)
+            : null,
+        companyDto: json['company'] != null
+            ? CompanyDto.fromJson(json['company'] as Map<String, dynamic>)
+            : null,
+        msAssessmentDto: json['msAssessmentEntity'] != null
+            ? MsAssessmentDto.fromJson(
+                json['msAssessmentEntity'] as Map<String, dynamic>)
+            : null,
+        assessmentHarm: json["assessmentHarm"],
+        reviewUser: json['reviewUser'] != null
+            ? ReviewSignOffUserDto.fromJson(
+                json['reviewUser'] as Map<String, dynamic>)
+            : null,
+        listChildren: (json['listChildren'] as List<dynamic>)
+            .map((e) => RiskAssessmentDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        documentsDirPath: json['documentsDirPath'],
+        hazardIconOpacity: json["hazard_icon_opacity"] as int?,
+        linkingPreference: json["linking_preference"] as int?,
+        );
   }
   static RiskAssessmentDto fromJsonString(String jsonString) {
     Map<String, dynamic> jsonMap = jsonDecode(jsonString);
@@ -503,7 +517,8 @@ class RiskAssessmentDto {
       ReferenceImageDto referImageEntity = element;
 
       referImageEntity.memoryImage = await TbPdfHelper()
-          .generateMemoryImageForPath(referImageEntity.referenceImagePath ?? "");
+          .generateMemoryImageForPath(
+              referImageEntity.referenceImagePath ?? "");
     });
 
     // update the memory image in list hazards

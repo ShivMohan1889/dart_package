@@ -49,7 +49,7 @@ class MapImageRow extends StatelessWidget {
           width: double.infinity,
           child: Row(
             children: [
-              projectDetils(
+              projectDetails(
                 context: context,
               ),
               // Padding(
@@ -78,7 +78,7 @@ class MapImageRow extends StatelessWidget {
   // PROJECT DETAILS
   /// draw project name and project description
   /* ************************************** */
-  Widget projectDetils({
+  Widget projectDetails({
     required Context context,
   }) {
     return Container(

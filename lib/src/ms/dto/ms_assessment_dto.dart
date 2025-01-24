@@ -9,6 +9,7 @@ import 'package:dart_pdf_package/src/ms/dto/ms_template_field_dto.dart';
 import 'package:dart_pdf_package/src/ms/dto/ms_template_value_dto.dart';
 import 'package:dart_pdf_package/src/ms/dto/review_sign_off_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/risk_assessment_dto.dart';
+import 'package:pdf/widgets.dart';
 
 import '../../audit/dto/user_dto.dart';
 
@@ -104,6 +105,9 @@ class MsAssessmentDto {
       List.empty(growable: true);
   List<ReviewSignOffUserDto>? listReviewSignOffUsers =
       List.empty(growable: true);
+  String? sitePhoto;
+
+  MemoryImage? sitePhotoMemoryPhoto;
 
   MsAssessmentDto({
     this.referenceNumber,
@@ -181,7 +185,8 @@ class MsAssessmentDto {
     this.isBeingEdited = 0,
     this.isSelected,
     this.riskAssessmentDto,
-
+    this.sitePhoto,
+    this.sitePhotoMemoryPhoto,
   });
 
   factory MsAssessmentDto.fromJson(Map<String, dynamic> json) {
@@ -239,7 +244,6 @@ class MsAssessmentDto {
       userUniqueKey: json['userUniqueKey'],
       user: json['user'],
       isSelected: json['isSelected'],
-
       companyDto:
           json['company'] != null ? CompanyDto.fromJson(json['company']) : null,
       userDto: json['userEntity'] != null
@@ -261,15 +265,15 @@ class MsAssessmentDto {
       riskAssessmentDto: json['riskAssessmentEntity'] != null
           ? RiskAssessmentDto.fromJson(json['riskAssessmentEntity'])
           : null,
-      listMsTemplateValues: (json['listMsTemplateValues'] as List<dynamic>)
-          .map((e) => MsTemplateValueDto.fromJson(e))
+      listMsTemplateValues: (json['listMsTemplateValues'] as List<dynamic>?)
+          ?.map((e) => MsTemplateValueDto.fromJson(e))
           .toList(),
       listMsTemplateField: (json['listMsTemplateField'] as List<dynamic>?)
           ?.map((e) => MsTemplateFieldDto.fromJson(e))
           .toList(),
       listMsAssessmentStatement:
-          (json['listMsAssessmentStatement'] as List<dynamic>)
-              .map((e) => MsAssessmentStatementDto.fromJson(e))
+          (json['listMsAssessmentStatement'] as List<dynamic>?)
+              ?.map((e) => MsAssessmentStatementDto.fromJson(e))
               .toList(),
       listMsAssessmentImageDto:
           (json['listMsAssessmentImageEntity'] as List<dynamic>?)
@@ -278,9 +282,10 @@ class MsAssessmentDto {
       msAssessmentIconList: (json['msAssessmentIconList'] as List<dynamic>?)
           ?.map((e) => MsAssessmentHazardIconDto.fromJson(e))
           .toList(),
-       listReviewSignOffUsers: (json['listReviewSignOffUsers'] as List<dynamic>?)
+      listReviewSignOffUsers: (json['listReviewSignOffUsers'] as List<dynamic>?)
           ?.map((e) => ReviewSignOffUserDto.fromJson(e))
           .toList(),
+      sitePhoto: json['site_photo_path'] as String?,
     );
   }
 

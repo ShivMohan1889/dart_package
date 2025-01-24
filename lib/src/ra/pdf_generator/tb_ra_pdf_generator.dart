@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:dart_pdf_package/src/ra/dto/assessment_image_dto.dart';
@@ -35,11 +34,14 @@ class TbRaPdfGenerator {
     required this.pdfHelper,
     this.pdfDocumentFromMs,
     required this.platFormLocaleName,
+    required this.showMsFirst,
   });
 
   Document? pdfDocumentFromMs;
   TbPdfHelper pdfHelper;
   String platFormLocaleName;
+
+  bool showMsFirst;
 
   /// risk assessment for which we need to create pdf
   final RiskAssessmentDto theRiskAssessmentDto;
@@ -75,6 +77,27 @@ class TbRaPdfGenerator {
       pdf = pdfDocumentFromMs!;
     }
 
+
+
+    if (showMsFirst && theRiskAssessmentDto.msAssessmentDto != null) {
+      // Generate MS PDF first
+      MsAssessmentDto msAssessmentDto =
+          theRiskAssessmentDto.msAssessmentDto!;
+
+      TbMsPdfGenerator msPdfGenerator = TbMsPdfGenerator(
+        msAssessmentDto: msAssessmentDto,
+        // documentsDirPath: documentsDirPath,
+        pdfDocumentFromRa: pdf,
+        pdfHelper: pdfHelper,
+        platFormLocaleName: platFormLocaleName,
+        showMsFirst: showMsFirst,
+      );
+      await msPdfGenerator.generatePDF();
+      // pdf.addPage(pw.Page(
+      //   build: (context) => pw.Container(),
+      // ));
+    }
+
     // await theRiskAssessmentDto.prepareEntityForPDF();
 
     // here we are adding all the assessments in the list
@@ -84,16 +107,12 @@ class TbRaPdfGenerator {
     l.addAll(theRiskAssessmentDto.listChildren ?? []);
 
     // here we are calling generatePDf method for each entity
-    
-    await Future.forEach(l, (raEntity)async{ 
-        
-          await raEntity.prepareEntityForPDF();
-       generatePdfFor(pdf, raEntity);
 
+    await Future.forEach(l, (raEntity) async {
+      await raEntity.prepareEntityForPDF();
+      generatePdfFor(pdf, raEntity);
     });
-    // for (RiskAssessmentDto raEntity in l) {
-    //  
-    // }
+  
 
     // String raPdfPath = TbFileManager.raPdfPath(
     //     raAssessmentUniqueKey: theRiskAssessmentDto.uniqueKey ?? "");
@@ -101,7 +120,7 @@ class TbRaPdfGenerator {
     // here we are workign for linked RAMS
     // if risk assessment is avaialbe generate its pdf
 
-    if (theRiskAssessmentDto.msAssessmentDto != null) {
+    if (!showMsFirst && theRiskAssessmentDto.msAssessmentDto != null) {
       MsAssessmentDto msAssessmentEntity =
           theRiskAssessmentDto.msAssessmentDto!;
 
@@ -115,6 +134,7 @@ class TbRaPdfGenerator {
         pdfHelper: pdfHelper,
         // localeName: platFormLocaleName,
         platFormLocaleName: platFormLocaleName,
+        showMsFirst: showMsFirst,
       );
       await msPdfGenerator.generatePDF();
       //  await FileManager.mergePDf(
@@ -294,8 +314,12 @@ class TbRaPdfGenerator {
         text: item.additionalControl ?? "",
         maxHeight: maxHeight,
         height: item.height,
-        riskAssessmentEntity: riskAssessmentEntity);
+        riskAssessmentEntity: riskAssessmentEntity,);
     TbHazardRowModel second = TbHazardRowModel();
+    second.rating = item.rating;
+    second.score = item.score;
+    second.additionalRating = item.additionalRating;
+    second.additionalScore = item.additionalScore; 
     if (index1 > 0) {
       var part1 = item.name?.substring(0, index1);
       var part2 = item.name?.substring(index1);
@@ -805,6 +829,7 @@ class TbRaPdfGenerator {
               isSelected: imageEntity.isSelected,
               image: assessmentImage,
               riskAssessmentEntity: riskAssessmentEntity,
+              opacity: riskAssessmentEntity.hazardIconOpacity,
               index: 1,
               raPdfPageTitleType: RaPdfPageTitleType.assessmentImage,
             ),
@@ -827,6 +852,7 @@ class TbRaPdfGenerator {
         if (assessmentImage != null) {
           list.add(
             AssessmentImageSection(
+              opacity:  riskAssessmentEntity.hazardIconOpacity,
               logoImage: companyLogo,
               isSelected: imageEntity.isSelected,
               image: assessmentImage,
@@ -896,6 +922,8 @@ class TbRaPdfGenerator {
             AssessmentImageSection(
               logoImage: companyLogo,
               image: referenceImage,
+              opacity: riskAssessmentEntity.hazardIconOpacity,
+
               riskAssessmentEntity: riskAssessmentEntity,
               index: index,
               raPdfPageTitleType: RaPdfPageTitleType.referenceImage,

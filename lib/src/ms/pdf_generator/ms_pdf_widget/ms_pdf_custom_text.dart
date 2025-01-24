@@ -3,7 +3,7 @@ import 'package:pdf/widgets.dart';
 
 class MsPdfCustomText extends StatelessWidget {
   final String? text;
-
+  int rowType;
   final PdfColor? color;
   final double? height;
   final TextStyle? textStyle;
@@ -11,6 +11,7 @@ class MsPdfCustomText extends StatelessWidget {
   final TextAlign? textAlign;
   MsPdfCustomText({
     this.text,
+    this.rowType = 0,
     this.height,
     this.padding,
     this.textAlign,

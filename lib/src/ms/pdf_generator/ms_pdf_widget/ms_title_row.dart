@@ -74,6 +74,9 @@ class MsTitleRow extends StatelessWidget {
                   ),
                 )
               : Container(),
+          Container(
+            height: 10,
+          )
         ],
       ),
     );

@@ -33,4 +33,11 @@ class Utils {
     return (col * 13) + row;
   }
 
+
+
+  static double convertToOpacity(int sliderValue) {
+    // Convert slider value (1-10) to opacity (0.1-1.0)
+    return sliderValue / 10;
+  }
+
 }

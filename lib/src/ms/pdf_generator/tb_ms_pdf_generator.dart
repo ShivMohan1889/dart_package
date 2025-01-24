@@ -2,12 +2,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_pdf_package/src/audit/dto/user_dto.dart';
+import 'package:dart_pdf_package/src/audit/pdf_generator/audit_pdf_constants.dart';
 import 'package:dart_pdf_package/src/ms/dto/ms_assessment_statement_dto.dart';
 import 'package:dart_pdf_package/src/ms/dto/ms_header_dto.dart';
 import 'package:dart_pdf_package/src/ms/dto/ms_statement_dto.dart';
+import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_assessment_image_box.dart';
+import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_assessment_image_row.dart';
 import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_company_details_row.dart';
 import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_pdf_custom_text.dart';
 import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_project_details_section.dart';
+import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_site_photo.dart';
 import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_statement_row.dart';
 import 'package:dart_pdf_package/src/ms/pdf_generator/tb_ms_pdf_constants.dart';
 import 'package:dart_pdf_package/src/ra/dto/risk_assessment_dto.dart';
@@ -44,12 +48,15 @@ class TbMsPdfGenerator {
   late TbPdfHelper pdfHelper;
   final String platFormLocaleName;
 
+  bool showMsFirst;
+
   TbMsPdfGenerator({
     required this.msAssessmentDto,
     // required this.documentsDirPath,
     required this.pdfHelper,
     this.pdfDocumentFromRa,
     required this.platFormLocaleName,
+    required this.showMsFirst,
   });
 
   final msPdfTextStyle = TbMsPdfTextStyles();
@@ -59,7 +66,7 @@ class TbMsPdfGenerator {
 
   // this list holds the Ms Assessment Image
   List<MsAssessmentImageDto> listImage = List.empty(growable: true);
-  
+
   // list of widgets that show Detials related to ms Assessment in pdf
   List<Widget> msPdfItems = List.empty(growable: true);
 
@@ -112,6 +119,16 @@ class TbMsPdfGenerator {
       color: TbMsPdfColors.projectDetailsBorderColor,
     ));
 
+    if (msAssessmentDto?.sitePhotoMemoryPhoto != null) {
+      msPdfItems.add(MsSitePhoto(
+        memoryImage: msAssessmentDto?.sitePhotoMemoryPhoto,
+      )
+          // MsSitePhoto(
+          //   memoryImage: msAssessmentDto?.sitePhotoMemoryPhoto,
+          // ),
+          );
+    }
+
     await updateSelectedStatementInTemplate(
       msTemplateDto: msAssessmentDto?.templateDto,
       listMsAssessmentStatementList:
@@ -119,7 +136,7 @@ class TbMsPdfGenerator {
       listMsAssessmentIconList: msAssessmentDto?.msAssessmentIconList ?? [],
     );
 
-    if (msAssessmentDto?.riskAssessmentDto != null) {
+    if (msAssessmentDto?.riskAssessmentDto != null && showMsFirst == false) {
       RiskAssessmentDto riskAssessmentDto = msAssessmentDto!.riskAssessmentDto!;
 
       TbRaPdfGenerator raPdfGenerator = TbRaPdfGenerator(
@@ -127,6 +144,7 @@ class TbMsPdfGenerator {
         theRiskAssessmentDto: riskAssessmentDto,
         pdfDocumentFromMs: pdf,
         pdfHelper: pdfHelper,
+        showMsFirst: showMsFirst,
       );
 
       await raPdfGenerator.generatePDF();
@@ -443,7 +461,11 @@ class TbMsPdfGenerator {
 
       // filter the list of images related to header entity
       var listFilteredImages = (msAssessmentDto?.listMsAssessmentImageDto ?? [])
-          .where((element) => element.headerCloudId == headerDto.headerCloudId)
+          .where(
+            (element) =>
+                element.headerCloudId == headerDto.headerCloudId &&
+                (element.statementCloudId ?? "").isEmpty,
+          )
           .toList();
 
       // when user does not selected the any statement but select the image
@@ -461,21 +483,43 @@ class TbMsPdfGenerator {
         headerWidget.add(widget);
       }
 
-      // loop for iterating the image from the listFilterImage
-      for (var element in listFilteredImages) {
-        listImage.add(element);
+      if (listFilteredImages.isNotEmpty) {
+        // Create a container that keeps header and images together
+        Widget headerWithImages =
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(
+            height: 10,
+            // color: PdfColors.red,
+          ),
+          // ...createImageRows(images: listFilteredImages),
+          ...showAssessmentImageOnPdf(
+            images: listFilteredImages,
+            isHeaderImage: true,
+          ),
+          Container(
+            height: 10,
+            // color: PdfColors.indigo400,
+          ),
+        ]);
 
-        Widget widget = MsStatementRow(
-            statementName:
-                "See Image Reference ${listImage.length} in Appendix",
-            // statmentTextStyle: msPdfTextStyle.msStatementTextStyle(),
-            statmentTextStyle: TbPdfHelper().textStyleGenerator(
-              font: Theme.of(context).header0.font,
-              fontSize: 11,
-              color: TbMsPdfColors.companyDetailsTextColor,
-            ));
-        headerWidget.add(widget);
+        headerWidget.add(headerWithImages);
       }
+
+      // loop for iterating the image from the listFilterImage
+      // for (var element in listFilteredImages) {
+      //   listImage.add(element);
+
+      //   Widget widget = MsStatementRow(
+      //       statementName:
+      //           "See Image Reference ${listImage.length} in Appendix",
+      //       // statmentTextStyle: msPdfTextStyle.msStatementTextStyle(),
+      //       statmentTextStyle: TbPdfHelper().textStyleGenerator(
+      //         font: Theme.of(context).header0.font,
+      //         fontSize: 11,
+      //         color: TbMsPdfColors.companyDetailsTextColor,
+      //       ));
+      //   headerWidget.add(widget);
+      // }
     }
   }
 
@@ -492,21 +536,8 @@ class TbMsPdfGenerator {
       Widget widget = MsPdfCustomText(
         text: "${msHeaderDto.name}",
         padding: msHeaderDto.isHeaderLevel == 0
-            ?
-            // const EdgeInsets.only(
-            //     left: 20,
-            //     // top: 18,
-            //     top: 15,
-            //     right: 20,
-            //   )
-            TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
-            :
-            // const EdgeInsets.only(
-            //     left: 20,
-            //     top: 5,
-            //     right: 20,
-            //   ),
-            TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
+            ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
+            : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
         textStyle: msHeaderDto.isHeaderLevel == 0
             // ? msPdfTextStyle.msMainHeaderTextStyle()
             ? TbPdfHelper().textStyleGenerator(
@@ -520,6 +551,9 @@ class TbMsPdfGenerator {
                 fontSize: 11,
               ),
       );
+      if (widget is MsPdfCustomText) {
+        widget.rowType = 1;
+      }
 
       headerWidget.add(widget);
     }
@@ -533,20 +567,97 @@ class TbMsPdfGenerator {
       }
     } else if ((msHeaderDto.listMsStatement ?? []).isNotEmpty) {
       // loop for iterating the statement from the listStatement
+
+      List<Widget> listStatement = List.empty(growable: true);
+
       for (MsStatementDto statementDto in msHeaderDto.listMsStatement ?? []) {
         if (statementDto.isSelected == 1) {
-          Widget w = MsStatementRow(
-            statementName: statementDto.statementName,
-            // statmentTextStyle: msPdfTextStyle.msStatementTextStyle(),
-            statmentTextStyle: TbPdfHelper().textStyleGenerator(
-              font: Theme.of(context).header0.font,
-              color: TbMsPdfColors.companyDetailsTextColor,
-              fontSize: 11,
-            ),
-          );
-          headerWidget.add(w);
+          var listFilteredImagesForStatement =
+              (msAssessmentDto?.listMsAssessmentImageDto ?? [])
+                  .where(
+                    (element) =>
+                        element.headerCloudId == msHeaderDto.headerCloudId &&
+                        element.statementCloudId == statementDto.uniqueKey,
+                  )
+                  .toList();
+
+          if (listFilteredImagesForStatement.isEmpty) {
+            Widget w = MsStatementRow(
+              // color: PdfColors.green200,
+              statementName: statementDto.statementName,
+              // statmentTextStyle: msPdfTextStyle.msStatementTextStyle(),
+              statmentTextStyle: TbPdfHelper().textStyleGenerator(
+                font: Theme.of(context).header0.font,
+                color: MsPdfColors.companyDetailsTextColor,
+                fontSize: 11,
+              ),
+            );
+            listStatement.add(w);
+          }
+
+          if (listFilteredImagesForStatement.isNotEmpty) {
+            listStatement.addAll(
+              showAssessmentImageOnPdf(
+                images: listFilteredImagesForStatement,
+                statement: statementDto.statementName,
+              ),
+            );
+
+            // listStatement.add(Container(
+            //   // color: PdfColors.orange,
+            //   height: 5,
+            // ));
+          }
+
+          // if(listFilteredImagesForStatement.isEmpty){
+
+          // }
+          // Widget w = MsStatementRow(
+          //   statementName: statementDto.statementName,
+          //   // statmentTextStyle: msPdfTextStyle.msStatementTextStyle(),
+          //   statmentTextStyle: TbPdfHelper().textStyleGenerator(
+          //     font: Theme.of(context).header0.font,
+          //     color: TbMsPdfColors.companyDetailsTextColor,
+          //     fontSize: 11,
+          //   ),
+          // );
+          // headerWidget.add(w);
         }
       }
+
+      //here i want to make sure that the first element of listStatement is not added to headerWidget
+      //so that i can add it later in the headerWidget with Header
+      List<Widget> listH = List.empty(growable: true);
+      if (listStatement.isNotEmpty) {
+        listH.add(listStatement.first);
+        listStatement.removeAt(0);
+      }
+
+      for (var i = headerWidget.length - 1; i >= 0; i--) {
+        if (headerWidget[i] is MsPdfCustomText &&
+            (headerWidget[i] as MsPdfCustomText).rowType == 1) {
+          listH.add(headerWidget[i]);
+          headerWidget.removeAt(i);
+        } else {
+          break;
+        }
+      }
+
+      headerWidget.add(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: listH.reversed.toList(),
+              ),
+            )
+          ],
+        ),
+      );
+      headerWidget.addAll(listStatement);
     } else if ((msHeaderDto.listMsStatementHazardIcons ?? []).isNotEmpty) {
       // filtered the selected Ms StatementHazardIcon from the listMsStatementHazardIcons
       List<MsStatementHazardIconDto> listStatementIconDtoList =
@@ -558,6 +669,117 @@ class TbMsPdfGenerator {
             msStatementHazadIconDtoList: listStatementIconDtoList);
       }
     }
+  }
+
+  List<Widget> showAssessmentImageOnPdf({
+    required List<MsAssessmentImageDto> images,
+    String? statement,
+    bool isHeaderImage = false,
+  }) {
+    //holds the Section image
+
+    List<Widget> imageRowWidgets = [];
+
+    List<Widget> rowChildren = [];
+
+    // this loop for iterating the element of list of Section image
+    // in this loop we have implement the logic to show only 4 image in a single row
+    //and image which came after the fourth one is show on next row
+    for (MsAssessmentImageDto imageEntity in images) {
+      if (imageEntity.memoryImage != null) {
+        MemoryImage memoryImage = imageEntity.memoryImage!;
+
+        int imageIndex = images.indexOf(imageEntity) + 1;
+        rowChildren.add(
+          MsAssessmentImageBox(
+            image: memoryImage,
+            index: imageIndex,
+          ),
+        );
+
+        rowChildren.add(Container(
+          width: 10,
+        ));
+      }
+
+      int imageIndex = images.indexOf(imageEntity) + 1;
+
+      int result = imageIndex % 2;
+
+      if (result == 0) {
+        if (isHeaderImage) {
+          if (imageIndex == 1 || imageIndex == 2) {
+            var row = MsAssessmentImageRow(
+              listChildren: rowChildren,
+              text: "Header Reference Images",
+            );
+            imageRowWidgets.add(row);
+          } else {
+            var row = MsAssessmentImageRow(
+              listChildren: rowChildren,
+            );
+            imageRowWidgets.add(row);
+          }
+        } else {
+          if ((statement ?? "").isNotEmpty) {
+            if (imageIndex == 1 || imageIndex == 2) {
+              var row = MsAssessmentImageRow(
+                listChildren: rowChildren,
+                statement: statement,
+              );
+              imageRowWidgets.add(row);
+            } else {
+              var row = MsAssessmentImageRow(
+                listChildren: rowChildren,
+              );
+              imageRowWidgets.add(row);
+            }
+          } else {
+            var row = MsAssessmentImageRow(
+              listChildren: rowChildren,
+            );
+            imageRowWidgets.add(row);
+          }
+        }
+
+        imageRowWidgets.add(Container(
+          // color: PdfColors.blue500,
+          height: 10,
+        ));
+        rowChildren = [];
+      }
+    }
+
+    // if some of images are left then we need to add them too into the next row
+    // like there was 5 images, it will create a row and next images will be added
+    // to the listSectionImageItems, but it will not be shown without below code
+    if (isHeaderImage == true && images.length == 1) {
+      var row = MsAssessmentImageRow(
+        listChildren: rowChildren,
+        text: "Header Reference Images",
+      );
+      imageRowWidgets.add(row);
+    } else {
+      if ((statement ?? "").isNotEmpty && images.length == 1) {
+        var row = Container(
+          child: MsAssessmentImageRow(
+            listChildren: rowChildren,
+            statement: statement,
+          ),
+        );
+
+        imageRowWidgets.add(row);
+      } else {
+        var row = Container(
+          child: MsAssessmentImageRow(
+            listChildren: rowChildren,
+          ),
+        );
+        imageRowWidgets.add(row);
+      }
+    }
+
+    return imageRowWidgets;
   }
 
   /* ****************************/
@@ -901,6 +1123,9 @@ class TbMsPdfGenerator {
   }
 
   Future<void> preparePDFImages(MsAssessmentDto msAssessmentDto) async {
+    msAssessmentDto.sitePhotoMemoryPhoto = await TbPdfHelper()
+        .generateMemoryImageForPath(msAssessmentDto.sitePhoto ?? "");
+
     msAssessmentDto.userDto?.signatureMemoryImage =
         await TbPdfHelper().generateMemoryImageForPath(
       msAssessmentDto.userDto?.imagePath ?? "",

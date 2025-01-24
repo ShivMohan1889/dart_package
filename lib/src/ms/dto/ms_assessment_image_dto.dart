@@ -17,7 +17,7 @@ class MsAssessmentImageDto {
     this.image,
     this.memoryImage,
     this.imagePath,
-
+    this.statementCloudId,
   });
 
   String? localPath;
@@ -35,31 +35,33 @@ class MsAssessmentImageDto {
   MemoryImage? memoryImage;
   String? uniqueKeyToUpload;
   String? imagePath;
-
+  String? statementCloudId;
 
   // Convert a JSON map to an instance of MsAssessmentImageDto
   factory MsAssessmentImageDto.fromJson(Map<String, dynamic> json) {
     return MsAssessmentImageDto(
-      localPath: json['localPath'],
-      order: json['order'],
-      isSelected: json['isSelected'],
-      msUniqueKey: json['msUniqueKey'],
-      // imageBytes: json['imageBytes'] != null
-      //     ? Uint8List.fromList(List<int>.from(json['imageBytes']))
-      //     : null,
-      
-      headerCloudId: json['headerCloudId'],
-      cloudUserId: json['cloudUserId'],
-      templateCloudId: json['templateCloudId'],
-      cloudCompanyId: json['cloudCompanyId'],
-      referenceNo: json['referenceNo'],
-      uniqueKey: json['uniqueKey'],
-      image: json['image'],
-      // memoryImage: json['memoryImage'] != null
-      //     ? MemoryImage(Uint8List.fromList(List<int>.from(json['memoryImage'])))
-      //     : null,
-       imagePath:   json["image_path"]  as String?
-    );
+        localPath: json['localPath'],
+        order: json['order'],
+        isSelected: json['isSelected'],
+        msUniqueKey: json['msUniqueKey'],
+        // imageBytes: json['imageBytes'] != null
+        //     ? Uint8List.fromList(List<int>.from(json['imageBytes']))
+        //     : null,
+
+        headerCloudId: json['headerCloudId'],
+        cloudUserId: json['cloudUserId'],
+        templateCloudId: json['templateCloudId'],
+        cloudCompanyId: json['cloudCompanyId'],
+        referenceNo: json['referenceNo'],
+        uniqueKey: json['uniqueKey'],
+        image: json['image'],
+        statementCloudId: json["statement_cloud_id"] as String?,
+
+        // statementCloudId:  json[""],
+        // memoryImage: json['memoryImage'] != null
+        //     ? MemoryImage(Uint8List.fromList(List<int>.from(json['memoryImage'])))
+        //     : null,
+        imagePath: json["image_path"] as String?);
   }
 
   Map<String, dynamic> toJson() {

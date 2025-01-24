@@ -1,4 +1,3 @@
-
 import 'package:dart_pdf_package/src/ra/dto/hazard_dto.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
@@ -15,6 +14,7 @@ class AssessmentImageSection extends StatelessWidget {
   final RaPdfPageTitleType raPdfPageTitleType;
   final int? isSelected;
   final MemoryImage? logoImage;
+  final int? opacity;
 
   final RiskAssessmentDto riskAssessmentEntity;
 
@@ -28,14 +28,15 @@ class AssessmentImageSection extends StatelessWidget {
     this.index,
     required this.raPdfPageTitleType,
     this.logoImage,
+    required this.opacity,
   });
 
   @override
   Widget build(Context context) {
     return Container(
       padding: const EdgeInsets.only(
-        // top: 35,
-      ),
+          // top: 35,
+          ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,7 +114,7 @@ class AssessmentImageSection extends StatelessWidget {
   }
 
   Container _createGridWithHazards() {
-    List<HazardDto > listHazards = (riskAssessmentEntity.listHazards ??  []);
+    List<HazardDto> listHazards = (riskAssessmentEntity.listHazards ?? []);
     List<Widget> listWidget = [];
     for (var i = 0; i < 13 * 8; i++) {
       var identifier = Utils.hazardGridCellIdentifier(i);
@@ -135,41 +136,45 @@ class AssessmentImageSection extends StatelessWidget {
       } else {
         HazardDto entity = filtered.first;
         MemoryImage? iconImage = entity.memoryImage;
-        Widget w = Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 0.25,
-              color: PdfColors.black,
+        Widget w = Opacity(
+          opacity: Utils.convertToOpacity(opacity ?? 10),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 0.25,
+                color: PdfColors.black,
+              ),
+              color: PdfColors.grey300,
             ),
-            color: PdfColors.grey300,
-          ),
-          child: Stack(children: [
-            (iconImage != null)
-                ? Center(
-                    child: Image(
-                      iconImage,
-                      fit: BoxFit.contain,
-                    ),
-                  )
-                : Container(),
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15 / 2),
-                  color: PdfColors.black,
-                ),
-                height: 15,
-                width: 15,
-                child: Center(
-                  child: Text((entity.cellRiskNumber ?? 0).toString(),
-                      style: const TextStyle(color: PdfColors.white)),
+            child: Stack(children: [
+              (iconImage != null)
+                  ? Center(
+                      child: Image(
+                        iconImage,
+                        fit: BoxFit.contain,
+                      ),
+                    )
+                  : Container(),
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15 / 2),
+                    color: PdfColors.black,
+                  ),
+                  height: 15,
+                  width: 15,
+                  child: Center(
+                    child: Text((entity.cellRiskNumber ?? 0).toString(),
+                        style: const TextStyle(color: PdfColors.white)),
+                  ),
                 ),
               ),
-            ),
-          ]),
+            ]),
+          ),
         );
+
         listWidget.add(w);
       }
     }
