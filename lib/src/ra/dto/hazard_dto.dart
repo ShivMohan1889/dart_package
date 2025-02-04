@@ -215,7 +215,7 @@ class HazardDto {
       uniqueKey: json['uniqueKey'],
       isFavourite: json['isFavourite'],
       isOld: json['isOld'],
-      // companyId: json['companyId'],
+      companyId: json['companyId'],
       // timestamp: json['timestamp'],
       order: json['order'],
       libraryId: json['libraryId'],

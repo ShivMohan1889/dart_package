@@ -1,4 +1,3 @@
-
 import 'package:dart_pdf_package/src/ra/pdf_generator/widgets/hazard_text.dart';
 import 'package:dart_pdf_package/src/utils/extensions/string_extension.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
@@ -14,16 +13,12 @@ class HazardTableRow extends StatelessWidget {
   final int isStandard;
   final raPdfTextStyles = TbRaPdfTextStyles();
 
-  final String ? hazardScore;
-
-
+  final String? hazardScore;
 
   HazardTableRow({
     required this.row,
     required this.isStandard,
-     this.hazardScore,
-
-
+    this.hazardScore,
   });
 
   @override
@@ -42,8 +37,11 @@ class HazardTableRow extends StatelessWidget {
   Widget matrixHazardRow({
     required Context context,
   }) {
-    PdfColor controlInPlaceColor = colorForScore(row.score ?? row.splitItemScore ?? "0");
-    PdfColor additionalControlColor = colorForScore(row.additionalScore ?? row.splitItemAdditionalScore ?? "0");
+    PdfColor controlInPlaceColor =
+        colorForScore(row.score ?? row.splitItemScore ?? "0");
+    // PdfColor additionalControlColor = PdfColors.amber;
+    PdfColor additionalControlColor = colorForScore(
+        row.additionalScore ?? row.splitItemAdditionalScore ?? "0");
     return Container(
       padding: TbRaPdfPaddings.pageHorizontalPadding,
       child: Table(
@@ -53,7 +51,7 @@ class HazardTableRow extends StatelessWidget {
             verticalAlignment: TableCellVerticalAlignment.full,
             children: [
               HazardTableCell(
-                text: row.name  ?? "",
+                text: row.name ?? "",
                 width: TbRaPdfWidth.columnWidthMatrix[0],
                 // style: raPdfTextStyles.italicBlack9(),
                 style: TbPdfHelper().textStyleGenerator(
@@ -280,8 +278,8 @@ class HazardTableRow extends StatelessWidget {
   // COLOR FOR SCORE
   /* ************************************** */
   PdfColor colorForScore(String score) {
-    int s =  
-    score.parseInt();
+    print("Score Given score $score");
+    int s = score.parseInt();
 
     // score.parseInt():  (hazardScore ?? "0").parseInt();
     if (s <= 25 && s >= 16) {

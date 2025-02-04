@@ -1,5 +1,3 @@
-
-
 import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_title_row.dart';
 import 'package:pdf/pdf.dart';
 
@@ -33,27 +31,29 @@ class MsHeaderRow extends StatelessWidget {
       child: Column(
         children: [
           Container(
-              width: TbMsPdfWidth.pageWidth,
-              color: MsPdfColors.white,
-              height: MsPdfHeights.blankSpaceContainerHeight,
-              child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    companyLogo != null
-                        ? Container(
-                            margin: const  EdgeInsets.only(right: 20),
-                            // color: RaPdfColors.black,
-                            height: 80,
-                            width: 80,
-                            child: Image(
-                              companyLogo!,
-                              height: 60,
-                              width: 80,
-                            ),
-                          )
-                        : Container()
-                  ])),
+            width: TbMsPdfWidth.pageWidth,
+            color: MsPdfColors.white,
+            height: MsPdfHeights.blankSpaceContainerHeight,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                companyLogo != null
+                    ? Container(
+                        margin: const EdgeInsets.only(right: 20),
+                        // color: RaPdfColors.black,
+                        height: 80,
+                        width: 80,
+                        child: Image(
+                          companyLogo!,
+                          height: 60,
+                          width: 80,
+                        ),
+                      )
+                    : Container()
+              ],
+            ),
+          ),
           MsTitleRow(
             localeName: localeName,
             msAssessmentDto: msAssessmentDto,

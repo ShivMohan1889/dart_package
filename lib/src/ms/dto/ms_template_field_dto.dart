@@ -40,7 +40,7 @@ class MsTemplateFieldDto {
       templateCloudId: json['templateCloudId'],
       isDeleted: json['isDeleted'],
       order: json['order'],
-      options: json['options'],
+      // options: json['options'],
       type: json['type'],
       values: json['values'],
       cloudCompanyId: json['cloudCompanyId'],

@@ -215,9 +215,10 @@ class MsAssessmentDto {
       phone: json['phone'],
       isUploaded: json['isUploaded'],
       isSubscribed: json['isSubscribed'],
-      createdTimestamp: json['createdTimestamp'],
-      lastUploadedTimestamp: json['lastUploadedTimestamp']?.toDouble(),
-      modifiedTimestamp: json['modifiedTimestamp']?.toDouble(),
+      // createdTimestamp: json['createdTimestamp'],
+      // lastUploadedTimestamp: (json['lastUploadedTimestamp'] as int?)?.toDouble(),
+      // modifiedTimestamp: (json['modifiedTimestamp'] as int?)?.toDouble(),
+      
       folderId: json['folderId'],
       phasePlanApplicable: json['phasePlanApplicable'],
       position: json['position'],

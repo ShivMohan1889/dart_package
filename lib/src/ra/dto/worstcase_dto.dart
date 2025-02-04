@@ -1,18 +1,18 @@
-class WorstcaseDto {
+class WorstCaseDto {
   final int? id;
   final int? score;
   final int? scoreMatrix;
   final String? name;
 
-  WorstcaseDto({
+  WorstCaseDto({
     this.id,
     this.score,
     this.scoreMatrix,
     this.name,
   });
 
-  factory WorstcaseDto.fromJson(Map<String, dynamic> json) {
-    return WorstcaseDto(
+  factory WorstCaseDto.fromJson(Map<String, dynamic> json) {
+    return WorstCaseDto(
       id: json['id'] as int?,
       score: json['score'] as int?,
       scoreMatrix: json['score_matrix'] as int?,

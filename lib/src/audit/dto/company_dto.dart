@@ -130,7 +130,7 @@ class CompanyDto {
       address3: json['address3'],
       town: json['town'],
       county: json['county'],
-      countryId: json['country_id'],
+      countryId: (json['country_id']).toString(),
       city: json['city'],
       postcode: json['postcode'],
       companyLogo: json['company_logo'],
@@ -165,6 +165,7 @@ class CompanyDto {
       phone: json['phone'],
       isMain: json['is_main'],
       inAppActivateStatus: json['in_app_activate_status'],
+      
       subscriptionStatus: json['subscription_status'],
       signOffStatus: json['sign_off_status'],
       signOffStatementApp: json['sign_off_statement_app'],

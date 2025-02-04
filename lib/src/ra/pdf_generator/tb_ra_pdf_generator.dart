@@ -5,7 +5,6 @@ import 'package:dart_pdf_package/src/ra/dto/harm_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/hazard_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/reference_image_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/review_sign_off_user_dto.dart';
-import 'package:dart_pdf_package/src/ra/dto/risk_assessment_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/weather/weather_dto.dart';
 import 'package:dart_pdf_package/src/ra/pdf_generator/models/tb_hazard_row_model.dart';
 import 'package:dart_pdf_package/src/ra/pdf_generator/widgets/ra_header_row.dart';
@@ -35,6 +34,7 @@ class TbRaPdfGenerator {
     this.pdfDocumentFromMs,
     required this.platFormLocaleName,
     required this.showMsFirst,
+    this.harmTextForWeb = false,
   });
 
   Document? pdfDocumentFromMs;
@@ -42,6 +42,9 @@ class TbRaPdfGenerator {
   String platFormLocaleName;
 
   bool showMsFirst;
+
+  /// this flag is used to showed the harm text in the pdf
+  bool harmTextForWeb;
 
   /// risk assessment for which we need to create pdf
   final RiskAssessmentDto theRiskAssessmentDto;
@@ -77,12 +80,9 @@ class TbRaPdfGenerator {
       pdf = pdfDocumentFromMs!;
     }
 
-
-
     if (showMsFirst && theRiskAssessmentDto.msAssessmentDto != null) {
       // Generate MS PDF first
-      MsAssessmentDto msAssessmentDto =
-          theRiskAssessmentDto.msAssessmentDto!;
+      MsAssessmentDto msAssessmentDto = theRiskAssessmentDto.msAssessmentDto!;
 
       TbMsPdfGenerator msPdfGenerator = TbMsPdfGenerator(
         msAssessmentDto: msAssessmentDto,
@@ -112,7 +112,6 @@ class TbRaPdfGenerator {
       await raEntity.prepareEntityForPDF();
       generatePdfFor(pdf, raEntity);
     });
-  
 
     // String raPdfPath = TbFileManager.raPdfPath(
     //     raAssessmentUniqueKey: theRiskAssessmentDto.uniqueKey ?? "");
@@ -311,15 +310,16 @@ class TbRaPdfGenerator {
         riskAssessmentEntity: riskAssessmentEntity);
     // then split additioal control
     int index3 = splitText(
-        text: item.additionalControl ?? "",
-        maxHeight: maxHeight,
-        height: item.height,
-        riskAssessmentEntity: riskAssessmentEntity,);
+      text: item.additionalControl ?? "",
+      maxHeight: maxHeight,
+      height: item.height,
+      riskAssessmentEntity: riskAssessmentEntity,
+    );
     TbHazardRowModel second = TbHazardRowModel();
     second.rating = item.rating;
     second.score = item.score;
     second.additionalRating = item.additionalRating;
-    second.additionalScore = item.additionalScore; 
+    second.additionalScore = item.additionalScore;
     if (index1 > 0) {
       var part1 = item.name?.substring(0, index1);
       var part2 = item.name?.substring(index1);
@@ -513,7 +513,12 @@ class TbRaPdfGenerator {
       }
 
       // String dash = "-";
-      String? harm = setRiskOfHarmOnUploading(personAtRisk: hazard.harm ?? "");
+      String? harm =
+
+          /// i do it because i get different value of harm in case of web
+          harmTextForWeb
+              ? hazard.harm
+              : setRiskOfHarmOnUploading(personAtRisk: hazard.harm ?? "");
 
       String harmName = harm != null ? "($harm)" : "";
 
@@ -700,7 +705,7 @@ class TbRaPdfGenerator {
 
     List<Widget> rowChildren = [];
 
-    if ((riskAssessmentEntity.signoffMode ?? 0) == 0) {
+    if ((riskAssessmentEntity.signOffMode ?? 0) == 0) {
       return [];
     }
     list.add(signOffPageHeading(
@@ -710,7 +715,7 @@ class TbRaPdfGenerator {
     ));
 
     /// this condition is applied to show  manual SignOff review
-    if (riskAssessmentEntity.signoffMode == ReviewSignOffMode.manual) {
+    if (riskAssessmentEntity.signOffMode == ReviewSignOffMode.manual) {
       int numberOfSignOff = riskAssessmentEntity.numberOfSigneeRequired ?? 0;
       int numberOfRowToShow = 3;
       if (numberOfSignOff != 0) {
@@ -852,7 +857,7 @@ class TbRaPdfGenerator {
         if (assessmentImage != null) {
           list.add(
             AssessmentImageSection(
-              opacity:  riskAssessmentEntity.hazardIconOpacity,
+              opacity: riskAssessmentEntity.hazardIconOpacity,
               logoImage: companyLogo,
               isSelected: imageEntity.isSelected,
               image: assessmentImage,
@@ -923,7 +928,6 @@ class TbRaPdfGenerator {
               logoImage: companyLogo,
               image: referenceImage,
               opacity: riskAssessmentEntity.hazardIconOpacity,
-
               riskAssessmentEntity: riskAssessmentEntity,
               index: index,
               raPdfPageTitleType: RaPdfPageTitleType.referenceImage,
@@ -1032,7 +1036,7 @@ class TbRaPdfGenerator {
     }
   }
 
-  Widget mapDisclaimerWidge({
+  Widget mapDisclaimerWidget({
     required Context context,
   }) {
     String disclaimerText =
@@ -1204,12 +1208,12 @@ class TbRaPdfGenerator {
           ),
         );
         if ((riskAssessmentEntity.listWeatherDto ?? []).indexOf(element) == 2) {
-          listWidget.add(mapDisclaimerWidge(
+          listWidget.add(mapDisclaimerWidget(
             context: context,
           ));
         }
       }
-      listWidget.add(mapDisclaimerWidge(
+      listWidget.add(mapDisclaimerWidget(
         context: context,
       ));
     }
@@ -1478,7 +1482,9 @@ class TbRaPdfGenerator {
     }
   }
 
-  static String? setRiskOfHarmOnUploading({required String personAtRisk}) {
+  static String? setRiskOfHarmOnUploading({
+    required String personAtRisk,
+  }) {
     var listHarmEntity = [
       HarmDto(
         name: "Employee (Emp)",
@@ -1533,7 +1539,8 @@ class TbRaPdfGenerator {
       }
       String? names;
       if (listHarmEntity.isNotEmpty) {
-        var listKeyNames = listHarmDto.map((e) => e.keyName).toList();
+        var listKeyNames = 
+        listHarmDto.map((e) => e.keyName).toList();
         names = listKeyNames.join(",");
       }
       return names;

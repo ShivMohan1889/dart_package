@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/audit/dto/company_dto.dart';
 import 'package:dart_pdf_package/src/audit/dto/user_dto.dart';
-import 'package:dart_pdf_package/src/ms/dto/ms_assessment_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/assessment_image_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/harm_dto.dart';
 import 'package:dart_pdf_package/src/ra/dto/hazard_dto.dart';
@@ -60,7 +58,7 @@ class RiskAssessmentDto {
 
   /// Determines mode of the sign off,
   /// manual or on this device
-  int? signoffMode;
+  int? signOffMode;
 
   /// Determines Weather report will be matrix type of standard
   /// user change is matrix from company details page
@@ -351,7 +349,7 @@ class RiskAssessmentDto {
     this.youngPerson2,
     this.serviceUsers,
     this.isApprovalRequired,
-    this.signoffMode,
+    this.signOffMode,
     this.startTime,
     this.workEndDate,
     this.workStartDate,
@@ -398,7 +396,7 @@ class RiskAssessmentDto {
         isApprovalRequired: json['isApprovalRequired'],
         isSignoffRequired: json['isSignoffRequired'],
         approvalMode: json['approvalMode'],
-        signoffMode: json['signoffMode'],
+        signOffMode: json['signoffMode'],
         assessmentType: json['assessmentType'],
         assessmentDate: json['assessmentDate'],
         workStartDate: json['workStartDate'],
@@ -419,7 +417,7 @@ class RiskAssessmentDto {
         zipcode: json['zipcode'],
         isSubscribed: json['isSubscribed'],
         rootId: json['rootId'],
-        // parentId: json['parentId'],
+        parentId: json['parentId'],
         msUniqueKey: json['msUniqueKey'],
         msCloudId: json['msCloudId'],
         cloudUserId: json['cloudUserId'],
@@ -436,31 +434,31 @@ class RiskAssessmentDto {
         oneDriveFileId: json['oneDriveFileId'],
         isSelected: json['isSelected'],
         isDraft: json['isDraft'],
-        listHazards: (json['listHazards'] as List<dynamic>)
-            .map((e) => HazardDto.fromJson(e as Map<String, dynamic>))
+        listHazards: (json['listHazards'] as List<dynamic>?)
+            ?.map((e) => HazardDto.fromJson(e as Map<String, dynamic>))
             .toList(),
-        listKeyStaff: (json['listKeyStaff'] as List<dynamic>)
-            .map((e) => KeyStaffDto.fromJson(e as Map<String, dynamic>))
+        listKeyStaff: (json['listKeyStaff'] as List<dynamic>?)
+            ?.map((e) => KeyStaffDto.fromJson(e as Map<String, dynamic>))
             .toList(),
-        listReferenceImage: (json['listReferenceImage'] as List<dynamic>)
-            .map((e) => ReferenceImageDto.fromJson(e as Map<String, dynamic>))
+        listReferenceImage: (json['listReferenceImage'] as List<dynamic>?)
+            ?.map((e) => ReferenceImageDto.fromJson(e as Map<String, dynamic>))
             .toList(),
-        listAssessmentImage: (json['listAssessmentImage'] as List<dynamic>)
-            .map((e) => AssessmentImageDto.fromJson(e as Map<String, dynamic>))
+        listAssessmentImage: (json['listAssessmentImage'] as List<dynamic>?)
+            ?.map((e) => AssessmentImageDto.fromJson(e as Map<String, dynamic>))
             .toList(),
         listReviewSignOffUsers: (json['listReviewSignOffUsers']
-                as List<dynamic>)
-            .map(
+                as List<dynamic>?)
+            ?.map(
                 (e) => ReviewSignOffUserDto.fromJson(e as Map<String, dynamic>))
             .toList(),
-        listTimeLogs: (json['listTimeLogs'] as List<dynamic>)
-            .map((e) => TimeLogsDto.fromJson(e as Map<String, dynamic>))
+        listTimeLogs: (json['listTimeLogs'] as List<dynamic>?)
+            ?.map((e) => TimeLogsDto.fromJson(e as Map<String, dynamic>))
             .toList(),
-        listWeatherDto: (json['listWeatherEntity'] as List<dynamic>)
-            .map((e) => WeatherDto.fromJson(e as Map<String, dynamic>))
+        listWeatherDto: (json['listWeatherEntity'] as List<dynamic>?)
+          ?.map((e) => WeatherDto.fromJson(e as Map<String, dynamic>))
             .toList(),
-        listHarmDto: (json['listHarmEntity'] as List<dynamic>)
-            .map((e) => HarmDto.fromJson(e as Map<String, dynamic>))
+        listHarmDto: (json['listHarmEntity'] as List<dynamic>?)
+            ?.map((e) => HarmDto.fromJson(e as Map<String, dynamic>))
             .toList(),
         userDto: json['userEntity'] != null
             ? UserDto.fromJson(json['userEntity'] as Map<String, dynamic>)
@@ -477,8 +475,8 @@ class RiskAssessmentDto {
             ? ReviewSignOffUserDto.fromJson(
                 json['reviewUser'] as Map<String, dynamic>)
             : null,
-        listChildren: (json['listChildren'] as List<dynamic>)
-            .map((e) => RiskAssessmentDto.fromJson(e as Map<String, dynamic>))
+        listChildren: (json['listChildren'] as List<dynamic>?)
+            ?.map((e) => RiskAssessmentDto.fromJson(e as Map<String, dynamic>))
             .toList(),
         documentsDirPath: json['documentsDirPath'],
         hazardIconOpacity: json["hazard_icon_opacity"] as int?,

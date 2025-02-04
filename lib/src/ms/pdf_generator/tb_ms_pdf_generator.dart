@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:dart_pdf_package/src/audit/dto/user_dto.dart';
 import 'package:dart_pdf_package/src/audit/pdf_generator/audit_pdf_constants.dart';
 import 'package:dart_pdf_package/src/ms/dto/ms_assessment_statement_dto.dart';
 import 'package:dart_pdf_package/src/ms/dto/ms_header_dto.dart';
@@ -23,7 +21,6 @@ import 'package:pdf/widgets.dart';
 import '../../utils/enums/enum/review_sign_off_mode.dart';
 import '../../utils/enums/enum/review_sign_off_user_type.dart';
 import '../../utils/pdf/tb_pdf_helper.dart';
-import '../../utils/tb_file_manager/tb_file_manager.dart';
 import '../dto/ms_assessment_dto.dart';
 import '../dto/ms_assessment_hazard_icon_dto.dart';
 import '../dto/ms_assessment_image_dto.dart';
@@ -49,6 +46,9 @@ class TbMsPdfGenerator {
   final String platFormLocaleName;
 
   bool showMsFirst;
+  
+  // this flag is used to show the harm text on the web pdf 
+  bool harmTextForWeb;
 
   TbMsPdfGenerator({
     required this.msAssessmentDto,
@@ -57,6 +57,7 @@ class TbMsPdfGenerator {
     this.pdfDocumentFromRa,
     required this.platFormLocaleName,
     required this.showMsFirst,
+    this.harmTextForWeb = false,
   });
 
   final msPdfTextStyle = TbMsPdfTextStyles();
@@ -145,6 +146,7 @@ class TbMsPdfGenerator {
         pdfDocumentFromMs: pdf,
         pdfHelper: pdfHelper,
         showMsFirst: showMsFirst,
+        harmTextForWeb: harmTextForWeb,
       );
 
       await raPdfGenerator.generatePDF();
@@ -357,7 +359,12 @@ class TbMsPdfGenerator {
             templateCloudId: msAssessmentStatementDto.templateCloudId,
             headerCloudId: msAssessmentStatementDto.headerCloudId,
             statementName: msAssessmentStatementDto.statementName,
-            uniqueKey: msAssessmentStatementDto.originalStatementUniqueKey,
+            uniqueKey:
+                msAssessmentStatementDto.originalStatementUniqueKey == "0"
+                    ? msAssessmentStatementDto.uniqueKey
+                    : msAssessmentStatementDto.originalStatementUniqueKey,
+
+            // uniqueKey:  msAssessmentStatementDto.uniqueKey,
             isSelected: 1,
             colorIdentifier: 0,
             parentHeader: msHeaderDto,
@@ -1106,10 +1113,13 @@ class TbMsPdfGenerator {
       for (MsTemplateValueDto valueDto
           in msAssessmentDto?.listMsTemplateValues ?? []) {
         if (valueDto.type == "radio") {
-          if (valueDto.values == "1") {
-            valueDto.values = "Yes";
+          if (valueDto.values == "Yes" || valueDto.values == "No") {
           } else {
-            valueDto.values = "No";
+            if (valueDto.values == "1") {
+              valueDto.values = "Yes";
+            } else {
+              valueDto.values = "No";
+            }
           }
         }
 

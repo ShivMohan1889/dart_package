@@ -48,6 +48,7 @@ class MsTemplateValueDto {
     // Handle date parsing if type is "date"
     String? parsedValue;
     if (json['type'] == 'date') {
+      print( json['value']);
       parsedValue = TbDateTime.dateForWebApis(json['value']);
     } else {
       parsedValue = json['value'] as String?;

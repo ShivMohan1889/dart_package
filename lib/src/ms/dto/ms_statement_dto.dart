@@ -44,6 +44,7 @@ class MsStatementDto {
       statementName: json['statementName'],
       order: json['order'],
       headerCloudId: json['headerCloudId'],
+     
       uniqueKey: json['uniqueKey'],
       cloudUserId: json['cloudUserId'],
       templateCloudId: json['templateCloudId'],
