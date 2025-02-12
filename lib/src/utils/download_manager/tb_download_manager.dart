@@ -38,10 +38,14 @@ class TbDownloadManager {
 
     await Future.forEach(chunksArray, (imageUrls) async {
       await Future.wait(imageUrls.map((item) async {
-        await TbFileManager.downloadImages(
-          sourceURL: item.url,
-          localPath: item.localPath,
-        );
+        try {
+          await TbFileManager.downloadImages(
+            sourceURL: item.url,
+            localPath: item.localPath,
+          );
+        } catch (e) {
+          print("Error downloading image: ${item.url}, Error: $e");
+        }
       }).toList());
     });
   }
@@ -51,31 +55,35 @@ class TbDownloadManager {
     ProgressCallback? onReceiveProgress,
   }) async {
     if (urlPath.fileName.isEmpty) {
+      print("Invalid file name for URL: $urlPath");
       return null;
     }
 
-    // try {
-    var response = await Dio().get(
-      urlPath,
-      options: Options(
-          extra: {"isDownlaoding": true},
+    try {
+      var response = await Dio().get(
+        urlPath,
+        options: Options(
+          extra: {"isDownloading": true},
           responseType: ResponseType.bytes,
           followRedirects: false,
           validateStatus: (status) {
             return (status ?? 0) == 200;
-          }),
-    );
+          },
+        ),
+      );
 
-    if (response.statusCode == 200) {
-      var imageData = Uint8List.fromList(response.data!);
-      final pw.MemoryImage image = pw.MemoryImage(imageData);
-
-      return image;
-    } else {
+      if (response.statusCode == 200 &&
+          response.data != null &&
+          (response.data as List).isNotEmpty) {
+        var imageData = Uint8List.fromList(response.data);
+        return pw.MemoryImage(imageData);
+      } else {
+        print("Download failed or empty image at: $urlPath");
+        return null;
+      }
+    } catch (e) {
+      print("Error downloading file from $urlPath: $e");
       return null;
     }
-    // } catch (e, stacktrace) {
-    //   rethrow;
-    // }
   }
 }

@@ -115,6 +115,7 @@ class AuditQuestionRow extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  // children: []
                   children: chainOptionWidget(
                     context,
                     AuditPdfDimension.pageWidth -
@@ -122,7 +123,7 @@ class AuditQuestionRow extends StatelessWidget {
                         20 -
                         20,
                   ),
-                ),
+                  ),
         ],
       ),
     );
@@ -138,6 +139,8 @@ class AuditQuestionRow extends StatelessWidget {
     double width,
   ) {
     List<Widget> list = [];
+
+    print("the given chain option :-${questionEntity?.chainOption}");
     var options = questionEntity?.chainOption ?? [];
     int totalOption = 5;
     for (int i = 0; i < 5; i++) {

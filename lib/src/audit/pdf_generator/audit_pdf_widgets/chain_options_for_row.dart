@@ -1,4 +1,5 @@
 import 'package:dart_pdf_package/src/audit/dto/chain_option_dto.dart';
+import 'package:pdf/pdf.dart';
 
 import '../audit_pdf_constants.dart';
 import 'package:pdf/widgets.dart';
@@ -14,7 +15,9 @@ class ChainOptionsForPdfRow extends StatelessWidget {
   });
   @override
   Widget build(Context context) {
+    print("the given chain option row :-${chainOptionsForPdf}");
     return Container(
+      color: PdfColors.red,
       // padding: AuditPdfPaddings.chainOptionRowPaddng,
       padding: const EdgeInsets.only(
         left: 20,
