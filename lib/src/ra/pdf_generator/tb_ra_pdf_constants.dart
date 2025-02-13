@@ -96,192 +96,10 @@ class TbRaPdfTextStyles {
     // loadFonts();
     return _singleton;
   }
-
-  static void loadFonts() async {
-    // don't remove this condition
-    // its important
-    // if (loadFontsFlag == true) {
-    //   arialNormalFont =
-    //       pw.Font.ttf(await rootBundle.load('assets/fonts/arial_1.ttf'));
-    //   arialBoldFont =
-    //       pw.Font.ttf(await rootBundle.load('assets/fonts/arialbd.ttf'));
-
-    //   arialItalicFont =
-    //       pw.Font.ttf(await rootBundle.load('assets/fonts/Arial_Italic.ttf'));
-    //   loadFontsFlag = false;
-    // }
-  }
-
-  // // pw.TextStyle msTitleTextStyle() {}
-
-  // /// style for header title text that says RISK ASSESSMENT REPORT
-  // pw.TextStyle headerTextStyle() {
-  //   return pw.TextStyle(
-  //     fontSize: 14,
-  //     fontWeight: FontWeight.bold,
-  //     color: TbRaPdfColors.black,
-  //     font: arialBoldFont,
-  //   );
-  // }
-
-  // /// style for header title text that says RISK ASSESSMENT REPORT
-
-  // pw.TextStyle italicBlack7() {
-  //   return pw.TextStyle(
-  //     fontSize: 7,
-  //     color: TbRaPdfColors.black,
-  //     font: arialItalicFont,
-  //     fontStyle: FontStyle.italic,
-  //   );
-  // }
-
-  // pw.TextStyle italicBlack8() {
-  //   return pw.TextStyle(
-  //     fontSize: 8,
-  //     color: TbRaPdfColors.black,
-  //     font: arialItalicFont,
-  //     fontStyle: FontStyle.italic,
-  //   );
-  // }
-
-  // pw.TextStyle normalWhite8() {
-  //   return pw.TextStyle(
-  //     fontSize: 8,
-  //     color: TbRaPdfColors.white,
-  //   );
-  // }
-
-  // pw.TextStyle normalWhite10() {
-  //   return pw.TextStyle(
-  //     fontSize: 10,
-  //     color: TbRaPdfColors.white,
-  //   );
-  // }
-
-  // pw.TextStyle normalBlack8() {
-  //   return pw.TextStyle(
-  //     fontSize: 8,
-  //     color: TbRaPdfColors.black,
-  //   );
-  // }
-
-  // pw.TextStyle linkBlue8() {
-  //   return pw.TextStyle(
-  //     fontSize: 8,
-  //     color: TbRaPdfColors.blue,
-  //     decoration: TextDecoration.underline,
-  //   );
-  // }
-
-  // pw.TextStyle hazardTableSubHeading() {
-  //   return pw.TextStyle(
-  //     fontSize: 8,
-  //     color: TbRaPdfColors.black,
-  //     font: arialBoldFont,
-  //     fontWeight: FontWeight.bold,
-  //   );
-  // }
-
-  // pw.TextStyle normalBlack9() {
-  //   return pw.TextStyle(
-  //     fontSize: 9,
-  //     color: TbRaPdfColors.black,
-  //     //font: arialItalicFont,
-  //   );
-  // }
-
-  // pw.TextStyle italicBlack9() {
-  //   return pw.TextStyle(
-  //     fontSize: 9,
-  //     color: TbRaPdfColors.black,
-  //     font: arialItalicFont,
-  //     fontStyle: FontStyle.italic,
-  //   );
-  // }
-
-  // pw.TextStyle linkBlue9() {
-  //   return pw.TextStyle(
-  //     fontSize: 9,
-  //     color: TbRaPdfColors.blue,
-  //     decoration: TextDecoration.underline,
-  //   );
-  // }
-
-  // pw.TextStyle boldBlack9() {
-  //   return pw.TextStyle(
-  //     fontSize: 9,
-  //     color: TbRaPdfColors.black,
-  //     font: arialBoldFont,
-  //     fontWeight: FontWeight.bold,
-  //   );
-  // }
-
-  // /// Style for company details in the header
-  // pw.TextStyle boldWhite9() {
-  //   return pw.TextStyle(
-  //     fontSize: 9,
-  //     color: TbRaPdfColors.white,
-  //     font: arialNormalFont,
-  //   );
-  // }
-
-  // /// Style for company details in the header
-  // pw.TextStyle boldWhite13() {
-  //   return pw.TextStyle(
-  //     fontSize: 13,
-  //     color: TbRaPdfColors.white,
-  //     font: arialBoldFont,
-  //     fontWeight: FontWeight.bold,
-  //   );
-  // }
-
-  // pw.TextStyle boldWhite11() {
-  //   return pw.TextStyle(
-  //     fontSize: 11,
-  //     color: TbRaPdfColors.white,
-  //     font: arialBoldFont,
-  //     fontWeight: FontWeight.bold,
-  //   );
-  // }
-
-  // pw.TextStyle weatherCell13() {
-  //   return pw.TextStyle(
-  //     fontSize: 10,
-  //     color: TbRaPdfColors.black,
-  //     font: arialNormalFont,
-  //   );
-  // }
-
-  // /// Style for company details in the header
-  // pw.TextStyle boldWhite15() {
-  //   return pw.TextStyle(
-  //     fontSize: 15,
-  //     color: TbRaPdfColors.white,
-  //     font: arialBoldFont,
-  //     fontWeight: FontWeight.bold,
-  //   );
-  // }
-
-  // pw.TextStyle hazardTableHeading() {
-  //   return pw.TextStyle(
-  //     fontSize: 10,
-  //     color: TbRaPdfColors.black,
-  //     font: arialBoldFont,
-  //     fontWeight: FontWeight.bold,
-  //   );
-  // }
-
-  // pw.TextStyle notUpgradeTextStyle() {
-  //   return pw.TextStyle(
-  //     fontSize: 9,
-  //     color: TbRaPdfColors.upgradeToUnlockColor,
-  //     font: arialNormalFont,
-  //     fontWeight: FontWeight.normal,
-  //   );
-  // }
 }
 
 class TbRaPdfSectionHeights {
+  /// logo section in which has RISK ASSESSMENT FORM Heading and the company logo
   /// logo section in which has RISK ASSESSMENT FORM Heading and the company logo
   static const double LOGO_SECTION = 69;
 
@@ -298,10 +116,10 @@ class TbRaPdfSectionHeights {
   static const double SECOND_PAGE_HEADER_HEIGHT = 149;
 
   static const double FIRST_PAGE_FOOTER_HEIGHT = 165;
-  static const double SECOND_PAGE_FOOTER_HEIGHT = 138;
+  static const double SECOND_PAGE_FOOTER_HEIGHT = 25;
   static const double SIGN_OFF_PAGE_FOOTER_HEIGHT = 20;
 
   static const double FIRST_PAGE_HEIGHT = 104;
-  static const double SECOND_PAGE_HEIGHT = 313;
+  static const double SECOND_PAGE_HEIGHT = 421;
   static const double SIGN_OFF_PAGE_HEIGHT = 297;
 }

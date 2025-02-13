@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_pdf_package/src/audit/dto/audit_assessment_dto.dart';
@@ -9,10 +8,8 @@ import 'package:dart_pdf_package/src/audit/dto/question_dto.dart';
 import 'package:dart_pdf_package/src/audit/dto/section_dto.dart';
 import 'package:dart_pdf_package/src/audit/dto/section_image_dto.dart';
 import 'package:dart_pdf_package/src/audit/dto/user_dto.dart';
-import 'package:dart_pdf_package/src/utils/download_manager/tb_download_manager.dart';
 import 'package:dart_pdf_package/src/utils/enums/enum/audit_enum.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
-import 'package:dart_pdf_package/src/utils/tb_file_manager/tb_file_manager.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
