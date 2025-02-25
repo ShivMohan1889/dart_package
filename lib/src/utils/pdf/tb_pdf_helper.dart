@@ -451,12 +451,11 @@ class TbPdfHelper {
       },
     );
   }
-  
 
   /// ***********************************
   ///   GENERATE MEMORY IMAGE FOR PATH
-  /// 
-  /// 
+  ///
+  ///
   /// ***********************************
   Future<pw.MemoryImage?> generateMemoryImageForPath(String path) async {
     if (path.isEmpty) {

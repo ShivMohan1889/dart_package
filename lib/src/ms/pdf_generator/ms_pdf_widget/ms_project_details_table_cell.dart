@@ -1,12 +1,9 @@
-
-import 'package:dart_pdf_package/src/ms/dto/ms_assessment_dto.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
 import '../tb_ms_pdf_constants.dart';
 
 class MsProjectDetailsTableCell extends StatelessWidget {
-  final MsAssessmentDto? msAssessmentDto;
   final String? templateFieldName;
   final String? templateFieldValues;
 
@@ -24,7 +21,6 @@ class MsProjectDetailsTableCell extends StatelessWidget {
     this.textStyleForFieldName,
     this.templateFieldName,
     this.templateFieldValues,
-    this.msAssessmentDto,
     this.height,
     this.width,
     this.padding,
@@ -40,7 +36,7 @@ class MsProjectDetailsTableCell extends StatelessWidget {
           ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: 96,
@@ -50,7 +46,7 @@ class MsProjectDetailsTableCell extends StatelessWidget {
             ),
           ),
           Container(
-            width: 16,
+            width: 8,
           ),
           Container(
             width: 160,

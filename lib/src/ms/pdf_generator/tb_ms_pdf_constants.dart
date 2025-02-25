@@ -15,18 +15,16 @@ class TbMsPdfWidth {
 
   // width for TbMs Statement Row Widget
   static const double statementWidth = 550;
-
-
 }
 /* ************************************** */
 //  MS PDF HEIGHTS
 /* ************************************** */
 
 class TbMsPdfHeights {
+  static const double COMPANY_DETAILS_BAR = 18;
   static double blankSpaceContainerHeight = 77;
   static const double FIRST_PAGE_HEIGHT = 104;
   static const double FIRST_PAGE_FOOTER_HEIGHT = 165;
-
 }
 /* ************************************** */
 //  MS PDF COLORS
@@ -34,6 +32,8 @@ class TbMsPdfHeights {
 
 class TbMsPdfColors {
   TbMsPdfColors._();
+  static const PdfColor lightGreyBackground =
+      PdfColor(0.98, 0.98, 0.98); // Light grey
   static PdfColor black = PdfColor.fromHex("#000000");
   static PdfColor white = PdfColor.fromHex("#fff");
   static PdfColor greyCompanyDetailsBackground = PdfColor.fromHex("#acacac");
@@ -51,8 +51,6 @@ class TbMsPdfColors {
   static PdfColor projectDetailsBorderColor = PdfColor.fromHex('#acacac');
 
   static PdfColor msTitleRowBorderColor = PdfColor.fromHex('#1f7ac1');
-
-
 }
 
 /* ************************************** */
@@ -206,10 +204,8 @@ class TbMsPdfPaddings {
   );
 
   /// padding for TbMs Sign Off Section Widget
-  static const pw.EdgeInsets paddingForTbMsSignOffSection = pw.EdgeInsets.only(
-    top: 18,
-    left: 20,
-  );
+  static const pw.EdgeInsets paddingForTbMsSignOffSection =
+      pw.EdgeInsets.only(top: 10, left: 20, bottom: 10);
 
 /* ***************--MARGIN--***************** */
 

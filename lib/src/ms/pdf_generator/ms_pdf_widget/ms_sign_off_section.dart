@@ -1,21 +1,14 @@
-import 'package:dart_pdf_package/src/ms/dto/review_sign_off_dto.dart';
+import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_data.dart';
 import 'package:pdf/widgets.dart';
 
 import '../../../utils/pdf/tb_pdf_helper.dart';
-import '../../dto/ms_assessment_dto.dart';
 import '../tb_ms_pdf_constants.dart';
 
 class MsSignOffSection extends StatelessWidget {
-  final ReviewSignOffUserDto? user;
-  final MemoryImage? signatureImage;
-  final String? signOffDate;
-  final String localeName;
+  final ReviewSignOffSignatureData? user;
 
   MsSignOffSection({
     this.user,
-    this.signatureImage,
-    this.signOffDate,
-    required this.localeName,
   });
 
   @override
@@ -37,9 +30,9 @@ class MsSignOffSection extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              child: signatureImage != null
+              child: user?.signatureMemoryImage != null
                   ? Image(
-                      signatureImage!,
+                      user!.signatureMemoryImage!,
                     )
                   : null,
             ),
@@ -55,14 +48,14 @@ class MsSignOffSection extends StatelessWidget {
                 ),
               ),
               SizedBox(width: 5.0),
-              Text(
-                "${user?.firstName ?? ""} ${user?.lastName ?? ""}",
-                style: TbPdfHelper().textStyleGenerator(
-                  font: Theme.of(context).header0.font,
-                  color: TbMsPdfColors.black,
-                  fontSize: 8,
-                ),
-              ),
+              // Text(
+              //   "${user?.firstName ?? ""} ${user?.lastName ?? ""}",
+              //   style: TbPdfHelper().textStyleGenerator(
+              //     font: Theme.of(context).header0.font,
+              //     color: TbMsPdfColors.black,
+              //     fontSize: 8,
+              //   ),
+              // ),
             ],
           ),
           SizedBox(height: 4.0),
@@ -78,10 +71,7 @@ class MsSignOffSection extends StatelessWidget {
               ),
               SizedBox(width: 5.0),
               Text(
-                // signOffDate ?? '',
-                TbPdfHelper.dateStringForLocaleInPdf(
-                    date: signOffDate ?? "", localeName: localeName),
-
+                user?.date ?? "",
                 style: TbPdfHelper().textStyleGenerator(
                   font: Theme.of(context).header0.font,
                   color: TbMsPdfColors.black,

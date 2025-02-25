@@ -34,7 +34,7 @@ class MsStatementRow extends StatelessWidget {
             height: 3,
             width: 3,
             decoration: BoxDecoration(
-              color: PdfColors.blue,
+              color: PdfColors.black,
               shape: BoxShape.circle,
               borderRadius: BorderRadius.circular(3),
             ),

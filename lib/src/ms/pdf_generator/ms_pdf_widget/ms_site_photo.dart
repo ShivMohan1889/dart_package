@@ -12,10 +12,7 @@ class MsSitePhoto extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      padding: const EdgeInsets.only(
-        left: 20,
-        top: 20,
-      ),
+      padding: const EdgeInsets.only(left: 20, top: 8, bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -24,7 +21,7 @@ class MsSitePhoto extends StatelessWidget {
             text: "Site Photo:",
             textStyle: TbPdfHelper().textStyleGenerator(
               font: Theme.of(context).header0.fontBold,
-              color: MsPdfColors.msBlueThemeColor,
+              color: MsPdfColors.black,
               fontSize: 12,
             ),
           )),
@@ -37,10 +34,9 @@ class MsSitePhoto extends StatelessWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
-                  // maxWidth:  300
-                  // maxHeight: 280,
-                  maxHeight:   250
-                ),
+                    // maxWidth:  300
+                    // maxHeight: 280,
+                    maxHeight: 250),
                 child: Image(
                   memoryImage!,
                   fit: BoxFit.contain,

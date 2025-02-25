@@ -221,8 +221,6 @@ class AuditPdfTextStyles {
 }
 // ignore_for_file: constant_identifier_names
 
-
-
 /* ************************************** */
 //  MS PDF WIDH
 /* ************************************** */
@@ -248,6 +246,8 @@ class MsPdfHeights {
 
 class MsPdfColors {
   MsPdfColors._();
+  // In your TbMsPdfColors class or wherever your colors are defined
+
   static PdfColor black = PdfColor.fromHex("#000000");
   static PdfColor white = PdfColor.fromHex("#fff");
   static PdfColor greyCompanyDetailsBackground = PdfColor.fromHex("#acacac");
@@ -319,6 +319,9 @@ class MsPdfBoxDecorations {
 
 class MsPdfPaddings {
 /**************** PADDING **************** */
+
+  static const pw.EdgeInsets pageHorizontalPadding =
+      pw.EdgeInsets.symmetric(horizontal: 15);
 
   /// padding for Review Sign off User Row
   static const pw.EdgeInsets rightAndLeftPadding =
@@ -475,4 +478,3 @@ class MsPdfTextStyles {
     return _singleton;
   }
 }
-
