@@ -101,7 +101,7 @@ class AuditQuestionRow extends StatelessWidget {
                         // "${questionEntity?.values}",
                         TbPdfHelper.dateStringForLocaleInPdf(
                           date: questionEntity?.values ?? "",
-                          localeName: localeName,
+                         
                         ),
                         // style: auditPdfTextStyle.questionNameTextStyle(),
                         style: TbPdfHelper().textStyleGenerator(

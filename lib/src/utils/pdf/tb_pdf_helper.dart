@@ -422,9 +422,7 @@ class TbPdfHelper {
     PageOrientation? pageOrientation,
     PdfPageFormat? pageFormat,
     ThemeData? themeData,
-
-    /// if this isSubcribed is equal to 1 then we not should the watermark on the pdf
-    required int isSubcribed,
+    required int isSubscribed,
   }) {
     ThemeData.withFont();
 
@@ -436,7 +434,7 @@ class TbPdfHelper {
       buildForeground: (context) {
         return pw.FullPage(
           ignoreMargins: true,
-          child: isSubcribed == 1
+          child: isSubscribed == 1
               ? Container()
               : pw.Watermark(
                   fit: BoxFit.fill,
@@ -468,6 +466,10 @@ class TbPdfHelper {
     }
   }
 
+  Uint8List decodeFont(String fontBase64) {
+    return base64Decode(fontBase64);
+  }
+
   /* ************************************* / 
   // DATE STRING FOR LOCALE  IN PDF
   
@@ -475,25 +477,16 @@ class TbPdfHelper {
  / ************************************* */
   static String dateStringForLocaleInPdf({
     required String date,
-    required String localeName,
   }) {
     if (date.isNotEmpty) {
-      if (localeName == RaLocaleType.enUS) {
-        DateTime dateTime = TbDateTime.inputFormat.parse(date);
+      DateTime dateTime = TbDateTime.inputFormat.parse(date);
 
-        String enINDate = TbDateTime.inputFormatForEnUs.format(dateTime);
+      String enINDate = TbDateTime.inputFormatForEnUs.format(dateTime);
 
-        return enINDate;
-      } else {
-        return date;
-      }
+      return enINDate;
     } else {
       return date;
     }
-  }
-
-  Uint8List decodeFont(String fontBase64) {
-    return base64Decode(fontBase64);
   }
 
   pw.Font loadFont(String fontBase64) {

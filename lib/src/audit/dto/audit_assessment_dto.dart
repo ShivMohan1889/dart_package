@@ -122,7 +122,7 @@ class AuditAssessmentDto {
 
   // JSON factory method to read from JSON
   factory AuditAssessmentDto.fromJsonString(String jsonString) {
-    Map<String, dynamic> json = Utils.mapFromJsonString(jsonString);
+    Map<String, dynamic> json = TbUtils.mapFromJsonString(jsonString);
 
     var dto = AuditAssessmentDto(
       id: json["id"],

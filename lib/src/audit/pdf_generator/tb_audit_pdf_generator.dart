@@ -94,7 +94,7 @@ class TbAuditPdfGenerator {
       pw.MultiPage(
         pageTheme: TbPdfHelper().returnPageTheme(
           waterMarkImage: pdfHelper.msWaterMarkImage,
-          isSubcribed: auditAssessmentEntity?.isSubscribed ?? 0,
+          isSubscribed: auditAssessmentEntity?.isSubscribed ?? 0,
           pageFormat: const PdfPageFormat(
             21.0 * PdfPageFormat.cm,
             29.7 * PdfPageFormat.cm,
@@ -198,13 +198,13 @@ class TbAuditPdfGenerator {
 
     Widget summeryTableRow = AuditSummaryTable(chainOptionMap: chainOptionMap);
 
-  listWidget.add(summeryTableRow);
+    listWidget.add(summeryTableRow);
 
     pdf.addPage(
       pw.MultiPage(
         pageTheme: TbPdfHelper().returnPageTheme(
           waterMarkImage: pdfHelper.msWaterMarkImage,
-          isSubcribed: auditAssessmentEntity?.isSubscribed ?? 0,
+          isSubscribed: auditAssessmentEntity?.isSubscribed ?? 0,
           pageFormat: const PdfPageFormat(
             21.0 * PdfPageFormat.cm,
             29.7 * PdfPageFormat.cm,
@@ -264,7 +264,7 @@ class TbAuditPdfGenerator {
       pw.MultiPage(
         pageTheme: TbPdfHelper().returnPageTheme(
           waterMarkImage: pdfHelper.msWaterMarkImage,
-          isSubcribed: auditAssessmentEntity?.isSubscribed ?? 0,
+          isSubscribed: auditAssessmentEntity?.isSubscribed ?? 0,
           pageFormat: const PdfPageFormat(
             21.0 * PdfPageFormat.cm,
             29.7 * PdfPageFormat.cm,
@@ -769,7 +769,7 @@ class TbAuditPdfGenerator {
       auditPdfItems.add(questionCommentWidget);
     }
 
-    if ((questionEntity.listAuditImageDto ??  []).isNotEmpty) {
+    if ((questionEntity.listAuditImageDto ?? []).isNotEmpty) {
       // list of image related to  question entity
       var list = questionEntity.listAuditImageDto;
 

@@ -26,8 +26,8 @@ class TbIrDateTime extends StatelessWidget {
         children: [
           Container(
             height: 19,
-            width:
-                TbIrPdfDimension.pageWidth - TbIrPdfDimension.spaceUsedForPadding,
+            width: TbIrPdfDimension.pageWidth -
+                TbIrPdfDimension.spaceUsedForPadding,
             decoration: BoxDecoration(
               color: TbIncidentReportPdfColor.incidentReportThemeColor,
               border: Border.all(
@@ -60,15 +60,14 @@ class TbIrDateTime extends StatelessWidget {
             // firstValue: " ${incidentReportEntity?.reportingDate}",
             firstValue: TbPdfHelper.dateStringForLocaleInPdf(
               date: incidentReportDto?.reportingDate ?? "",
-              localeName: localName,
             ),
             secondTitle: "Time:",
             secondValue: " ${incidentReportDto?.reportingTime}",
             secondContainerWidth: 300,
           ),
           Container(
-            width:
-                TbIrPdfDimension.pageWidth - TbIrPdfDimension.spaceUsedForPadding,
+            width: TbIrPdfDimension.pageWidth -
+                TbIrPdfDimension.spaceUsedForPadding,
             padding: const EdgeInsets.only(
               left: 7,
               top: 8,

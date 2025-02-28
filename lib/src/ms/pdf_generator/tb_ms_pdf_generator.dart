@@ -103,7 +103,7 @@ class TbMsPdfGenerator {
     pdf.addPage(
       MultiPage(
         pageTheme: TbPdfHelper().returnPageTheme(
-          isSubcribed: pdfData.isSubscribed ?? 0,
+          isSubscribed: pdfData.isSubscribed ?? 0,
           waterMarkImage: pdfHelper.msWaterMarkImage,
           themeData: pdfHelper.msTheme,
           pageFormat: const PdfPageFormat(

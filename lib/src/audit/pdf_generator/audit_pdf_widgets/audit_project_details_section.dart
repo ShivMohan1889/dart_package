@@ -49,7 +49,7 @@ class AuditProjectDetailSection extends StatelessWidget {
                 ? "Upgrade to Unlock"
                 // : dateEntity.value ?? "",
                 : TbPdfHelper.dateStringForLocaleInPdf(
-                    date: dateEntity.value ?? "", localeName: localeName),
+                    date: dateEntity.value ?? ""),
             fieldValueTextStyle: auditAssessmentEntity?.isSubscribed == 0
                 ? TbPdfHelper().textStyleGenerator(
                     font: Theme.of(context).header0.fontBoldItalic,

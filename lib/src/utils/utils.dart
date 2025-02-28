@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:uuid/uuid.dart';
 
-class Utils {
+class TbUtils {
   static var _theUuid = const Uuid();
 
   static String uuid() {
-    String key = Utils._theUuid.v4();
+    String key = TbUtils._theUuid.v4();
 
     // if (Platform.isIOS == true) {
     //   key = "iOS_$key";
@@ -20,7 +20,7 @@ class Utils {
     return jsonDecode(jsonString);
   }
 
-    static String hazardGridCellIdentifier(int number) {
+  static String hazardGridCellIdentifier(int number) {
     int row = (number ~/ 13) + 1;
     int col = (number % 13) + 1;
     String columnLetter = String.fromCharCode(64 + row);
@@ -33,11 +33,8 @@ class Utils {
     return (col * 13) + row;
   }
 
-
-
   static double convertToOpacity(int sliderValue) {
     // Convert slider value (1-10) to opacity (0.1-1.0)
     return sliderValue / 10;
   }
-
 }
