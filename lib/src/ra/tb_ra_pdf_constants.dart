@@ -1,6 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
-import 'package:dart_pdf_package/src/ms/pdf_generator/tb_ms_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';

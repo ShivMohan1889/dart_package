@@ -1,5 +1,5 @@
-import 'package:dart_pdf_package/src/ra/pdf_generator/tb_ra_pdf_generator.dart';
-import 'package:dart_pdf_package/src/ra/pdf_generator/widgets/hazard_text.dart';
+import 'package:dart_pdf_package/src/ra/tb_ra_pdf_generator.dart';
+import 'package:dart_pdf_package/src/ra/widgets/hazard_text.dart';
 import 'package:dart_pdf_package/src/utils/extensions/string_extension.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 import 'package:pdf/pdf.dart';

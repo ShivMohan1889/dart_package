@@ -1,4 +1,4 @@
-import 'package:dart_pdf_package/src/ra/pdf_generator/tb_ra_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ra/tb_ra_pdf_constants.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 

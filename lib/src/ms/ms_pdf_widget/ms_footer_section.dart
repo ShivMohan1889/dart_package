@@ -1,5 +1,5 @@
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_data.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/tb_ms_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
+import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';

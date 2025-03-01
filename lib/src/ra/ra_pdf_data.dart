@@ -1,4 +1,4 @@
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_data.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
 import 'package:pdf/widgets.dart';
 
 /// A dedicated model class to hold all the data required for PDF generation
@@ -50,14 +50,14 @@ class RaPdfData {
     this.reviewSignature,
     this.listChildren = const [],
     this.msPdfData,
-    this.signOffStatementReport,
+    required this.signOffStatementReport,
   });
   final String titleForPDF;
   final String? companyLogo;
   final MemoryImage? companyLogoMemoryImage;
   final String companyDetails;
   final String companyPhoneEmail;
-  final String? signOffStatementReport;
+  final String signOffStatementReport;
 
   final String name;
   final String description;

@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:dart_pdf_package/dart_pdf_package.dart';
-import 'package:dart_pdf_package/src/ra/pdf_generator/tb_ra_pdf_constants.dart';
-import 'package:dart_pdf_package/src/ra/pdf_generator/widgets/sign_off_signature.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_sign_off_section.dart';
+import 'package:dart_pdf_package/src/ra/tb_ra_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ra/widgets/sign_off_signature.dart';
 import 'package:dart_pdf_package/src/utils/enums/enum/ra_pdf_title_type.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -215,6 +216,7 @@ class TbRaPdfGenerator {
         },
         header: (context) {
           return RaHeaderRow(
+            headerForSignOff: true,
             pdfHelper: TbPdfHelper(),
             raPdfData: pdfData,
             pageNo: context.pageNumber,
@@ -238,10 +240,12 @@ class TbRaPdfGenerator {
 
     List<Widget> rowChildren = [];
 
-    list.add(signOffPageHeading(
-      context: context,
-      pdfData: raPdfData,
-    ));
+    list.add(
+      signOffPageHeading(
+        context: context,
+        pdfData: raPdfData,
+      ),
+    );
 
     for (ReviewSignOffSignatureData user in raPdfData.signOffUsers) {
       rowChildren.add(
@@ -255,7 +259,7 @@ class TbRaPdfGenerator {
                 vertical: 15,
               ),
               child: Container(
-                child: SignOffSignature(
+                child: MsSignOffSection(
                   user: user,
                 ),
               ),
@@ -278,10 +282,7 @@ class TbRaPdfGenerator {
 /* ************************************** */
   // SIGN OFF PAGE HEADING
   /* ************************************** */
-  Widget signOffPageHeading(
-      // RiskAssessmentEntity riskAssessmentEntity,
-      // Context context,
-      {
+  Widget signOffPageHeading({
     required RaPdfData pdfData,
     required Context context,
   }) {
@@ -293,7 +294,7 @@ class TbRaPdfGenerator {
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            pdfData.signOffStatementReport ?? "sign_off_statement_report",
+            pdfData.signOffStatementReport,
             // style: raPdfTextStyles.boldBlack9(),
             style: TbPdfHelper().textStyleGenerator(
               color: PdfColors.black,
@@ -767,7 +768,7 @@ class TbRaPdfGenerator {
             alignment: Alignment.bottomRight,
             padding: EdgeInsets.only(bottom: 15, right: 20),
             child: Text(
-              "Page No: ${context.pageNumber}/${pdfData.referenceNumber}",
+              "Page No: ${context.pageNumber}${pdfData.referenceNumber != null ? '/${pdfData.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
                 font: Theme.of(context).header0.fontItalic,
                 color: TbRaPdfColors.black,
@@ -828,7 +829,7 @@ class TbRaPdfGenerator {
             padding: EdgeInsets.only(bottom: 15, right: 20),
             alignment: Alignment.bottomRight,
             child: Text(
-              "Page No: ${context.pageNumber}/${pdfData.referenceNumber}",
+              "Page No: ${context.pageNumber}${pdfData.referenceNumber != null ? '/${pdfData.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
                 font: Theme.of(context).header0.fontItalic,
                 color: TbRaPdfColors.black,
@@ -883,7 +884,7 @@ class TbRaPdfGenerator {
             alignment: Alignment.bottomRight,
             padding: EdgeInsets.only(bottom: 15, right: 20),
             child: Text(
-              "Page No: ${context.pageNumber}/${pdfData.referenceNumber}",
+              "Page No: ${context.pageNumber}${pdfData.referenceNumber != null ? '/${pdfData.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
                 font: Theme.of(context).header0.fontItalic,
                 color: TbRaPdfColors.black,

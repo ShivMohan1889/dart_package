@@ -1,11 +1,10 @@
 import 'package:dart_pdf_package/dart_pdf_package.dart';
-import 'package:dart_pdf_package/src/ra/pdf_generator/tb_ra_pdf_constants.dart';
-import 'package:dart_pdf_package/src/ra/pdf_generator/widgets/hazard_heading_row.dart';
-import 'package:dart_pdf_package/src/ra/pdf_generator/widgets/ra_company_details_row.dart';
-import 'package:dart_pdf_package/src/ra/pdf_generator/widgets/ra_logo_row.dart';
-import 'package:dart_pdf_package/src/ra/pdf_generator/widgets/ra_project_row.dart';
+import 'package:dart_pdf_package/src/ra/tb_ra_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ra/widgets/hazard_heading_row.dart';
+import 'package:dart_pdf_package/src/ra/widgets/ra_company_details_row.dart';
+import 'package:dart_pdf_package/src/ra/widgets/ra_logo_row.dart';
+import 'package:dart_pdf_package/src/ra/widgets/ra_project_row.dart';
 import 'package:dart_pdf_package/src/utils/enums/enum/ra_pdf_title_type.dart';
-import './../ra_pdf_data.dart';
 import 'package:pdf/widgets.dart';
 
 /// creates the header for the pdf, depending on the [pageNo]
@@ -13,16 +12,22 @@ class RaHeaderRow extends StatelessWidget {
   final RaPdfData raPdfData;
   final int? pageNo;
   final TbPdfHelper pdfHelper;
+  final bool? headerForSignOff;
 
   RaHeaderRow({
     required this.raPdfData,
     required this.pageNo,
     required this.pdfHelper,
+    this.headerForSignOff,
   });
 
   @override
   Widget build(Context context) {
-    return header();
+    if (headerForSignOff == true) {
+      return signOffHeader();
+    } else {
+      return header();
+    }
   }
 
   /* ************************************** */
@@ -72,6 +77,30 @@ class RaHeaderRow extends StatelessWidget {
                     isStandard: raPdfData.assessmentType,
                   ),
                 )
+        ],
+      ),
+    );
+  }
+
+  /* ************************************** */
+  // HEADER FOR SIGN OFF PAGE
+  /* ************************************** */
+  Widget signOffHeader() {
+    var height = TbRaPdfSectionHeights.LOGO_SECTION +
+        TbRaPdfSectionHeights.COMPANY_DETAILS_BAR +
+        12;
+    return Container(
+      height: height,
+      width: double.infinity,
+      child: Column(
+        children: [
+          RaLogoRow(
+              pageTitleType: RaPdfPageTitleType.normal,
+              logoImage: raPdfData.companyLogoMemoryImage),
+          RaCompanyDetailsRow(
+            companyDetails: raPdfData.companyDetails,
+            companyPhoneEmail: raPdfData.companyPhoneEmail,
+          ),
         ],
       ),
     );

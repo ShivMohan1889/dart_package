@@ -1,8 +1,8 @@
-import 'package:dart_pdf_package/src/ms/pdf_generator/tb_ms_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 import 'package:pdf/widgets.dart';
 
-import '../../../audit/pdf_generator/audit_pdf_constants.dart';
-import '../../../utils/pdf/tb_pdf_helper.dart';
+import '../../audit/pdf_generator/audit_pdf_constants.dart';
+import '../../utils/pdf/tb_pdf_helper.dart';
 
 class MsCompanyDetailsRow extends StatelessWidget {
   final String? companyDetails;

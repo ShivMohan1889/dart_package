@@ -1,12 +1,12 @@
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_data.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_company_details_row.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_title_row.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_company_details_row.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_title_row.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart';
 
-import '../../../audit/pdf_generator/audit_pdf_constants.dart';
+import '../../audit/pdf_generator/audit_pdf_constants.dart';
 import '../tb_ms_pdf_constants.dart';
 
 /// this widget is use to show  header   of the pdf

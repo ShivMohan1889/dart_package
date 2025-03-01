@@ -1,4 +1,4 @@
-import 'package:dart_pdf_package/src/ms/pdf_generator/tb_ms_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 import 'package:pdf/widgets.dart';
 
 class MsStatementHazardIconsRow extends StatelessWidget {

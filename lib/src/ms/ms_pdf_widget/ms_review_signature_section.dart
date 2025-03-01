@@ -1,8 +1,8 @@
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_border.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_border.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
-import '../../../utils/pdf/tb_pdf_helper.dart';
+import '../../utils/pdf/tb_pdf_helper.dart';
 import '../tb_ms_pdf_constants.dart';
 
 class MsReviewSignatureSection extends StatelessWidget {

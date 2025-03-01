@@ -1,24 +1,24 @@
 import 'dart:typed_data';
 
 import 'package:dart_pdf_package/src/audit/pdf_generator/audit_pdf_constants.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_data.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
 
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_assessment_image_box.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_assessment_image_row.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_border.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_pdf_custom_text.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_project_details_section.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_sign_off_section.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_site_photo.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/ms_pdf_widget/ms_statement_row.dart';
-import 'package:dart_pdf_package/src/ms/pdf_generator/tb_ms_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_assessment_image_box.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_assessment_image_row.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_border.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_pdf_custom_text.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_project_details_section.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_sign_off_section.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_site_photo.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_statement_row.dart';
+import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 
 import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart';
 
-import '../../utils/enums/enum/review_sign_off_mode.dart';
-import '../../utils/pdf/tb_pdf_helper.dart';
+import '../utils/enums/enum/review_sign_off_mode.dart';
+import '../utils/pdf/tb_pdf_helper.dart';
 
 import 'ms_pdf_widget/ms_footer_section.dart';
 import 'ms_pdf_widget/ms_header_row.dart';
@@ -398,17 +398,11 @@ class TbMsPdfGenerator {
 
       // Add second user if available
       if (i + 1 < signOffUsers.length) {
-        rowChildren.add(Container(
-          width: TbMsPdfWidth.pageWidth / 2 - 25, // Half width with padding
-          decoration: BoxDecoration(
-            color: TbMsPdfColors.lightGreyBackground, // Light grey background
-            border: Border.all(width: 0.5, color: PdfColors.grey300),
-            borderRadius: BorderRadius.circular(4), // Rounded corners
-          ),
-          child: MsSignOffSection(
+        rowChildren.add(
+          MsSignOffSection(
             user: signOffUsers[i + 1],
           ),
-        ));
+        );
       } else {
         // Add empty container for even spacing
         rowChildren.add(Container(

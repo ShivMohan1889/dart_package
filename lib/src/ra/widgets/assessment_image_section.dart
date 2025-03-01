@@ -1,9 +1,9 @@
-import 'package:dart_pdf_package/src/ra/pdf_generator/ra_pdf_data.dart';
+import 'package:dart_pdf_package/src/ra/ra_pdf_data.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
-import '../../../utils/enums/enum/ra_pdf_title_type.dart';
-import '../../../utils/utils.dart';
+import '../../utils/enums/enum/ra_pdf_title_type.dart';
+import '../../utils/utils.dart';
 import 'ra_company_details_row.dart';
 import 'ra_logo_row.dart';
 
