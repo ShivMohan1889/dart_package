@@ -1,4 +1,3 @@
-
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 
 import '../audit_pdf_constants.dart';
@@ -21,16 +20,14 @@ class AuditProjectDetailsTableCell extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      // color: PdfColors.pink,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            // color: PdfColors.amber,
             width: AuditPdfDimension.projectDetailsTableCellWidth,
             child: AuditPdfCustomText(
-              text: fieldName,
+              text: fieldName?.trim(),
               textStyle: TbPdfHelper().textStyleGenerator(
                 font: Theme.of(context).header0.fontBoldItalic,
                 color: AuditPdfColors.auditTextStyleColor,

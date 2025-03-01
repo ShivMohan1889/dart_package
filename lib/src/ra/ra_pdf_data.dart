@@ -102,6 +102,123 @@ class RaPdfData {
   final MsPdfData? msPdfData;
 
   String? get uniqueKey => '${name}_${referenceNumber ?? ""}';
+
+  Map<String, dynamic> toJson() {
+    return {
+      'titleForPDF': titleForPDF,
+      'companyLogo': companyLogo,
+      'companyDetails': companyDetails,
+      'companyPhoneEmail': companyPhoneEmail,
+      'name': name,
+      'description': description,
+      'referenceNumber': referenceNumber,
+      'isSubscribed': isSubscribed,
+      'assessmentType': assessmentType,
+      'assessmentDate': assessmentDate,
+      'workStartDate': workStartDate,
+      'workEndDate': workEndDate,
+      'anotherAssessmentRequired': anotherAssessmentRequired,
+      'anotherAssessmentDate': anotherAssessmentDate,
+      'location': location,
+      'fire': fire,
+      'coshh': coshh,
+      'manualHandling': manualHandling,
+      'displayHandling': displayHandling,
+      'youngPerson': youngPerson,
+      'employees': employees,
+      'visitors': visitors,
+      'contractors': contractors,
+      'membersOfPublic': membersOfPublic,
+      'others': others,
+      'nursingExpectantMums': nursingExpectantMums,
+      'youngPerson2': youngPerson2,
+      'disabled': disabled,
+      'serviceUsers': serviceUsers,
+      'signOffMode': signOffMode,
+      'approvalMode': approvalMode,
+      'numberOfSigneeRequired': numberOfSigneeRequired,
+      'hazardIconOpacity': hazardIconOpacity,
+      'hazards': hazards.map((h) => h.toJson()).toList(),
+      'keyStaff': keyStaff,
+      'assessmentImages': assessmentImages.map((img) => img.toJson()).toList(),
+      'referenceImages': referenceImages.map((img) => img.toJson()).toList(),
+      'weatherItems': weatherItems.map((w) => w.toJson()).toList(),
+      'signOffUsers': signOffUsers.map((u) => u.toJson()).toList(),
+      'userSignature': userSignature.toJson(),
+      'reviewSignature': reviewSignature?.toJson(),
+      'listChildren': listChildren.map((child) => child.toJson()).toList(),
+      'msPdfData': msPdfData?.toJson(),
+      'signOffStatementReport': signOffStatementReport,
+    };
+  }
+
+  /// Create a model from a JSON map, ignoring MemoryImage fields
+  static RaPdfData fromJson(Map<String, dynamic> json) {
+    return RaPdfData(
+      titleForPDF: json['titleForPDF'],
+      companyLogo: json['companyLogo'],
+      companyDetails: json['companyDetails'],
+      companyPhoneEmail: json['companyPhoneEmail'],
+      name: json['name'],
+      description: json['description'],
+      referenceNumber: json['referenceNumber'],
+      isSubscribed: json['isSubscribed'],
+      assessmentType: json['assessmentType'],
+      assessmentDate: json['assessmentDate'],
+      workStartDate: json['workStartDate'],
+      workEndDate: json['workEndDate'],
+      anotherAssessmentRequired: json['anotherAssessmentRequired'],
+      anotherAssessmentDate: json['anotherAssessmentDate'],
+      location: json['location'],
+      fire: json['fire'],
+      coshh: json['coshh'],
+      manualHandling: json['manualHandling'],
+      displayHandling: json['displayHandling'],
+      youngPerson: json['youngPerson'],
+      employees: json['employees'],
+      visitors: json['visitors'],
+      contractors: json['contractors'],
+      membersOfPublic: json['membersOfPublic'],
+      others: json['others'],
+      nursingExpectantMums: json['nursingExpectantMums'],
+      youngPerson2: json['youngPerson2'],
+      disabled: json['disabled'],
+      serviceUsers: json['serviceUsers'],
+      signOffMode: json['signOffMode'],
+      approvalMode: json['approvalMode'],
+      numberOfSigneeRequired: json['numberOfSigneeRequired'],
+      hazardIconOpacity: json['hazardIconOpacity'],
+      hazards: (json['hazards'] as List)
+          .map((h) => HazardPdfModel.fromJson(h))
+          .toList(),
+      keyStaff: List<String>.from(json['keyStaff']),
+      assessmentImages: (json['assessmentImages'] as List)
+          .map((img) => AssessmentImagePdfModel.fromJson(img))
+          .toList(),
+      referenceImages: (json['referenceImages'] as List)
+          .map((img) => ReferenceImagePdfModel.fromJson(img))
+          .toList(),
+      weatherItems: (json['weatherItems'] as List)
+          .map((w) => WeatherPdfModel.fromJson(w))
+          .toList(),
+      signOffUsers: (json['signOffUsers'] as List)
+          .map((u) => ReviewSignOffSignatureData.fromJson(u))
+          .toList(),
+      userSignature: UserSignatureData.fromJson(json['userSignature']),
+      reviewSignature: json['reviewSignature'] != null
+          ? ReviewSignOffSignatureData.fromJson(json['reviewSignature'])
+          : null,
+      listChildren: json['listChildren'] != null
+          ? (json['listChildren'] as List)
+              .map((child) => RaPdfData.fromJson(child))
+              .toList()
+          : [],
+      msPdfData: json['msPdfData'] != null
+          ? MsPdfData.fromJson(json['msPdfData'])
+          : null,
+      signOffStatementReport: json['signOffStatementReport'],
+    );
+  }
 }
 
 class HazardPdfModel {
@@ -138,6 +255,48 @@ class HazardPdfModel {
   final MemoryImage? memoryImage;
   final List<String> existingControls;
   final List<String>? additionalControls;
+
+  /// Convert the model to a JSON map, ignoring MemoryImage fields
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'cellPosition': cellPosition,
+      'harm': harm,
+      'worstCase': worstCase,
+      'likelihoods': likelihoods,
+      'additionalLikelihood': additionalLikelihood,
+      'score': score,
+      'rating': rating,
+      'additionalRating': additionalRating,
+      'additionalScore': additionalScore,
+      'cellRiskNumber': cellRiskNumber,
+      'imageURL': imageURL,
+      'existingControls': existingControls,
+      'additionalControls': additionalControls,
+    };
+  }
+
+  /// Create a model from a JSON map, ignoring MemoryImage fields
+  static HazardPdfModel fromJson(Map<String, dynamic> json) {
+    return HazardPdfModel(
+      name: json['name'],
+      cellPosition: json['cellPosition'],
+      harm: json['harm'],
+      worstCase: json['worstCase'],
+      likelihoods: json['likelihoods'],
+      additionalLikelihood: json['additionalLikelihood'],
+      score: json['score'],
+      rating: json['rating'],
+      additionalRating: json['additionalRating'],
+      additionalScore: json['additionalScore'],
+      cellRiskNumber: json['cellRiskNumber'],
+      imageURL: json['imageURL'],
+      existingControls: List<String>.from(json['existingControls']),
+      additionalControls: json['additionalControls'] != null
+          ? List<String>.from(json['additionalControls'])
+          : null,
+    );
+  }
 }
 
 class AssessmentImagePdfModel {
@@ -152,6 +311,24 @@ class AssessmentImagePdfModel {
   final String? image;
   final MemoryImage? memoryImage;
   final int index;
+
+  /// Convert the model to a JSON map, ignoring MemoryImage fields
+  Map<String, dynamic> toJson() {
+    return {
+      'isSelected': isSelected,
+      'image': image,
+      'index': index,
+    };
+  }
+
+  /// Create a model from a JSON map, ignoring MemoryImage fields
+  static AssessmentImagePdfModel fromJson(Map<String, dynamic> json) {
+    return AssessmentImagePdfModel(
+      isSelected: json['isSelected'],
+      image: json['image'],
+      index: json['index'],
+    );
+  }
 }
 
 class ReferenceImagePdfModel {
@@ -164,6 +341,22 @@ class ReferenceImagePdfModel {
   final String? image;
   final MemoryImage? memoryImage;
   final String index;
+
+  /// Convert the model to a JSON map, ignoring MemoryImage fields
+  Map<String, dynamic> toJson() {
+    return {
+      'image': image,
+      'index': index,
+    };
+  }
+
+  /// Create a model from a JSON map, ignoring MemoryImage fields
+  static ReferenceImagePdfModel fromJson(Map<String, dynamic> json) {
+    return ReferenceImagePdfModel(
+      image: json['image'],
+      index: json['index'],
+    );
+  }
 }
 
 class WeatherPdfModel {
@@ -188,4 +381,34 @@ class WeatherPdfModel {
   final String? pressure;
   final String? visibility;
   final String? uvIndex;
+
+  /// Convert the model to a JSON map
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date,
+      'sunrise': sunrise,
+      'sunset': sunset,
+      'chancesOfRain': chancesOfRain,
+      'humidity': humidity,
+      'windSpeed': windSpeed,
+      'pressure': pressure,
+      'visibility': visibility,
+      'uvIndex': uvIndex,
+    };
+  }
+
+  /// Create a model from a JSON map
+  static WeatherPdfModel fromJson(Map<String, dynamic> json) {
+    return WeatherPdfModel(
+      date: json['date'],
+      sunrise: json['sunrise'],
+      sunset: json['sunset'],
+      chancesOfRain: json['chancesOfRain'],
+      humidity: json['humidity'],
+      windSpeed: json['windSpeed'],
+      pressure: json['pressure'],
+      visibility: json['visibility'],
+      uvIndex: json['uvIndex'],
+    );
+  }
 }

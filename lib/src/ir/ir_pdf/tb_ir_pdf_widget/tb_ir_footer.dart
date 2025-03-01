@@ -1,4 +1,4 @@
-import 'package:dart_pdf_package/src/audit/dto/company_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/company_dto.dart';
 import 'package:pdf/widgets.dart';
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
@@ -44,8 +44,8 @@ class TbIrFooter extends StatelessWidget {
                 ),
               ]),
           Container(
-              width:
-                  TbIrPdfDimension.pageWidth - TbIrPdfDimension.spaceUsedForPadding,
+              width: TbIrPdfDimension.pageWidth -
+                  TbIrPdfDimension.spaceUsedForPadding,
               height: 1,
               color: TbIncidentReportPdfColor.incidentReportThemeColor),
           Container(height: 3),

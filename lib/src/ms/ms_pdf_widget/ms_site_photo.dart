@@ -1,5 +1,5 @@
 import 'package:dart_pdf_package/dart_pdf_package.dart';
-import 'package:dart_pdf_package/src/audit/pdf_generator/audit_pdf_constants.dart';
+import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_pdf_custom_text.dart';
 import 'package:pdf/widgets.dart';
 

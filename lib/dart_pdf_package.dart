@@ -5,9 +5,7 @@ library dart_pdf_package;
 
 export 'src/dart_pdf_package_base.dart';
 
-export 'src/audit/pdf_generator/tb_audit_pdf_generator.dart';
-
-export 'src/audit/dto/audit_assessment_dto.dart';
+export 'src/audit/tb_audit_pdf_generator.dart';
 
 export 'src/utils/pdf/tb_pdf_helper.dart';
 export 'src/ms/tb_ms_pdf_generator.dart';
@@ -17,5 +15,6 @@ export 'src/ir/ir_pdf/tb_ir_pdf_generator.dart';
 export 'src/ms/ms_pdf_data.dart';
 export 'src/ra/ra_pdf_data.dart';
 export 'src/ra/tb_ra_pdf_generator.dart';
+export 'src/audit/audit_pdf_data.dart';
 
 export 'src/utils/utils.dart';

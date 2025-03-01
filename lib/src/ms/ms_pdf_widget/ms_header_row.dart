@@ -6,19 +6,25 @@ import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart';
 
-import '../../audit/pdf_generator/audit_pdf_constants.dart';
+import '../../audit/audit_pdf_constants.dart';
 import '../tb_ms_pdf_constants.dart';
 
 /// this widget is use to show  header   of the pdf
 class MsHeaderRow extends StatelessWidget {
-  final MsPdfData pdfData;
+  final MemoryImage? companyLogoMemoryImage;
+  final String companyDetails;
+  final String companyPhoneEmail;
+  final String titleForPdf;
 
   /// holds the pages number
   final int? pagesNo;
 
   MsHeaderRow({
-    required this.pdfData,
     this.pagesNo,
+    required this.companyDetails,
+    this.companyLogoMemoryImage,
+    required this.companyPhoneEmail,
+    required this.titleForPdf,
   });
 
   @override
@@ -38,13 +44,13 @@ class MsHeaderRow extends StatelessWidget {
                 textWidget(
                   context: context,
                 ),
-                pdfData.companyLogoMemoryImage != null
+                companyLogoMemoryImage != null
                     ? Container(
                         // color: RaPdfColors.black,
                         height: 80,
                         width: 80,
                         child: Image(
-                          pdfData.companyLogoMemoryImage!,
+                          companyLogoMemoryImage!,
                           height: 60,
                           width: 80,
                         ),
@@ -54,8 +60,8 @@ class MsHeaderRow extends StatelessWidget {
             ),
           ),
           MsCompanyDetailsRow(
-            companyDetails: pdfData.companyDetails,
-            companyPhoneEmail: pdfData.companyPhoneEmail,
+            companyDetails: companyDetails,
+            companyPhoneEmail: companyPhoneEmail,
           ),
         ],
       ),
@@ -65,12 +71,10 @@ class MsHeaderRow extends StatelessWidget {
   Widget textWidget({
     required Context context,
   }) {
-    String title = pdfData.titleForPDF ?? "METHOD ASSESSMENT FORM";
-
     return Container(
       padding: MsPdfPaddings.pageHorizontalPadding,
       child: Text(
-        title,
+        titleForPdf,
         // style: raPdfTextStyles.headerTextStyle(),
         style: TbPdfHelper().textStyleGenerator(
           font: Theme.of(context).header0.fontBold,

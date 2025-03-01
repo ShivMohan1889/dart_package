@@ -1,5 +1,4 @@
-import 'package:dart_pdf_package/src/audit/dto/audit_answer_field_dto.dart';
-import 'package:dart_pdf_package/src/audit/dto/audit_assessment_dto.dart';
+import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 import 'package:pdf/widgets.dart';
 
@@ -8,31 +7,28 @@ import 'audit_project_detials_table_cell.dart';
 
 /// this widget is use to show the project details related to audit on pdf
 class AuditProjectDetailSection extends StatelessWidget {
-  final AuditAssessmentDto? auditAssessmentEntity;
-
-  final String localeName;
+  final AuditPdfData? auditAssessmentEntity;
 
   final auditPdfTextStyles = AuditPdfTextStyles();
 
   AuditProjectDetailSection({
     this.auditAssessmentEntity,
-    required this.localeName,
   });
 
   @override
   Widget build(Context context) {
-    AuditAnswerFieldDto auditReference = AuditAnswerFieldDto(
-      name: "Audit Reference",
-      value: auditAssessmentEntity?.refName,
+    ProjectDetailsData auditReference = ProjectDetailsData(
+      key: "Audit Reference",
+      value: auditAssessmentEntity?.referenceNo ?? "",
     );
 
-    AuditAnswerFieldDto dateEntity = AuditAnswerFieldDto(
-      name: "Date",
-      value: auditAssessmentEntity?.date,
+    ProjectDetailsData dateEntity = ProjectDetailsData(
+      key: "Date",
+      value: auditAssessmentEntity?.date ?? "",
     );
 
-    List<AuditAnswerFieldDto> listAuditAnswerField =
-        auditAssessmentEntity?.listAuditAnswerFieldDto ?? [];
+    List<ProjectDetailsData> listAuditAnswerField =
+        auditAssessmentEntity!.projectDetails;
 
     return Container(
       // padding: AuditPdfPaddings.projectDetailsSectionPadding,
@@ -44,7 +40,7 @@ class AuditProjectDetailSection extends StatelessWidget {
       child: Column(
         children: [
           AuditProjectDetailsTableCell(
-            fieldName: "${dateEntity.name} :",
+            fieldName: "${dateEntity.key} :",
             fieldValue: auditAssessmentEntity?.isSubscribed == 0
                 ? "Upgrade to Unlock"
                 // : dateEntity.value ?? "",
@@ -63,7 +59,7 @@ class AuditProjectDetailSection extends StatelessWidget {
             height: 4.5,
           ),
           AuditProjectDetailsTableCell(
-            fieldName: "${auditReference.name}:",
+            fieldName: "${auditReference.key}:",
             fieldValue: auditAssessmentEntity?.isSubscribed == 0
                 ? "Upgrade to Unlock"
                 : auditReference.value ?? "",
@@ -77,7 +73,6 @@ class AuditProjectDetailSection extends StatelessWidget {
                 : null,
           ),
           Container(
-            // heightid: 5.5,
             height: 4.5,
           ),
           Column(
@@ -85,24 +80,19 @@ class AuditProjectDetailSection extends StatelessWidget {
               listAuditAnswerField: listAuditAnswerField,
             ),
           ),
-          // for (var auditAnswerField in listAuditAnswerField)
-          //   AuditProjectDetailsTableCell(
-          //     fieldName: "${auditAnswerField.name?.replaceAll(":", "")} :",
-          //     fieldValue: auditAnswerField.value ?? "",
-          //   ),
         ],
       ),
     );
   }
 
   List<Widget> returnAuditProjectDetialsTableCell({
-    required List<AuditAnswerFieldDto> listAuditAnswerField,
+    required List<ProjectDetailsData> listAuditAnswerField,
   }) {
     List<Widget> listChildren = [];
 
     for (var auditAnswerField in listAuditAnswerField) {
       listChildren.add(AuditProjectDetailsTableCell(
-        fieldName: "${auditAnswerField.name?.replaceAll(":", "")}:",
+        fieldName: "${auditAnswerField.key?.replaceAll(":", "")}:",
         fieldValue: auditAnswerField.value ?? "",
       ));
       if (auditAnswerField != listAuditAnswerField.last) {

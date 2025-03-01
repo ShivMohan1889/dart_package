@@ -1,4 +1,4 @@
-import 'package:dart_pdf_package/src/audit/dto/audit_assessment_dto.dart';
+import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
@@ -7,7 +7,7 @@ import '../audit_pdf_constants.dart';
 
 class AuditFooterSection extends StatelessWidget {
   final String? pageNo;
-  final AuditAssessmentDto? auditAssessmentEntity;
+  final AuditPdfData? auditAssessmentEntity;
 
   final auditPdfTextStyle = AuditPdfTextStyles();
 
@@ -41,7 +41,7 @@ class AuditFooterSection extends StatelessWidget {
                         // style: auditPdfTextStyle.urlTextStyle(),
                         style: TbPdfHelper().textStyleGenerator(
                           font: Theme.of(context).iconTheme.font,
-                          color: AuditPdfColors.auditBlueLightColor,
+                          color: AuditPdfColors.black,
                           fontSize: 10,
                         ),
                       )
@@ -64,8 +64,8 @@ class AuditFooterSection extends StatelessWidget {
   }
 
   String getReferenceNumber() {
-    if ((auditAssessmentEntity?.referenceNumber ?? "").isNotEmpty) {
-      return " / ${auditAssessmentEntity?.referenceNumber ?? ''}";
+    if ((auditAssessmentEntity?.referenceNo ?? "").isNotEmpty) {
+      return " / ${auditAssessmentEntity?.referenceNo ?? ''}";
     } else {
       return "";
     }

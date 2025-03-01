@@ -33,7 +33,7 @@ class AuditQuestionTextInputAnswerSection extends StatelessWidget {
             // textStyle: auditPdfTextStyle.questionNumberTextStyle(),
             textStyle: TbPdfHelper().textStyleGenerator(
               font: Theme.of(context).header0.font,
-              color: AuditPdfColors.auditBlueLightColor,
+              color: AuditPdfColors.black,
               fontSize: 12,
             ),
           ),

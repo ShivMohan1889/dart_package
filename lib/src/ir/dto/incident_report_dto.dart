@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:dart_pdf_package/src/audit/dto/company_dto.dart';
-import 'package:dart_pdf_package/src/audit/dto/user_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/company_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_injured_body_part_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_injury_person_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_injury_option_dto.dart';
@@ -10,6 +9,7 @@ import 'package:dart_pdf_package/src/ir/dto/incident_report_option_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_photo_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_user_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_witness_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/user_dto.dart';
 import 'package:pdf/widgets.dart';
 
 class IncidentReportDto {
@@ -373,7 +373,7 @@ class IncidentReportDto {
       isUploadedOneDrive: json['isUploadedOneDrive'],
       isUploadedProcore: json['isUploadedProcore'],
       lattitude: json['lattitude'],
-      longitude: json['longitude'], 
+      longitude: json['longitude'],
       managerName: json['managerName'],
       mapImagePath: json['mapImagePath'],
       numberOfDaysOffWork: json['numberOfDaysOffWork'],

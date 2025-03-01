@@ -1,12 +1,11 @@
-import 'package:dart_pdf_package/src/audit/dto/chain_option_dto.dart';
+import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
 import 'package:pdf/pdf.dart';
 
-import '../audit_pdf_constants.dart';
 import 'package:pdf/widgets.dart';
 
 /// this widget is use to show  the row  that  contains name of chainOptions
 class ChainOptionsForPdfRow extends StatelessWidget {
-  final List<ChainOptionDto>? chainOptionsForPdf;
+  final List<String>? chainOptionsForPdf;
 
   final auditTextStyle = AuditPdfTextStyles();
 
@@ -15,9 +14,7 @@ class ChainOptionsForPdfRow extends StatelessWidget {
   });
   @override
   Widget build(Context context) {
-    print("the given chain option row :-${chainOptionsForPdf}");
     return Container(
-      color: PdfColors.red,
       // padding: AuditPdfPaddings.chainOptionRowPaddng,
       padding: const EdgeInsets.only(
         left: 20,
@@ -69,7 +66,7 @@ class ChainOptionsForPdfRow extends StatelessWidget {
       String text = "";
       if (i >= index) {
         int currentIndex = i - index;
-        text = options[currentIndex].name ?? "";
+        text = options[currentIndex];
       }
       Widget widget = Container(
         width: width / 5,
@@ -83,12 +80,12 @@ class ChainOptionsForPdfRow extends StatelessWidget {
             // style: auditTextStyle.auditChainOptionTextStyle(),
             // style: PdfHelper().textStyleGenerator(
             //   font: Theme.of(context).header0.fontBoldItalic,
-            //   color: AuditPdfColors.auditBlueLightColor,
+            //   color: AuditPdfColors.black,
             //   fontSize: 8,
             // ),
             style: TextStyle(
               font: Theme.of(context).header0.fontBoldItalic,
-              color: AuditPdfColors.auditBlueLightColor,
+              color: AuditPdfColors.black,
               fontSize: 8.3,
               // letterSpacing: 1.2,
               lineSpacing: 1.6,

@@ -44,7 +44,7 @@ class AuditQuestionImageColumn extends StatelessWidget {
                       fontSize: 12,
 
                       // color: PdfColors.black,
-                      color: AuditPdfColors.auditBlueLightColor,
+                      color: AuditPdfColors.black,
                     ),
                     textAlign: TextAlign.center,
                   ),

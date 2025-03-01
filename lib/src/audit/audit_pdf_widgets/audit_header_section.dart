@@ -1,15 +1,14 @@
-import 'package:dart_pdf_package/src/audit/dto/audit_assessment_dto.dart';
+import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart';
 
 import '../audit_pdf_constants.dart';
-import 'audit_title_row.dart';
 
 ///this  widget  use to the header section  of audit pdf
 class AuditHeaderSection extends StatelessWidget {
   ///holds the auditAssessmentEntity
-  final AuditAssessmentDto? auditAssessmentEntity;
+  final AuditPdfData? auditAssessmentEntity;
 
   final MemoryImage? companyLogoImage;
 
@@ -38,7 +37,6 @@ class AuditHeaderSection extends StatelessWidget {
               children: [
                 companyLogoImage != null
                     ? Container(
-                        color: PdfColors.red,
                         margin: EdgeInsets.only(right: 20),
                         // color: RaPdfColors.black,
                         height: 80,
@@ -52,9 +50,6 @@ class AuditHeaderSection extends StatelessWidget {
                     : Container()
               ],
             ),
-          ),
-          AuditTitleRow(
-            auditAssessmentEntity: auditAssessmentEntity,
           ),
         ],
       ),

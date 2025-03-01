@@ -38,7 +38,7 @@ class AuditSummaryTable extends StatelessWidget {
               "SUMMARY OF RESULTS",
               style: TbPdfHelper().textStyleGenerator(
                 font: Theme.of(context).header0.fontBold,
-                color: AuditPdfColors.auditBlueLightColor,
+                color: AuditPdfColors.black,
                 fontSize: 15,
               ),
             ),
@@ -47,8 +47,7 @@ class AuditSummaryTable extends StatelessWidget {
             height: 15,
           ),
           Table(
-            border: TableBorder.all(
-                width: 1, color: AuditPdfColors.auditBlueLightColor),
+            border: TableBorder.all(width: 1, color: AuditPdfColors.black),
             columnWidths: {
               0: const FlexColumnWidth(8),
               1: const FlexColumnWidth(1),
@@ -57,7 +56,7 @@ class AuditSummaryTable extends StatelessWidget {
               TableRow(
                 children: [
                   Container(
-                    color: AuditPdfColors.auditBlueLightColor,
+                    color: AuditPdfColors.black,
                     // height: 50,
                     height: 30,
                     alignment: Alignment.centerLeft,
@@ -78,7 +77,7 @@ class AuditSummaryTable extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    color: AuditPdfColors.auditBlueLightColor,
+                    color: AuditPdfColors.black,
                     // height: 50,
                     height: 30,
                     padding: const EdgeInsets.only(
@@ -93,7 +92,7 @@ class AuditSummaryTable extends StatelessWidget {
                         font: Theme.of(context).header0.font,
                         fontSize: 12,
                         // fontSize: 11,
-                        // color: AuditPdfColors.auditBlueLightColor,
+                        // color: AuditPdfColors.black,
                         color: PdfColors.white,
                       ),
                     ),

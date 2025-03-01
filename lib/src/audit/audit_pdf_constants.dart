@@ -35,7 +35,7 @@ class AuditPdfColors {
   static PdfColor questionRowBackgroundDarkGreyColor =
       PdfColor.fromHex('#e2e2e3');
 
-  static PdfColor auditBlueLightColor = PdfColor.fromHex("#38b8f0");
+  // static PdfColor auditBlueLightColor = PdfColor.fromHex("#38b8f0");
 
   static PdfColor upgradeToUnlockColor = PdfColor.fromHex("#077BB7");
 
@@ -49,7 +49,7 @@ class AuditPdfBoxDecorations {
   static pw.BoxDecoration auditSectionImageItemBoxDecoration = pw.BoxDecoration(
     border: Border.all(
       width: 1,
-      color: AuditPdfColors.auditBlueLightColor,
+      color: AuditPdfColors.black,
     ),
   );
 }

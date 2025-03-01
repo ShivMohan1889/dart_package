@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:dart_pdf_package/src/audit/pdf_generator/audit_pdf_constants.dart';
+import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
 
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_assessment_image_box.dart';
@@ -17,7 +17,6 @@ import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart';
 
-import '../utils/enums/enum/review_sign_off_mode.dart';
 import '../utils/pdf/tb_pdf_helper.dart';
 
 import 'ms_pdf_widget/ms_footer_section.dart';
@@ -85,21 +84,6 @@ class TbMsPdfGenerator {
     }
     msPdfItems.add(MsBorder());
 
-    // if (msAssessmentDto?.riskAssessmentDto != null && showMsFirst == false) {
-    //   RiskAssessmentDto riskAssessmentDto = msAssessmentDto!.riskAssessmentDto!;
-
-    //   TbRaPdfGenerator raPdfGenerator = TbRaPdfGenerator(
-    //     platFormLocaleName: platFormLocaleName,
-    //     theRiskAssessmentDto: riskAssessmentDto,
-    //     pdfDocumentFromMs: pdf,
-    //     pdfHelper: pdfHelper,
-    //     showMsFirst: showMsFirst,
-    //     harmTextForWeb: harmTextForWeb,
-    //   );
-
-    //   await raPdfGenerator.generatePDF();
-    // }
-
     pdf.addPage(
       MultiPage(
         pageTheme: TbPdfHelper().returnPageTheme(
@@ -136,12 +120,16 @@ class TbMsPdfGenerator {
         header: (context) {
           return MsHeaderRow(
             pagesNo: context.pageNumber,
-            pdfData: pdfData,
+            companyDetails: pdfData.companyDetails,
+            companyPhoneEmail: pdfData.companyPhoneEmail ?? "",
+            titleForPdf: "METHOD ASSESSMENT",
+            companyLogoMemoryImage: pdfData.companyLogoMemoryImage,
           );
         },
         footer: (context) {
           return MsFooterSection(
-            pdfData: pdfData,
+            isSubscribed: pdfData.isSubscribed,
+            referenceNo: pdfData.referenceNo,
             pageNumber: context.pageNumber.toString(),
           );
         },

@@ -1,5 +1,5 @@
 
-import 'package:dart_pdf_package/src/audit/pdf_generator/audit_pdf_constants.dart';
+import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
 import 'package:pdf/widgets.dart';
 
 import '../../../dart_pdf_package.dart';
