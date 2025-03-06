@@ -470,8 +470,8 @@ class RaProjectRow extends StatelessWidget {
   }) {
     List<Widget> children = [];
     for (int i = start; i <= end; i++) {
-      if ((pdfData.keyStaff).length >= i) {
-        String entity = (pdfData.keyStaff)[i - 1];
+      if ((pdfData.keyStaff ??  []).length >= i) {
+        String entity = (pdfData.keyStaff ??  [])[i - 1];
 
         children.add(Expanded(
           child: Row(

@@ -59,6 +59,7 @@ class TbIrDateTime extends StatelessWidget {
             firstTitle: "Start Date:",
             // firstValue: " ${incidentReportEntity?.reportingDate}",
             firstValue: TbPdfHelper.dateStringForLocaleInPdf(
+              //  localeName:  localName,
               date: incidentReportDto?.reportingDate ?? "",
             ),
             secondTitle: "Time:",

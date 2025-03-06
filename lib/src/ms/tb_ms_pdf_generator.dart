@@ -36,6 +36,7 @@ class TbMsPdfGenerator {
 
   // this flag is used to show the harm text on the web pdf
   bool harmTextForWeb;
+  
 
   TbMsPdfGenerator({
     required this.pdfData,

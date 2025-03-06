@@ -41,11 +41,11 @@ class RaPdfData {
     required this.hazardIconOpacity,
     this.mapMemoryImage,
     required this.hazards,
-    required this.keyStaff,
-    required this.assessmentImages,
-    required this.referenceImages,
-    required this.weatherItems,
-    required this.signOffUsers,
+    this.keyStaff,
+    this.assessmentImages,
+    this.referenceImages,
+    this.weatherItems,
+    this.signOffUsers,
     required this.userSignature,
     this.reviewSignature,
     this.listChildren = const [],
@@ -91,14 +91,14 @@ class RaPdfData {
 
   final MemoryImage? mapMemoryImage;
   final List<HazardPdfModel> hazards;
-  final List<String> keyStaff;
-  final List<AssessmentImagePdfModel> assessmentImages;
-  final List<ReferenceImagePdfModel> referenceImages;
-  final List<WeatherPdfModel> weatherItems;
-  final List<ReviewSignOffSignatureData> signOffUsers;
+  final List<String>? keyStaff;
+  final List<AssessmentImagePdfModel>? assessmentImages;
+  final List<ReferenceImagePdfModel>? referenceImages;
+  final List<WeatherPdfModel>? weatherItems;
+  final List<ReviewSignOffSignatureData>? signOffUsers;
   final UserSignatureData userSignature;
   final ReviewSignOffSignatureData? reviewSignature;
-  final List<RaPdfData> listChildren;
+  final List<RaPdfData>? listChildren;
   final MsPdfData? msPdfData;
 
   String? get uniqueKey => '${name}_${referenceNumber ?? ""}';
@@ -140,13 +140,13 @@ class RaPdfData {
       'hazardIconOpacity': hazardIconOpacity,
       'hazards': hazards.map((h) => h.toJson()).toList(),
       'keyStaff': keyStaff,
-      'assessmentImages': assessmentImages.map((img) => img.toJson()).toList(),
-      'referenceImages': referenceImages.map((img) => img.toJson()).toList(),
-      'weatherItems': weatherItems.map((w) => w.toJson()).toList(),
-      'signOffUsers': signOffUsers.map((u) => u.toJson()).toList(),
+      'assessmentImages': assessmentImages?.map((img) => img.toJson()).toList(),
+      'referenceImages': referenceImages?.map((img) => img.toJson()).toList(),
+      'weatherItems': weatherItems?.map((w) => w.toJson()).toList(),
+      'signOffUsers': signOffUsers?.map((u) => u.toJson()).toList(),
       'userSignature': userSignature.toJson(),
       'reviewSignature': reviewSignature?.toJson(),
-      'listChildren': listChildren.map((child) => child.toJson()).toList(),
+      'listChildren': listChildren?.map((child) => child.toJson()).toList(),
       'msPdfData': msPdfData?.toJson(),
       'signOffStatementReport': signOffStatementReport,
     };
@@ -191,18 +191,19 @@ class RaPdfData {
       hazards: (json['hazards'] as List)
           .map((h) => HazardPdfModel.fromJson(h))
           .toList(),
-      keyStaff: List<String>.from(json['keyStaff']),
-      assessmentImages: (json['assessmentImages'] as List)
-          .map((img) => AssessmentImagePdfModel.fromJson(img))
+      keyStaff:
+          json['keyStaff'] == null ? [] : List<String>.from(json['keyStaff']),
+      assessmentImages: (json['assessmentImages'] as List<dynamic>?)
+          ?.map((img) => AssessmentImagePdfModel.fromJson(img))
           .toList(),
-      referenceImages: (json['referenceImages'] as List)
-          .map((img) => ReferenceImagePdfModel.fromJson(img))
+      referenceImages: (json['referenceImages'] as List<dynamic>?)
+          ?.map((img) => ReferenceImagePdfModel.fromJson(img))
           .toList(),
-      weatherItems: (json['weatherItems'] as List)
-          .map((w) => WeatherPdfModel.fromJson(w))
+      weatherItems: (json['weatherItems'] as List<dynamic>?)
+          ?.map((w) => WeatherPdfModel.fromJson(w))
           .toList(),
-      signOffUsers: (json['signOffUsers'] as List)
-          .map((u) => ReviewSignOffSignatureData.fromJson(u))
+      signOffUsers: (json['signOffUsers'] as List<dynamic>?)
+          ?.map((u) => ReviewSignOffSignatureData.fromJson(u))
           .toList(),
       userSignature: UserSignatureData.fromJson(json['userSignature']),
       reviewSignature: json['reviewSignature'] != null
@@ -225,7 +226,7 @@ class HazardPdfModel {
   HazardPdfModel({
     required this.name,
     required this.cellPosition,
-    required this.harm,
+    this.harm,
     required this.worstCase,
     required this.likelihoods,
     required this.additionalLikelihood,
@@ -234,7 +235,7 @@ class HazardPdfModel {
     required this.additionalRating,
     required this.additionalScore,
     required this.cellRiskNumber,
-    required this.existingControls,
+    this.existingControls,
     this.additionalControls,
     this.memoryImage,
     this.imageURL,
@@ -253,7 +254,7 @@ class HazardPdfModel {
   final int? cellRiskNumber;
   final String? imageURL;
   final MemoryImage? memoryImage;
-  final List<String> existingControls;
+  final List<String>? existingControls;
   final List<String>? additionalControls;
 
   /// Convert the model to a JSON map, ignoring MemoryImage fields
@@ -281,8 +282,8 @@ class HazardPdfModel {
     return HazardPdfModel(
       name: json['name'],
       cellPosition: json['cellPosition'],
-      harm: json['harm'],
-      worstCase: json['worstCase'],
+      harm: json['harm'] as String?,
+      worstCase: json['worstCase'] as String,
       likelihoods: json['likelihoods'],
       additionalLikelihood: json['additionalLikelihood'],
       score: json['score'],
@@ -291,7 +292,9 @@ class HazardPdfModel {
       additionalScore: json['additionalScore'],
       cellRiskNumber: json['cellRiskNumber'],
       imageURL: json['imageURL'],
-      existingControls: List<String>.from(json['existingControls']),
+      existingControls: json['existingControls'] == null
+          ? []
+          : List<String>.from(json['existingControls']),
       additionalControls: json['additionalControls'] != null
           ? List<String>.from(json['additionalControls'])
           : null,
@@ -340,7 +343,7 @@ class ReferenceImagePdfModel {
 
   final String? image;
   final MemoryImage? memoryImage;
-  final String index;
+  final int index;
 
   /// Convert the model to a JSON map, ignoring MemoryImage fields
   Map<String, dynamic> toJson() {

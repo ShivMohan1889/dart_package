@@ -70,7 +70,7 @@ class TbRaPdfGenerator {
     generatePdfFor(pdf, pdfData);
 
     // Process children assessments
-    for (var childModel in pdfData.listChildren) {
+    for (var childModel in pdfData.listChildren ?? []) {
       generatePdfFor(pdf, childModel);
     }
 
@@ -247,7 +247,7 @@ class TbRaPdfGenerator {
       ),
     );
 
-    for (ReviewSignOffSignatureData user in raPdfData.signOffUsers) {
+    for (ReviewSignOffSignatureData user in raPdfData.signOffUsers ?? []) {
       rowChildren.add(
         Container(
           height: (TbRaPdfSectionHeights.SIGN_OFF_PAGE_HEIGHT - 40) / 2,
@@ -270,7 +270,7 @@ class TbRaPdfGenerator {
       if (rowChildren.length == 3) {
         list.add(createSignOffRow(rowChildren));
         rowChildren.clear();
-      } else if (raPdfData.signOffUsers.last == user) {
+      } else if (raPdfData.signOffUsers?.last == user) {
         list.add(createSignOffRow(rowChildren));
         rowChildren.clear();
       }
@@ -342,7 +342,9 @@ class TbRaPdfGenerator {
         rating: hazard.rating,
         additionalRating: hazard.additionalRating,
         additionalScore: hazard.additionalScore?.toString() ?? "0",
-        controlInPlace: joinControlsText(hazard.existingControls),
+        controlInPlace: (hazard.existingControls ?? []).isNotEmpty
+            ? joinControlsText(hazard.existingControls ?? [])
+            : "",
         additionalControl: hazard.additionalControls != null
             ? joinControlsText(hazard.additionalControls!)
             : "",
@@ -705,7 +707,8 @@ class TbRaPdfGenerator {
     required Document pdf,
   }) {
     List<Widget> imageWidgets = [];
-    List<AssessmentImagePdfModel> images = riskAssessmentModel.assessmentImages;
+    List<AssessmentImagePdfModel> images =
+        riskAssessmentModel.assessmentImages ?? [];
 
     if (images.isEmpty) return;
 
@@ -789,7 +792,8 @@ class TbRaPdfGenerator {
     required Document pdf,
   }) {
     List<Widget> imageWidgets = [];
-    List<ReferenceImagePdfModel> images = riskAssessmentModel.referenceImages;
+    List<ReferenceImagePdfModel> images =
+        riskAssessmentModel.referenceImages ?? [];
 
     if (images.isEmpty) return;
 
@@ -802,7 +806,7 @@ class TbRaPdfGenerator {
             image: image.memoryImage!,
             opacity: riskAssessmentModel.hazardIconOpacity,
             pdfData: pdfData,
-            index: int.tryParse(image.index) ?? 1,
+            index: image.index ?? 1,
             raPdfPageTitleType: RaPdfPageTitleType.referenceImage,
           ),
         );
@@ -914,14 +918,16 @@ class TbRaPdfGenerator {
     ));
 
     // Add weather information if available
-    if (riskAssessmentModel.weatherItems.isNotEmpty) {
+    if ((riskAssessmentModel.weatherItems ?? []).isNotEmpty) {
       widgets.add(
           buildWeatherDisclaimer(context: context, model: riskAssessmentModel));
 
       widgets.add(buildWeatherHeadingRow(context: context));
 
       // Add weather data rows
-      for (int i = 0; i < riskAssessmentModel.weatherItems.length; i++) {
+      for (int i = 0;
+          i < (riskAssessmentModel.weatherItems ?? []).length;
+          i++) {
         if (i == 3) {
           // Add new disclaimer and heading for every 3 items
           widgets.add(buildWeatherDisclaimer(
@@ -932,7 +938,8 @@ class TbRaPdfGenerator {
 
         // Add weather row
         widgets.add(buildWeatherDataRow(
-            weather: riskAssessmentModel.weatherItems[i], context: context));
+            weather: (riskAssessmentModel.weatherItems ?? [])[i],
+            context: context));
 
         // if (i == 2) {
         //   widgets.add(buildWeatherLicenseInfo(context: context));

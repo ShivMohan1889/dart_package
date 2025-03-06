@@ -479,11 +479,15 @@ class TbPdfHelper {
     required String date,
   }) {
     if (date.isNotEmpty) {
-      DateTime dateTime = TbDateTime.inputFormat.parse(date);
+      // if (localeName == RaLocaleType.enUS) {
+        DateTime dateTime = TbDateTime.inputFormat.parse(date);
 
-      String enINDate = TbDateTime.inputFormatForEnUs.format(dateTime);
+        String enINDate = TbDateTime.inputFormatForEnUs.format(dateTime);
 
-      return enINDate;
+        return enINDate;
+      // } else {
+      //   date;
+      // }
     } else {
       return date;
     }

@@ -64,7 +64,7 @@ class MsPdfData {
 
   factory MsPdfData.fromJson(Map<String, dynamic> json) {
     return MsPdfData(
-      titleForPDF: json['titleForPDF'],
+      titleForPDF: json['titleForPDF'] ,
       companyLogo: json['companyLogo'],
       companyDetails: json['companyDetails'],
       companyPhoneEmail: json['companyPhoneEmail'],

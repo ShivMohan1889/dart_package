@@ -46,6 +46,7 @@ class TbAuditPdfGenerator {
 
     // Add project details section
     auditPdfItems.add(AuditProjectDetailSection(
+      
       auditAssessmentEntity: pdfData,
     ));
     auditPdfItems.add(MsBorder());
