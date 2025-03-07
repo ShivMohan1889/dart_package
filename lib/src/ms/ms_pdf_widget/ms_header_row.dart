@@ -1,6 +1,4 @@
-import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_company_details_row.dart';
-import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_title_row.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 import 'package:pdf/pdf.dart';
 
@@ -30,12 +28,17 @@ class MsHeaderRow extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      color: PdfColors.deepOrange,
+      padding: EdgeInsets.only(
+        bottom: 10,
+      ),
       child: Column(
         children: [
           Container(
             width: TbMsPdfWidth.pageWidth,
             color: MsPdfColors.white,
+            // color: PdfColors.amber,
+            padding: MsPdfPaddings.rightPadding,
+            // padding: MsPdfPaddings.pageHorizontalPadding,
             height: MsPdfHeights.blankSpaceContainerHeight,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,

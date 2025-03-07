@@ -771,7 +771,7 @@ class TbRaPdfGenerator {
             alignment: Alignment.bottomRight,
             padding: EdgeInsets.only(bottom: 15, right: 20),
             child: Text(
-              "Page No: ${context.pageNumber}${pdfData.referenceNumber != null ? '/${pdfData.referenceNumber}' : ''}",
+              "Page No: ${context.pageNumber}${(pdfData.referenceNumber ?? "").isNotEmpty ? '/${pdfData.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
                 font: Theme.of(context).header0.fontItalic,
                 color: TbRaPdfColors.black,
@@ -833,7 +833,7 @@ class TbRaPdfGenerator {
             padding: EdgeInsets.only(bottom: 15, right: 20),
             alignment: Alignment.bottomRight,
             child: Text(
-              "Page No: ${context.pageNumber}${pdfData.referenceNumber != null ? '/${pdfData.referenceNumber}' : ''}",
+              "Page No: ${context.pageNumber}${(pdfData.referenceNumber ?? "").isNotEmpty ? '/${pdfData.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
                 font: Theme.of(context).header0.fontItalic,
                 color: TbRaPdfColors.black,
@@ -888,7 +888,7 @@ class TbRaPdfGenerator {
             alignment: Alignment.bottomRight,
             padding: EdgeInsets.only(bottom: 15, right: 20),
             child: Text(
-              "Page No: ${context.pageNumber}${pdfData.referenceNumber != null ? '/${pdfData.referenceNumber}' : ''}",
+              "Page No: ${context.pageNumber}${(pdfData.referenceNumber ?? "").isNotEmpty ? '/${pdfData.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
                 font: Theme.of(context).header0.fontItalic,
                 color: TbRaPdfColors.black,

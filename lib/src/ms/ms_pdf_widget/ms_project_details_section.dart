@@ -2,6 +2,7 @@ import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_project_details_table_cell.dart';
 import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
 class MsProjectDetailsSection extends StatelessWidget {
@@ -15,29 +16,34 @@ class MsProjectDetailsSection extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
+      color: PdfColors.white,
       width: TbMsPdfWidth.pageWidth,
       // padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Container(
+          //   height: 30,
+          //   // color:  PdfColors
+          //   color: PdfColors.red,
+          // ),
           Container(
-            height: 30,
-            // color: PdfColors.red,
-          ),
-          Container(
+            // color: PdfColors.amber,
+
             padding: const EdgeInsets.only(
               left: 20,
-              top: 8,
+              // top: 8,
               bottom: 8,
             ),
             child: drawFieldList(projectDetailsSideLeft, context),
           ),
           Container(
+            // color: PdfColors.green,
             padding: const EdgeInsets.only(
               right: 20,
               left: 4,
-              top: 8,
+              // top: 8,
               bottom: 8,
             ),
             child: drawFieldList(projectDetailsSideRight, context),

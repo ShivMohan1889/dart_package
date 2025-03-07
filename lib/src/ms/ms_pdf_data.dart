@@ -1,4 +1,5 @@
 // Model to hold all data needed for MS PDF generation
+import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:pdf/widgets.dart';
 
 class MsPdfData {
@@ -19,6 +20,7 @@ class MsPdfData {
   int isSubscribed;
   int? numberOfSignOffReview;
   int approvalMode;
+  RaPdfData? raPdfData;
 
   MsPdfData({
     this.siteMemoryImage,
@@ -38,6 +40,7 @@ class MsPdfData {
     required this.approvalMode,
     this.referenceNo,
     this.signOffSignatures,
+    this.raPdfData,
   });
 
   Map<String, dynamic> toJson() {
@@ -59,12 +62,13 @@ class MsPdfData {
       'approvalMode': approvalMode,
       'sign_off_signatures':
           signOffSignatures?.map((signOff) => signOff.toJson()).toList(),
+      "raPdfData": raPdfData?.toJson(),
     };
   }
 
   factory MsPdfData.fromJson(Map<String, dynamic> json) {
     return MsPdfData(
-      titleForPDF: json['titleForPDF'] ,
+      titleForPDF: json['titleForPDF'],
       companyLogo: json['companyLogo'],
       companyDetails: json['companyDetails'],
       companyPhoneEmail: json['companyPhoneEmail'],
@@ -90,6 +94,11 @@ class MsPdfData {
       signOffSignatures: (json['sign_off_signatures'] as List)
           .map((item) => ReviewSignOffSignatureData.fromJson(item))
           .toList(),
+      raPdfData: json["raPdfData"] == null
+          ? null
+          : RaPdfData.fromJson(
+              json["raPdfData"]
+            ),
     );
   }
 }

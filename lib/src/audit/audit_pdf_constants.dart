@@ -327,6 +327,8 @@ class MsPdfPaddings {
   static const pw.EdgeInsets rightAndLeftPadding =
       pw.EdgeInsets.only(left: 20, right: 20);
 
+  static const pw.EdgeInsets rightPadding = pw.EdgeInsets.only(right: 20);
+
   /// padding for Ms Header Entity
   static const pw.EdgeInsets paddingForMsheaderEntity = pw.EdgeInsets.only(
     left: 20,

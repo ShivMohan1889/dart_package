@@ -72,6 +72,10 @@ class RaLogoRow extends StatelessWidget {
       case 3:
         title = "RISK ASSESSMENT FORM MAP";
         break;
+
+      case 4:
+        title = "METHOD ASSESSMENT";
+        break;
       default:
     }
     // if (showAlphabetOrNumber == null) {

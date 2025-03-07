@@ -58,14 +58,14 @@ class MsSignOffSection extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 5.0),
-                // Text(
-                //   "${user?.firstName ?? ""} ${user?.lastName ?? ""}",
-                //   style: TbPdfHelper().textStyleGenerator(
-                //     font: Theme.of(context).header0.font,
-                //     color: TbMsPdfColors.black,
-                //     fontSize: 8,
-                //   ),
-                // ),
+                Text(
+                  user?.name ?? "",
+                  style: TbPdfHelper().textStyleGenerator(
+                    font: Theme.of(context).header0.font,
+                    color: TbMsPdfColors.black,
+                    fontSize: 8,
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 4.0),

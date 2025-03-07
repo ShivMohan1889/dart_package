@@ -39,6 +39,7 @@ class RaPdfData {
     required this.approvalMode,
     required this.numberOfSigneeRequired,
     required this.hazardIconOpacity,
+    required this.linkingPreference,
     this.mapMemoryImage,
     required this.hazards,
     this.keyStaff,
@@ -58,6 +59,7 @@ class RaPdfData {
   final String companyDetails;
   final String companyPhoneEmail;
   final String signOffStatementReport;
+  final int? linkingPreference;
 
   final String name;
   final String description;
@@ -155,6 +157,8 @@ class RaPdfData {
   /// Create a model from a JSON map, ignoring MemoryImage fields
   static RaPdfData fromJson(Map<String, dynamic> json) {
     return RaPdfData(
+      linkingPreference:  json['linkingPreference'],
+      
       titleForPDF: json['titleForPDF'],
       companyLogo: json['companyLogo'],
       companyDetails: json['companyDetails'],

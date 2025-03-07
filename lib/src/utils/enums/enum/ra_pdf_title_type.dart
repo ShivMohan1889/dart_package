@@ -1,1 +1,1 @@
-enum RaPdfPageTitleType { normal, assessmentImage, referenceImage, mapImage }
+enum RaPdfPageTitleType { normal, assessmentImage, referenceImage, mapImage , methodAssessment,}

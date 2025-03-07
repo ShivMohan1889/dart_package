@@ -191,10 +191,13 @@ class MsReviewSignatureSection extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 5),
             height: 60,
             width: 80,
-            decoration: BoxDecoration(
-              color: PdfColors.white,
-              border: Border.all(width: 0.5, color: PdfColors.grey200),
-            ),
+            // decoration: BoxDecoration(
+            //   color: PdfColors.white,
+            //   border: Border.all(
+            //     width: 0.5,
+            //     color: PdfColors.grey200,
+            //   ),
+            // ),
             child: userSignature != null
                 ? Image(
                     userSignature!,
@@ -282,10 +285,12 @@ class MsReviewSignatureSection extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 5),
             height: 60,
             width: 80,
-            decoration: BoxDecoration(
-              color: PdfColors.white,
-              border: Border.all(width: 0.5, color: PdfColors.grey200),
-            ),
+            // decoration: BoxDecoration(
+            //   color: PdfColors.white,
+            //   border: Border.all(width: 0.5, color: PdfColors.grey200,
+
+            //   ),
+            // ),
             child: reviewSignatureImage != null
                 ? Image(
                     reviewSignatureImage!,
