@@ -97,6 +97,9 @@ class TbRaPdfGenerator {
   // Generate PDF for a specific risk assessment
   /* ************************************** */
   void generatePdfFor(pw.Document pdf, RaPdfData riskAssessmentModel) {
+    bool isFirstTimeFooter = true;
+    bool isFirstTimeHeader = true;
+
     // Reset for new assessment
     hazardRows.clear();
     remainingHeight = TbRaPdfSectionHeights.FIRST_PAGE_HEIGHT;
@@ -132,18 +135,25 @@ class TbRaPdfGenerator {
           // Return cached header if it exists
           if (headerWidgets.containsKey(pageNo)) {
             return headerWidgets[pageNo]!;
+          } else {
+            var pNO = context.pageNumber;
+            if (isFirstTimeHeader == true) {
+              isFirstTimeHeader = false;
+              pNO = 1;
+            }
+
+            Widget header = RaHeaderRow(
+              raPdfData: pdfData,
+              pageNo: pNO,
+              pdfHelper: pdfHelper,
+            );
+
+            // Cache the header
+            headerWidgets[pageNo] = header;
+            return header;
           }
 
           // Create new header
-          Widget header = RaHeaderRow(
-            raPdfData: pdfData,
-            pageNo: pageNo,
-            pdfHelper: pdfHelper,
-          );
-
-          // Cache the header
-          headerWidgets[pageNo] = header;
-          return header;
         },
         footer: (context) {
           final pageNo = context.pageNumber;
@@ -151,18 +161,24 @@ class TbRaPdfGenerator {
           // Return cached footer if it exists
           if (footerWidgets.containsKey(pageNo)) {
             return footerWidgets[pageNo]!;
+          } else {
+            var pNO = context.pageNumber;
+            if (isFirstTimeFooter == true) {
+              isFirstTimeFooter = false;
+              pNO = 1;
+            }
+
+            // Create new footer
+            Widget footer = RaFooterRow(
+              pageNo: pNO,
+              pdfData: pdfData,
+              isSignOffFooter: false,
+            );
+
+            // Cache the footer
+            footerWidgets[pageNo] = footer;
+            return footer;
           }
-
-          // Create new footer
-          Widget footer = RaFooterRow(
-            pageNo: pageNo,
-            pdfData: pdfData,
-            isSignOffFooter: false,
-          );
-
-          // Cache the footer
-          footerWidgets[pageNo] = footer;
-          return footer;
         },
       ),
     );
@@ -333,7 +349,7 @@ class TbRaPdfGenerator {
       // Create hazard row
       TbHazardRowModel row = TbHazardRowModel(
         name:
-            '${hazard.name}${hazard.harm != null ? "\n\n(${hazard.harm})" : ""}',
+            '${hazard.name}${(hazard.harm ?? "").isNotEmpty ? "\n\n(${hazard.harm})" : ""}',
         gridRef: hazard.cellPosition,
         worstCase: hazard.worstCase,
         likelihood: hazard.likelihoods,

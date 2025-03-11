@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
 
@@ -36,7 +37,6 @@ class TbMsPdfGenerator {
 
   // this flag is used to show the harm text on the web pdf
   bool harmTextForWeb;
-  
 
   TbMsPdfGenerator({
     required this.pdfData,
@@ -65,6 +65,30 @@ class TbMsPdfGenerator {
       pdf = pdfDocumentFromRa!;
     }
 
+    if (pdfData.raPdfData != null && showMsFirst) {
+      // RiskAssessmentEntity riskAssessmentEntity =
+      //     msAssessmentEntity!.riskAssessmentEntity!;
+
+      // RaPdfGenerator raPdfGenerator = RaPdfGenerator(
+      //   platFormLocaleName: platFormLocaleName,
+      //   theRiskAssessmentEntity: riskAssessmentEntity,
+      //   documentsDirPath: documentsDirPath,
+      //   pdfDocumentFromMs: pdf,
+      //   pdfHelper: pdfHelper,
+      //   showMsFirst: showMsFirst,
+      // );
+      TbRaPdfGenerator raPdfGenerator = TbRaPdfGenerator(
+        pdfData: pdfData.raPdfData!,
+        pdfDocumentFromMs: pdf,
+        pdfHelper: pdfHelper,
+        showMsFirst: showMsFirst,
+        
+       
+      );
+
+      await raPdfGenerator.generatePDF();
+    }
+    
     await preparePDFImages(pdfData);
 
     var projectDetailsSection = MsProjectDetailsSection(
@@ -141,6 +165,28 @@ class TbMsPdfGenerator {
     // if risk assessment is avaialbe generate its pdf
     // String msPdfPath = FileManager.msPdfPath(
     //      msAssessmentUniqueKey: msAssessmentDto?.uniqueKey ?? "");
+
+    if (pdfData.raPdfData != null && !showMsFirst) {
+      // RiskAssessmentEntity riskAssessmentEntity =
+      //     msAssessmentEntity!.riskAssessmentEntity!;
+
+      // RaPdfGenerator raPdfGenerator = RaPdfGenerator(
+      //   platFormLocaleName: platFormLocaleName,
+      //   theRiskAssessmentEntity: riskAssessmentEntity,
+      //   documentsDirPath: documentsDirPath,
+      //   pdfDocumentFromMs: pdf,
+      //   pdfHelper: pdfHelper,
+      //   showMsFirst: showMsFirst,
+      // );
+      TbRaPdfGenerator raPdfGenerator = TbRaPdfGenerator(
+        pdfData: pdfData.raPdfData!,
+        pdfDocumentFromMs: pdf,
+        pdfHelper: pdfHelper,
+        showMsFirst: showMsFirst,
+      );
+
+      await raPdfGenerator.generatePDF();
+    }
 
     if (pdfDocumentFromRa == null) {
       // final file = File(aPath);
