@@ -67,11 +67,21 @@ class TbRaPdfGenerator {
     }
 
     // Process main risk assessment
-    generatePdfFor(pdf, pdfData);
+    // generatePdfFor(pdf, pdfData);
 
-    // Process children assessments
-    for (var childModel in pdfData.listChildren ?? []) {
-      generatePdfFor(pdf, childModel);
+    // // Process children assessments
+    // for (var childModel in pdfData.listChildren ?? []) {
+    //   generatePdfFor(pdf, childModel);
+    // }
+
+    List<RaPdfData> l = [];
+    l.add(pdfData);
+    l.addAll(pdfData.listChildren ?? []);
+
+    // here we are calling generatePDf method for each entity
+
+    for (RaPdfData raEntity in l) {
+      generatePdfFor(pdf, raEntity);
     }
 
     // Handle MS assessment if present and if showMsFirst is false
@@ -133,25 +143,25 @@ class TbRaPdfGenerator {
           final pageNo = context.pageNumber;
 
           // Return cached header if it exists
-          if (headerWidgets.containsKey(pageNo)) {
-            return headerWidgets[pageNo]!;
-          } else {
-            var pNO = context.pageNumber;
-            if (isFirstTimeHeader == true) {
-              isFirstTimeHeader = false;
-              pNO = 1;
-            }
-
-            Widget header = RaHeaderRow(
-              raPdfData: pdfData,
-              pageNo: pNO,
-              pdfHelper: pdfHelper,
-            );
-
-            // Cache the header
-            headerWidgets[pageNo] = header;
-            return header;
+          // if (headerWidgets.containsKey(pageNo)) {
+          //   return headerWidgets[pageNo]!;
+          // } else {
+          var pNO = context.pageNumber;
+          if (isFirstTimeHeader == true) {
+            isFirstTimeHeader = false;
+            pNO = 1;
           }
+
+          Widget header = RaHeaderRow(
+            raPdfData: pdfData,
+            pageNo: pNO,
+            pdfHelper: pdfHelper,
+          );
+
+          // Cache the header
+          headerWidgets[pageNo] = header;
+          return header;
+          // }
 
           // Create new header
         },
