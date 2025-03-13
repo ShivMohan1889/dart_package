@@ -73,7 +73,7 @@ class TbMsPdfGenerator {
       //   platFormLocaleName: platFormLocaleName,
       //   theRiskAssessmentEntity: riskAssessmentEntity,
       //   documentsDirPath: documentsDirPath,
-      //   pdfDocumentFromMs: pdf,
+      //   pdfDocumentFromMs: pdf, 
       //   pdfHelper: pdfHelper,
       //   showMsFirst: showMsFirst,
       // );
@@ -218,6 +218,7 @@ class TbMsPdfGenerator {
     Widget widget = MsReviewSignatureSection(
       reviewDate: pdfData.reviewSignature?.date ?? "",
       reviewUserName: pdfData.reviewSignature?.name,
+      approvalMode:   pdfData.approvalMode,
       reviewSignatureImage: pdfData.reviewSignature?.signatureMemoryImage,
       userName: pdfData.userSignature.name,
       userAssessmentDate: pdfData.userSignature.date,

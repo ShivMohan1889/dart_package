@@ -125,6 +125,7 @@ class RaProjectRow extends StatelessWidget {
   Widget projectDetils({
     required Context context,
   }) {
+    print("${pdfData.name}");
     return Container(
       width: 245,
       padding: const EdgeInsets.symmetric(horizontal: 2.0),
@@ -153,6 +154,7 @@ class RaProjectRow extends StatelessWidget {
               pdfData.isSubscribed == 0
                   ? "Upgrade to Unlock"
                   : pdfData.name ?? "",
+
               style: pdfData.isSubscribed == 0
                   // ? raPdfTextStyles.notUpgradeTextStyle()
                   // : raPdfTextStyles.normalBlack9(),
@@ -210,6 +212,7 @@ class RaProjectRow extends StatelessWidget {
   Widget checkBoxContainer({
     required Context context,
   }) {
+
     return Container(
       height: 93,
       padding: const EdgeInsets.symmetric(horizontal: 2.0),

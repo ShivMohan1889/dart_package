@@ -75,13 +75,17 @@ class TbRaPdfGenerator {
     // }
 
     List<RaPdfData> l = [];
+
     l.add(pdfData);
     l.addAll(pdfData.listChildren ?? []);
 
     // here we are calling generatePDf method for each entity
 
     for (RaPdfData raEntity in l) {
-      generatePdfFor(pdf, raEntity);
+      generatePdfFor(
+        pdf: pdf,
+        riskAssessmentModel: raEntity,
+      );
     }
 
     // Handle MS assessment if present and if showMsFirst is false
@@ -106,7 +110,10 @@ class TbRaPdfGenerator {
   /* ************************************** */
   // Generate PDF for a specific risk assessment
   /* ************************************** */
-  void generatePdfFor(pw.Document pdf, RaPdfData riskAssessmentModel) {
+  void generatePdfFor({
+    required pw.Document pdf,
+    required RaPdfData riskAssessmentModel,
+  }) {
     bool isFirstTimeFooter = true;
     bool isFirstTimeHeader = true;
 
@@ -142,26 +149,30 @@ class TbRaPdfGenerator {
         header: (context) {
           final pageNo = context.pageNumber;
 
+          print(riskAssessmentModel.name);
+          print(isFirstTimeHeader);
+
           // Return cached header if it exists
-          // if (headerWidgets.containsKey(pageNo)) {
-          //   return headerWidgets[pageNo]!;
-          // } else {
-          var pNO = context.pageNumber;
-          if (isFirstTimeHeader == true) {
-            isFirstTimeHeader = false;
-            pNO = 1;
+          if (headerWidgets.containsKey(pageNo)) {
+            return headerWidgets[pageNo]!;
+          } 
+          else {
+            var pNO = context.pageNumber;
+            if (isFirstTimeHeader == true) {
+              isFirstTimeHeader = false;
+              pNO = 1;
+            }
+
+            Widget h = RaHeaderRow(
+              raPdfData: riskAssessmentModel,
+              pageNo: pNO,
+              pdfHelper: pdfHelper,
+            );
+
+            // Cache the header
+            headerWidgets[pageNo] = h;
+            return h;
           }
-
-          Widget header = RaHeaderRow(
-            raPdfData: pdfData,
-            pageNo: pNO,
-            pdfHelper: pdfHelper,
-          );
-
-          // Cache the header
-          headerWidgets[pageNo] = header;
-          return header;
-          // }
 
           // Create new header
         },
@@ -181,7 +192,7 @@ class TbRaPdfGenerator {
             // Create new footer
             Widget footer = RaFooterRow(
               pageNo: pNO,
-              pdfData: pdfData,
+              pdfData: riskAssessmentModel,
               isSignOffFooter: false,
             );
 
@@ -208,7 +219,8 @@ class TbRaPdfGenerator {
       riskAssessmentModel: riskAssessmentModel,
       pdf: pdf,
     );
-    addSignOffPages(pdfData: pdfData, pdf: pdf);
+    // addSignOffPages(pdfData: pdfData, pdf: pdf);
+    addSignOffPages(pdfData: riskAssessmentModel, pdf: pdf);
   }
 
   /* ************************************** */
@@ -266,12 +278,14 @@ class TbRaPdfGenerator {
 
     List<Widget> rowChildren = [];
 
-    list.add(
-      signOffPageHeading(
-        context: context,
-        pdfData: raPdfData,
-      ),
-    );
+    if ((raPdfData.signOffUsers ?? []).isNotEmpty) {
+      list.add(
+        signOffPageHeading(
+          context: context,
+          pdfData: raPdfData,
+        ),
+      );
+    }
 
     for (ReviewSignOffSignatureData user in raPdfData.signOffUsers ?? []) {
       rowChildren.add(
@@ -746,7 +760,8 @@ class TbRaPdfGenerator {
       if (image.memoryImage != null) {
         imageWidgets.add(
           AssessmentImageSection(
-            pdfData: pdfData,
+            // pdfData: pdfData,
+            pdfData: riskAssessmentModel,
             logoImage: riskAssessmentModel.companyLogoMemoryImage,
             isSelected: image.isSelected,
             image: image.memoryImage!,
@@ -765,7 +780,8 @@ class TbRaPdfGenerator {
       if (image.memoryImage != null) {
         imageWidgets.add(
           AssessmentImageSection(
-            pdfData: pdfData,
+            // pdfData: pdfData,
+            pdfData: riskAssessmentModel,
             logoImage: riskAssessmentModel.companyLogoMemoryImage,
             isSelected: image.isSelected,
             image: image.memoryImage!,
@@ -797,7 +813,7 @@ class TbRaPdfGenerator {
             alignment: Alignment.bottomRight,
             padding: EdgeInsets.only(bottom: 15, right: 20),
             child: Text(
-              "Page No: ${context.pageNumber}${(pdfData.referenceNumber ?? "").isNotEmpty ? '/${pdfData.referenceNumber}' : ''}",
+              "Page No: ${context.pageNumber}${(riskAssessmentModel.referenceNumber ?? "").isNotEmpty ? '/${riskAssessmentModel.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
                 font: Theme.of(context).header0.fontItalic,
                 color: TbRaPdfColors.black,
@@ -831,7 +847,7 @@ class TbRaPdfGenerator {
             logoImage: riskAssessmentModel.companyLogoMemoryImage,
             image: image.memoryImage!,
             opacity: riskAssessmentModel.hazardIconOpacity,
-            pdfData: pdfData,
+            pdfData: riskAssessmentModel,
             index: image.index ?? 1,
             raPdfPageTitleType: RaPdfPageTitleType.referenceImage,
           ),
@@ -859,7 +875,7 @@ class TbRaPdfGenerator {
             padding: EdgeInsets.only(bottom: 15, right: 20),
             alignment: Alignment.bottomRight,
             child: Text(
-              "Page No: ${context.pageNumber}${(pdfData.referenceNumber ?? "").isNotEmpty ? '/${pdfData.referenceNumber}' : ''}",
+              "Page No: ${context.pageNumber}${(riskAssessmentModel.referenceNumber ?? "").isNotEmpty ? '/${riskAssessmentModel.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
                 font: Theme.of(context).header0.fontItalic,
                 color: TbRaPdfColors.black,
@@ -905,8 +921,11 @@ class TbRaPdfGenerator {
         },
         header: (context) {
           return RaMapHeaderRow(
-            pdfData: pdfData,
-            logoImage: pdfData.companyLogoMemoryImage,
+            logoImage: riskAssessmentModel.companyLogoMemoryImage,
+            pdfData: riskAssessmentModel,
+
+            // pdfData: pdfData,
+            // logoImage: pdfData.companyLogoMemoryImage,
           );
         },
         footer: (context) {
@@ -914,7 +933,7 @@ class TbRaPdfGenerator {
             alignment: Alignment.bottomRight,
             padding: EdgeInsets.only(bottom: 15, right: 20),
             child: Text(
-              "Page No: ${context.pageNumber}${(pdfData.referenceNumber ?? "").isNotEmpty ? '/${pdfData.referenceNumber}' : ''}",
+              "Page No: ${context.pageNumber}${(riskAssessmentModel.referenceNumber ?? "").isNotEmpty ? '/${riskAssessmentModel.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
                 font: Theme.of(context).header0.fontItalic,
                 color: TbRaPdfColors.black,
@@ -939,7 +958,7 @@ class TbRaPdfGenerator {
 
     // Add map image
     widgets.add(MapImageRow(
-      pdfData: pdfData,
+      pdfData: riskAssessmentModel,
       image: image,
     ));
 
