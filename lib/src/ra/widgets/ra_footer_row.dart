@@ -8,11 +8,13 @@ import 'package:pdf/widgets.dart';
 
 class RaFooterRow extends StatelessWidget {
   final int? pageNo;
+  int? pageNoToRender;
   final bool? isSignOffFooter;
   final RaPdfData pdfData;
 
   RaFooterRow({
     required this.pageNo,
+    this.pageNoToRender,
     required this.pdfData,
     required this.isSignOffFooter,
   });
@@ -652,7 +654,7 @@ class RaFooterRow extends StatelessWidget {
         Container(
           padding: const EdgeInsets.only(top: 0),
           child: Text(
-            "Page No: $pageNo${getReferenceNumber()}",
+            "Page No: $pageNoToRender${getReferenceNumber()}",
             // style: raPdfTextStyles.italicBlack8(),
             style: TbPdfHelper().textStyleGenerator(
               font: Theme.of(context).header0.fontItalic,

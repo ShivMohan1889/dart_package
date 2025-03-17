@@ -11,6 +11,7 @@ import 'package:pdf/widgets.dart';
 class RaHeaderRow extends StatelessWidget {
   final RaPdfData raPdfData;
   final int? pageNo;
+
   final TbPdfHelper pdfHelper;
   final bool? headerForSignOff;
 
@@ -23,8 +24,6 @@ class RaHeaderRow extends StatelessWidget {
 
   @override
   Widget build(Context context) {
-
-    
     if (headerForSignOff == true) {
       return signOffHeader();
     } else {
@@ -38,7 +37,6 @@ class RaHeaderRow extends StatelessWidget {
   /// header for all the pages other than Sign Off
   /* ************************************** */
   Widget header() {
-
     var height = pageNo == 1
         ? TbRaPdfSectionHeights.LOGO_SECTION +
             TbRaPdfSectionHeights.COMPANY_DETAILS_BAR +

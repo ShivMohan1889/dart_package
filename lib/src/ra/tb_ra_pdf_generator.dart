@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_sign_off_section.dart';
 import 'package:dart_pdf_package/src/ra/tb_ra_pdf_constants.dart';
-import 'package:dart_pdf_package/src/ra/widgets/sign_off_signature.dart';
 import 'package:dart_pdf_package/src/utils/enums/enum/ra_pdf_title_type.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -43,7 +42,7 @@ class TbRaPdfGenerator {
 
   // Store pages' header and footer widgets
   final Map<int, Widget> headerWidgets = {};
-  final Map<int, Widget> footerWidgets = {};
+  final Map<int, RaFooterRow> footerWidgets = {};
 
   /* ************************************** */
   // GENERATE PDF
@@ -66,14 +65,6 @@ class TbRaPdfGenerator {
       await msPdfGenerator.generatePDF();
     }
 
-    // Process main risk assessment
-    // generatePdfFor(pdf, pdfData);
-
-    // // Process children assessments
-    // for (var childModel in pdfData.listChildren ?? []) {
-    //   generatePdfFor(pdf, childModel);
-    // }
-
     List<RaPdfData> l = [];
 
     l.add(pdfData);
@@ -87,7 +78,8 @@ class TbRaPdfGenerator {
         riskAssessmentModel: raEntity,
       );
     }
-
+    // headerWidgets.clear();
+    // footerWidgets.clear();
     // Handle MS assessment if present and if showMsFirst is false
     if (!showMsFirst && pdfData.msPdfData != null) {
       TbMsPdfGenerator msPdfGenerator = TbMsPdfGenerator(
@@ -120,8 +112,6 @@ class TbRaPdfGenerator {
     // Reset for new assessment
     hazardRows.clear();
     remainingHeight = TbRaPdfSectionHeights.FIRST_PAGE_HEIGHT;
-    headerWidgets.clear();
-    footerWidgets.clear();
 
     // Prepare hazard rows for PDF rendering
     createHazardRows(riskAssessmentModel);
@@ -155,8 +145,7 @@ class TbRaPdfGenerator {
           // Return cached header if it exists
           if (headerWidgets.containsKey(pageNo)) {
             return headerWidgets[pageNo]!;
-          } 
-          else {
+          } else {
             var pNO = context.pageNumber;
             if (isFirstTimeHeader == true) {
               isFirstTimeHeader = false;
@@ -181,7 +170,9 @@ class TbRaPdfGenerator {
 
           // Return cached footer if it exists
           if (footerWidgets.containsKey(pageNo)) {
-            return footerWidgets[pageNo]!;
+            RaFooterRow f = footerWidgets[pageNo]!;
+            f.pageNoToRender = pageNo;
+            return f;
           } else {
             var pNO = context.pageNumber;
             if (isFirstTimeFooter == true) {
@@ -190,11 +181,12 @@ class TbRaPdfGenerator {
             }
 
             // Create new footer
-            Widget footer = RaFooterRow(
+            RaFooterRow footer = RaFooterRow(
               pageNo: pNO,
               pdfData: riskAssessmentModel,
               isSignOffFooter: false,
             );
+            footer.pageNoToRender = pageNo;
 
             // Cache the footer
             footerWidgets[pageNo] = footer;
@@ -219,8 +211,11 @@ class TbRaPdfGenerator {
       riskAssessmentModel: riskAssessmentModel,
       pdf: pdf,
     );
-    // addSignOffPages(pdfData: pdfData, pdf: pdf);
-    addSignOffPages(pdfData: riskAssessmentModel, pdf: pdf);
+
+    addSignOffPages(
+      pdfData: riskAssessmentModel,
+      pdf: pdf,
+    );
   }
 
   /* ************************************** */
@@ -262,9 +257,11 @@ class TbRaPdfGenerator {
         },
         footer: (context) {
           return RaFooterRow(
-              pageNo: context.pageNumber,
-              isSignOffFooter: true,
-              pdfData: pdfData);
+            pageNoToRender: context.pageNumber,
+            pageNo: context.pageNumber,
+            isSignOffFooter: true,
+            pdfData: pdfData,
+          );
         },
       ),
     );
