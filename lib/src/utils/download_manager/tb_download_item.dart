@@ -1,6 +1,9 @@
 class TbDownloadItem {
   final String url;
-  final String localPath;
+  final String id;
 
-  TbDownloadItem({required this.url, required this.localPath});
+  TbDownloadItem({
+    required this.url,
+    required this.id,
+  });
 }

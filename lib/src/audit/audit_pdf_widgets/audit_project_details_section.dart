@@ -11,12 +11,11 @@ class AuditProjectDetailSection extends StatelessWidget {
 
   final auditPdfTextStyles = AuditPdfTextStyles();
 
-    // final String localeName;
+  // final String localeName;
 
   AuditProjectDetailSection({
     this.auditAssessmentEntity,
     // required this.localeName,
-
   });
 
   @override
@@ -48,11 +47,7 @@ class AuditProjectDetailSection extends StatelessWidget {
             fieldValue: auditAssessmentEntity?.isSubscribed == 0
                 ? "Upgrade to Unlock"
                 // : dateEntity.value ?? "",
-                : TbPdfHelper.dateStringForLocaleInPdf(
-                    date: dateEntity.value ?? "",
-                    //  localeName:  localeName,
-
-                    ),
+                : dateEntity.value ?? "",
             fieldValueTextStyle: auditAssessmentEntity?.isSubscribed == 0
                 ? TbPdfHelper().textStyleGenerator(
                     font: Theme.of(context).header0.fontBoldItalic,

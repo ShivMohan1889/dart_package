@@ -109,9 +109,7 @@ class AuditUserDetailsSection extends StatelessWidget {
               Text(
                 // "$userAssessmentDate",
 
-                TbPdfHelper.dateStringForLocaleInPdf(
-                  date: userAssessmentDate ?? "",
-                ),
+                userAssessmentDate ?? "",
 
                 style: TbPdfHelper().textStyleGenerator(
                   font: Theme.of(context).header0.font,

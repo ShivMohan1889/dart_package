@@ -3,8 +3,6 @@
 /// More dartdocs go here.
 library dart_pdf_package;
 
-export 'src/dart_pdf_package_base.dart';
-
 export 'src/audit/tb_audit_pdf_generator.dart';
 
 export 'src/utils/pdf/tb_pdf_helper.dart';

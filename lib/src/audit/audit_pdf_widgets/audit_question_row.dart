@@ -14,9 +14,6 @@ class AuditQuestionRow extends StatelessWidget {
   final auditPdfTextStyle = AuditPdfTextStyles();
   final TbPdfHelper pdfHelper;
 
-  
-
-
   AuditQuestionRow({
     required this.pdfHelper,
     this.questionEntity,
@@ -98,10 +95,10 @@ class AuditQuestionRow extends StatelessWidget {
                       ),
                       child: Text(
                         // "${questionEntity?.values}",
-                        TbPdfHelper.dateStringForLocaleInPdf(
-                          date: questionEntity?.answer ?? "",
-                          // localeName:  
-                        ),
+
+                        questionEntity?.answer ?? "",
+                        // localeName:
+
                         // style: auditPdfTextStyle.questionNameTextStyle(),
                         style: TbPdfHelper().textStyleGenerator(
                           font: Theme.of(context).header0.fontItalic,
@@ -150,7 +147,7 @@ class AuditQuestionRow extends StatelessWidget {
         if (questionEntity?.answer == options[currentIndex]) {
           image = Image(pdfHelper.auditCheckImage, height: 17, width: 17);
         } else {
-          image = Image(pdfHelper.aduitUncheckImage, height: 17, width: 17);
+          image = Image(pdfHelper.auditUncheckImage, height: 17, width: 17);
         }
       }
 
