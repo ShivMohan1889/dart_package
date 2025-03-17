@@ -1,6 +1,6 @@
 
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_contants.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/yes_and_no_enum.dart';
+import 'package:dart_pdf_package/src/utils/enums/yes_and_no_enum.dart';
 import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';

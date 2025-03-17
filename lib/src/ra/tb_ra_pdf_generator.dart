@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_sign_off_section.dart';
 import 'package:dart_pdf_package/src/ra/tb_ra_pdf_constants.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/ra_pdf_title_type.dart';
+import 'package:dart_pdf_package/src/utils/enums/ra_pdf_title_type.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
@@ -72,12 +72,29 @@ class TbRaPdfGenerator {
 
     // here we are calling generatePDf method for each entity
 
-    for (RaPdfData raEntity in l) {
-      generatePdfFor(
+    // for (RaPdfData raEntity in l) {
+    //   await  preparePDFImages(
+    //     raEntity,
+    //   );
+
+    //   generatePdfFor(
+    //     pdf: pdf,
+    //     riskAssessmentModel: raEntity,
+    //   );
+    // }
+     await Future.forEach(l, (raEntity) async{
+        
+        RaPdfData raData = raEntity as RaPdfData;
+
+        await preparePDFImages(
+            raData
+        );
+        generatePdfFor(
         pdf: pdf,
         riskAssessmentModel: raEntity,
       );
-    }
+    });
+    
     // headerWidgets.clear();
     // footerWidgets.clear();
     // Handle MS assessment if present and if showMsFirst is false
@@ -1261,6 +1278,80 @@ class TbRaPdfGenerator {
         ),
       ),
     );
+  }
+
+
+
+  Future<void> preparePDFImages(RaPdfData raPdfData) async {
+   
+    if (raPdfData.companyLogo != null) {
+      raPdfData.companyLogoMemoryImage =
+          await TbPdfHelper().generateMemoryImageForPath(pdfData.companyLogo!);
+    }
+
+    if (raPdfData.userSignature.signature != null) {
+      raPdfData.userSignature.signatureMemoryImage =
+          await TbPdfHelper().generateMemoryImageForPath(
+        raPdfData.userSignature.signature ?? "",
+      );
+    }
+
+    if (raPdfData.reviewSignature?.signature != null) {
+      raPdfData.reviewSignature?.signatureMemoryImage =
+          await TbPdfHelper().generateMemoryImageForPath(
+        pdfData.reviewSignature?.signature ?? "",
+      );
+    }
+
+
+
+    if ((raPdfData.signOffUsers ?? []).isNotEmpty) {
+      await Future.forEach(raPdfData.signOffUsers ?? [], (element) async {
+        ReviewSignOffSignatureData imagePdfModel =
+            element as ReviewSignOffSignatureData;
+
+        if ((imagePdfModel.signature ?? "").isNotEmpty) {
+          imagePdfModel.signatureMemoryImage = await TbPdfHelper()
+              .generateMemoryImageForPath(imagePdfModel.signature ?? "");
+        }
+      });
+    }
+    
+
+    if ((raPdfData.referenceImages ?? []).isNotEmpty) {
+      await Future.forEach(raPdfData.referenceImages ?? [], (element) async {
+        ReferenceImagePdfModel imagePdfModel =
+            element as ReferenceImagePdfModel;
+
+        if ((imagePdfModel.image ?? "").isNotEmpty) {
+          imagePdfModel.memoryImage = await TbPdfHelper()
+              .generateMemoryImageForPath(imagePdfModel.image ?? "");
+        }
+      });
+    }
+
+    if ((raPdfData.assessmentImages ?? []).isNotEmpty) {
+      await Future.forEach(raPdfData.assessmentImages ?? [], (element) async {
+        AssessmentImagePdfModel imagePdfModel =
+            element as AssessmentImagePdfModel;
+
+        if ((imagePdfModel.image ?? "").isNotEmpty) {
+          imagePdfModel.memoryImage = await TbPdfHelper()
+              .generateMemoryImageForPath(imagePdfModel.image ?? "");
+        }
+      });
+    }
+
+    if ((raPdfData.hazards).isNotEmpty) {
+      await Future.forEach(raPdfData.hazards, (element) async {
+        HazardPdfModel imagePdfModel = element;
+
+        if ((imagePdfModel.imageURL ?? "").isNotEmpty) {
+          imagePdfModel.memoryImage = await TbPdfHelper()
+              .generateMemoryImageForPath(imagePdfModel.imageURL ?? "");
+        }
+      });
+    }
   }
 }
 

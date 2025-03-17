@@ -1,7 +1,7 @@
 
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_contants.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/incident_report_enum.dart';
+import 'package:dart_pdf_package/src/utils/enums/incident_report_enum.dart';
 import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart';

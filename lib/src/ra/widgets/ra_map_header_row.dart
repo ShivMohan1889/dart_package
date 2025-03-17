@@ -2,7 +2,7 @@ import 'package:dart_pdf_package/src/ra/ra_pdf_data.dart';
 import 'package:dart_pdf_package/src/ra/tb_ra_pdf_constants.dart';
 import 'package:dart_pdf_package/src/ra/widgets/ra_company_details_row.dart';
 import 'package:dart_pdf_package/src/ra/widgets/ra_logo_row.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/ra_pdf_title_type.dart';
+import 'package:dart_pdf_package/src/utils/enums/ra_pdf_title_type.dart';
 import 'package:pdf/widgets.dart';
 
 /// creates the header for the pdf, depending on the [pageNo]

@@ -54,8 +54,8 @@ class RaPdfData {
     required this.signOffStatementReport,
   });
   final String titleForPDF;
-  final String? companyLogo;
-  final MemoryImage? companyLogoMemoryImage;
+  String? companyLogo;
+  MemoryImage? companyLogoMemoryImage;
   final String companyDetails;
   final String companyPhoneEmail;
   final String signOffStatementReport;
@@ -90,6 +90,7 @@ class RaPdfData {
   final int? approvalMode;
   final int? numberOfSigneeRequired;
   final int? hazardIconOpacity;
+  String? mapImagePath;
 
   final MemoryImage? mapMemoryImage;
   final List<HazardPdfModel> hazards;
@@ -157,8 +158,7 @@ class RaPdfData {
   /// Create a model from a JSON map, ignoring MemoryImage fields
   static RaPdfData fromJson(Map<String, dynamic> json) {
     return RaPdfData(
-      linkingPreference:  json['linkingPreference'],
-      
+      linkingPreference: json['linkingPreference'],
       titleForPDF: json['titleForPDF'],
       companyLogo: json['companyLogo'],
       companyDetails: json['companyDetails'],
@@ -243,6 +243,8 @@ class HazardPdfModel {
     this.additionalControls,
     this.memoryImage,
     this.imageURL,
+
+
   });
 
   final String name;
@@ -257,10 +259,10 @@ class HazardPdfModel {
   final int? additionalScore;
   final int? cellRiskNumber;
   final String? imageURL;
-  final MemoryImage? memoryImage;
+  MemoryImage? memoryImage;
   final List<String>? existingControls;
   final List<String>? additionalControls;
-
+  
   /// Convert the model to a JSON map, ignoring MemoryImage fields
   Map<String, dynamic> toJson() {
     return {
@@ -316,7 +318,7 @@ class AssessmentImagePdfModel {
 
   final int isSelected;
   final String? image;
-  final MemoryImage? memoryImage;
+  MemoryImage? memoryImage;
   final int index;
 
   /// Convert the model to a JSON map, ignoring MemoryImage fields
@@ -346,7 +348,7 @@ class ReferenceImagePdfModel {
   });
 
   final String? image;
-  final MemoryImage? memoryImage;
+  MemoryImage? memoryImage;
   final int index;
 
   /// Convert the model to a JSON map, ignoring MemoryImage fields

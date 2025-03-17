@@ -24,8 +24,8 @@ import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_ir_space_box.
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_ir_text_question.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_ir_type.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_ir_user_details_table.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/incident_report_enum.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/yes_and_no_enum.dart';
+import 'package:dart_pdf_package/src/utils/enums/incident_report_enum.dart';
+import 'package:dart_pdf_package/src/utils/enums/yes_and_no_enum.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 

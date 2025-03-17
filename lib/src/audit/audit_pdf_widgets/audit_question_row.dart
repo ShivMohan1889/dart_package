@@ -1,5 +1,5 @@
 import 'package:dart_pdf_package/dart_pdf_package.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/audit_enum.dart';
+import 'package:dart_pdf_package/src/utils/enums/audit_enum.dart';
 
 import '../audit_pdf_constants.dart';
 import 'package:pdf/pdf.dart';

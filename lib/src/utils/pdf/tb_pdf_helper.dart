@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/incident_report_enum.dart';
+import 'package:dart_pdf_package/src/utils/enums/incident_report_enum.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial_1.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial_italic.dart';
@@ -123,7 +123,7 @@ class TbPdfHelper {
   /* ************************************** */
   String returnTextForIncidentReportType({
     required IncidentReportDto? incidentReportEntity,
-    required String injuryTypeText,
+  required String injuryTypeText,
     required String illHealthTypeText,
     required String nearMissType,
   }) {

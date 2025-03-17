@@ -9,7 +9,7 @@ import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_border.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_footer_section.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_header_row.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_review_signature_section.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/audit_enum.dart';
+import 'package:dart_pdf_package/src/utils/enums/audit_enum.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';

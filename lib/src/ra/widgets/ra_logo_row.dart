@@ -1,7 +1,6 @@
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ra/tb_ra_pdf_constants.dart';
-import 'package:dart_pdf_package/src/utils/enums/enum/ra_pdf_title_type.dart';
-import 'package:pdf/pdf.dart';
+import 'package:dart_pdf_package/src/utils/enums/ra_pdf_title_type.dart';
 import 'package:pdf/widgets.dart';
 
 class RaLogoRow extends StatelessWidget {
@@ -37,10 +36,12 @@ class RaLogoRow extends StatelessWidget {
                   height: 80,
                   width: 80,
                   child: Image(
+                  
                     logoImage!,
                     height: 60,
                     width: 80,
                   ),
+
                 )
               : Container(height: 50, width: 50),
         ],
