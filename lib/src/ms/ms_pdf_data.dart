@@ -96,9 +96,7 @@ class MsPdfData {
           .toList(),
       raPdfData: json["raPdfData"] == null
           ? null
-          : RaPdfData.fromJson(
-              json["raPdfData"]
-            ),
+          : RaPdfData.fromJson(json["raPdfData"]),
     );
   }
 }
@@ -129,27 +127,27 @@ class ProjectDetailsData {
 class HeaderRows {
   String name;
   int level;
-  List<HeaderStatementData> statements;
-  List<HazardIconData> hazardIcons;
-  List<HeaderReferenceImageData> images;
-  List<HeaderRows>? headerRows;
+  List<HeaderStatementData>? statements;
+  List<HazardIconData>? hazardIcons;
+  List<HeaderReferenceImageData>? images;
+  List<HeaderRows>?headerRows;
 
   HeaderRows({
     required this.name,
     required this.level,
-    required this.statements,
-    required this.hazardIcons,
+    this.statements,
+     this.hazardIcons,
     required this.images,
-    this.headerRows,
+     this.headerRows,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'name': name,
       'level': level,
-      'statements': statements.map((statement) => statement.toJson()).toList(),
-      'hazardIcons': hazardIcons.map((icon) => icon.toJson()).toList(),
-      'images': images.map((image) => image.toJson()).toList(),
+      'statements': statements?.map((statement) => statement.toJson()).toList(),
+      'hazardIcons': hazardIcons?.map((icon) => icon.toJson()).toList(),
+      'images': images?.map((image) => image.toJson()).toList(),
       'headerRows': headerRows?.map((header) => header.toJson()).toList(),
     };
   }
@@ -158,20 +156,20 @@ class HeaderRows {
     return HeaderRows(
       name: json['name'] as String,
       level: json['level'] as int,
-      statements: (json['statements'] as List)
-          .map((item) =>
+      statements: (json['statements'] as List<dynamic>?)
+          ?.map((item) =>
               HeaderStatementData.fromJson(item as Map<String, dynamic>))
           .toList(),
-      hazardIcons: (json['hazardIcons'] as List)
-          .map((item) => HazardIconData.fromJson(item as Map<String, dynamic>))
+      hazardIcons: (json['hazardIcons'] as List<dynamic>?)
+         ?.map((item) => HazardIconData.fromJson(item as Map<String, dynamic>))
           .toList(),
-      images: (json['images'] as List)
-          .map((item) =>
+      images: (json['images'] as List<dynamic>?)
+          ?.map((item) =>
               HeaderReferenceImageData.fromJson(item as Map<String, dynamic>))
           .toList(),
       headerRows: json['headerRows'] != null
-          ? (json['headerRows'] as List)
-              .map((item) => HeaderRows.fromJson(item as Map<String, dynamic>))
+          ? (json['headerRows'] as List<dynamic>?)
+              ?.map((item) => HeaderRows.fromJson(item as Map<String, dynamic>))
               .toList()
           : null,
     );
@@ -181,7 +179,7 @@ class HeaderRows {
 class HeaderStatementData {
   String text;
   List<MemoryImage>? memoryImages;
-  List<String>? images;
+  List<StatementImageData>? images;
 
   HeaderStatementData({
     required this.text,
@@ -198,9 +196,19 @@ class HeaderStatementData {
 
   factory HeaderStatementData.fromJson(Map<String, dynamic> json) {
     return HeaderStatementData(
-      text: json['text'],
-      images: List<String>.from(json['images']),
-    );
+        text: json['text'],
+        // images: List<String>.from(json['images']),
+        images: (json['images'] as List<dynamic>?)
+            ?.map((item) =>
+                StatementImageData.fromJson(item as Map<String, dynamic>))
+            .toList()
+        // images:  json['images'] != null
+        //     ? (json['images'] as List<)
+        //         .map((item) =>
+        //             StatementImageData.fromJson(item as Map<String, dynamic>))
+        //         .toList()
+        //     : null,
+        );
   }
 }
 
@@ -232,11 +240,11 @@ class HazardIconData {
 class HeaderReferenceImageData {
   MemoryImage? memoryImage;
   String? image;
-  String referenceNo;
+  String? referenceNo;
 
   HeaderReferenceImageData({
     this.image,
-    required this.referenceNo,
+    this.referenceNo,
     this.memoryImage,
   });
   Map<String, dynamic> toJson() {
@@ -249,7 +257,28 @@ class HeaderReferenceImageData {
   factory HeaderReferenceImageData.fromJson(Map<String, dynamic> json) {
     return HeaderReferenceImageData(
       image: json['image'],
-      referenceNo: json['referenceNo'],
+      referenceNo: json['referenceNo'] as String? ,
+    );
+  }
+}
+
+class StatementImageData {
+  MemoryImage? memoryImage;
+  String? image;
+
+  StatementImageData({
+    this.image,
+    this.memoryImage,
+  });
+  Map<String, dynamic> toJson() {
+    return {
+      'image': image,
+    };
+  }
+
+  factory StatementImageData.fromJson(Map<String, dynamic> json) {
+    return StatementImageData(
+      image: json['image'],
     );
   }
 }
@@ -284,7 +313,7 @@ class UserSignatureData {
       name: json['name'],
       position: json['position'],
       date: json['date'],
-      signature: null, // Need to reload this from the path
+      signature: json["signature"]  // Need to reload this from the path
     );
   }
 }
@@ -313,7 +342,7 @@ class ReviewSignOffSignatureData {
     return ReviewSignOffSignatureData(
       name: json['name'],
       date: json['date'],
-      signature: null, // Need to reload this from the path
+      signature: json["signature"], // Need to reload this from the path
     );
   }
 }

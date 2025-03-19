@@ -33,8 +33,10 @@ class RaFooterRow extends StatelessWidget {
     if (pageNo != 1) {
       return Container(
         height: TbRaPdfSectionHeights.SECOND_PAGE_FOOTER_HEIGHT,
-        // color: TbRaPdfColors.green,
-        padding: const EdgeInsets.only(bottom: 6),
+        padding: const EdgeInsets.only(
+          // bottom: 6,
+          bottom: 10,
+        ),
         child: drawPageNoRow(
           isForSignOff: true,
           context: context,
@@ -145,8 +147,10 @@ class RaFooterRow extends StatelessWidget {
                 color: TbMsPdfColors.lightGreyBackground,
                 child: pdfData.userSignature.signatureMemoryImage != null
                     ? Center(
-                        child:
-                            Image(pdfData.userSignature.signatureMemoryImage!))
+                        child: Image(
+                          pdfData.userSignature.signatureMemoryImage!,
+                        ),
+                      )
                     : Container(),
               ),
             ),
@@ -630,7 +634,11 @@ class RaFooterRow extends StatelessWidget {
     required Context context,
   }) {
     return Container(
-      padding: const EdgeInsets.only(left: 15, top: 3, right: 15),
+      padding: const EdgeInsets.only(
+        left: 15, top: 3,
+
+        // right: 15,
+      ),
       alignment: Alignment.bottomLeft,
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Container(
@@ -652,7 +660,12 @@ class RaFooterRow extends StatelessWidget {
                     )),
         ),
         Container(
-          padding: const EdgeInsets.only(top: 0),
+          padding: isForSignOff
+              ? const EdgeInsets.only(
+                  top: 0,
+                  right: 15,
+                )
+              : const EdgeInsets.only(),
           child: Text(
             "Page No: $pageNoToRender${getReferenceNumber()}",
             // style: raPdfTextStyles.italicBlack8(),

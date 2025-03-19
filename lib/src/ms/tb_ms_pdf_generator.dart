@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
-import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
 
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_assessment_image_box.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_assessment_image_row.dart';
@@ -18,7 +17,6 @@ import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart';
 
-import '../utils/pdf/tb_pdf_helper.dart';
 
 import 'ms_pdf_widget/ms_footer_section.dart';
 import 'ms_pdf_widget/ms_header_row.dart';
@@ -73,7 +71,7 @@ class TbMsPdfGenerator {
       //   platFormLocaleName: platFormLocaleName,
       //   theRiskAssessmentEntity: riskAssessmentEntity,
       //   documentsDirPath: documentsDirPath,
-      //   pdfDocumentFromMs: pdf, 
+      //   pdfDocumentFromMs: pdf,
       //   pdfHelper: pdfHelper,
       //   showMsFirst: showMsFirst,
       // );
@@ -82,13 +80,11 @@ class TbMsPdfGenerator {
         pdfDocumentFromMs: pdf,
         pdfHelper: pdfHelper,
         showMsFirst: showMsFirst,
-        
-       
       );
 
       await raPdfGenerator.generatePDF();
     }
-    
+
     await preparePDFImages(pdfData);
 
     var projectDetailsSection = MsProjectDetailsSection(
@@ -218,7 +214,7 @@ class TbMsPdfGenerator {
     Widget widget = MsReviewSignatureSection(
       reviewDate: pdfData.reviewSignature?.date ?? "",
       reviewUserName: pdfData.reviewSignature?.name,
-      approvalMode:   pdfData.approvalMode,
+      approvalMode: pdfData.approvalMode,
       reviewSignatureImage: pdfData.reviewSignature?.signatureMemoryImage,
       userName: pdfData.userSignature.name,
       userAssessmentDate: pdfData.userSignature.date,
@@ -288,10 +284,10 @@ class TbMsPdfGenerator {
           context: context,
         );
       }
-    } else if ((headerRow.hazardIcons).isNotEmpty) {
-      showMsStatementIconsOnPdf(hazardIconData: headerRow.hazardIcons);
-    } else if ((headerRow.statements).isNotEmpty) {
-      for (HeaderStatementData statementData in headerRow.statements) {
+    } else if ((headerRow.hazardIcons ??  []).isNotEmpty) {
+      showMsStatementIconsOnPdf(hazardIconData: headerRow.hazardIcons ?? []);
+    } else if ((headerRow.statements ??  []).isNotEmpty) {
+      for (HeaderStatementData statementData in headerRow.statements ?? []) {
         Widget w = MsStatementRow(
           statementName: statementData.text,
           statmentTextStyle: TbPdfHelper().textStyleGenerator(
@@ -315,7 +311,7 @@ class TbMsPdfGenerator {
     if ((headerRow.images ?? []).isNotEmpty) {
       List<MemoryImage> images = [];
 
-      for (HeaderReferenceImageData image in headerRow.images) {
+      for (HeaderReferenceImageData image in headerRow.images ?? []) {
         if (image.memoryImage != null) {
           images.add(image.memoryImage!);
         }
@@ -698,6 +694,9 @@ class TbMsPdfGenerator {
       pdfData.companyLogoMemoryImage =
           await TbPdfHelper().generateMemoryImageForPath(pdfData.companyLogo!);
     }
+    await _processReviewSignOff(
+        signOffSignatures: pdfData.signOffSignatures ?? []);
+        
     await _processHeadersMemoryImagesRecursively(pdfData.headers);
   }
 
@@ -706,9 +705,9 @@ class TbMsPdfGenerator {
     for (var header in headers) {
       // Process immediate content of this header
       await Future.wait([
-        _processStatements(header.statements),
-        _processHazardIcons(header.hazardIcons),
-        _processReferenceImages(header.images),
+        _processStatements(header.statements ??  []),
+        _processHazardIcons(header.hazardIcons ?? []),
+        _processReferenceImages(header.images ??  []),
       ]);
 
       // Process any nested headers recursively
@@ -725,8 +724,10 @@ class TbMsPdfGenerator {
     await Future.forEach(statements, (statement) async {
       List<MemoryImage> memoryImage = [];
       await Future.forEach((statement.images ?? []), (image) async {
-        if ((statement.memoryImages ?? []).isEmpty) {
-          var i = await TbPdfHelper().generateMemoryImageForPath(image);
+        if ((statement.images ?? []).isNotEmpty) {
+          StatementImageData statementImageData = image as StatementImageData;
+          var i = await TbPdfHelper()
+              .generateMemoryImageForPath(statementImageData.image ?? "");
           if (i != null) {
             memoryImage.add(i);
           }
@@ -744,6 +745,16 @@ class TbMsPdfGenerator {
       if (hazardIcon.icon != null) {
         hazardIcon.iconMemoryImage =
             await TbPdfHelper().generateMemoryImageForPath(hazardIcon.icon!);
+      }
+    }
+  }
+
+  Future<void> _processReviewSignOff(
+      {required List<ReviewSignOffSignatureData> signOffSignatures}) async {
+    for (ReviewSignOffSignatureData signOff in signOffSignatures) {
+      if ((signOff.signature ?? "").isNotEmpty) {
+        signOff.signatureMemoryImage =
+            await TbPdfHelper().generateMemoryImageForPath(signOff.signature!);
       }
     }
   }

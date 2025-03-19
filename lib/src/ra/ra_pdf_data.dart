@@ -52,6 +52,8 @@ class RaPdfData {
     this.listChildren = const [],
     this.msPdfData,
     required this.signOffStatementReport,
+    this.mapImagePath,
+
   });
   final String titleForPDF;
   String? companyLogo;
@@ -92,7 +94,7 @@ class RaPdfData {
   final int? hazardIconOpacity;
   String? mapImagePath;
 
-  final MemoryImage? mapMemoryImage;
+   MemoryImage? mapMemoryImage;
   final List<HazardPdfModel> hazards;
   final List<String>? keyStaff;
   final List<AssessmentImagePdfModel>? assessmentImages;
@@ -125,6 +127,7 @@ class RaPdfData {
       'location': location,
       'fire': fire,
       'coshh': coshh,
+      'mapImagePath': mapImagePath,
       'manualHandling': manualHandling,
       'displayHandling': displayHandling,
       'youngPerson': youngPerson,
@@ -192,6 +195,8 @@ class RaPdfData {
       approvalMode: json['approvalMode'],
       numberOfSigneeRequired: json['numberOfSigneeRequired'],
       hazardIconOpacity: json['hazardIconOpacity'],
+      mapImagePath:   json["mapImagePath"] as String?,
+      
       hazards: (json['hazards'] as List)
           .map((h) => HazardPdfModel.fromJson(h))
           .toList(),

@@ -82,19 +82,16 @@ class TbRaPdfGenerator {
     //     riskAssessmentModel: raEntity,
     //   );
     // }
-     await Future.forEach(l, (raEntity) async{
-        
-        RaPdfData raData = raEntity as RaPdfData;
+    await Future.forEach(l, (raEntity) async {
+      RaPdfData raData = raEntity as RaPdfData;
 
-        await preparePDFImages(
-            raData
-        );
-        generatePdfFor(
+      await preparePDFImages(raData);
+      generatePdfFor(
         pdf: pdf,
         riskAssessmentModel: raEntity,
       );
     });
-    
+
     // headerWidgets.clear();
     // footerWidgets.clear();
     // Handle MS assessment if present and if showMsFirst is false
@@ -560,61 +557,7 @@ class TbRaPdfGenerator {
     }
   }
 
-  /* ************************************** */
-  // SPLIT TEXT
-  /* ************************************** */
-  // int splitText({
-  //   required RaPdfData riskAssessmentModel,
-  //   required String text,
-  //   required double maxHeight,
-  //   required double height,
-  // }) {
-  //   if (text.isEmpty) return 0;
 
-  //   // Get approximate split index
-  //   double ratio = maxHeight / height;
-  //   int approxIndex = (ratio * text.length).floor();
-
-  //   // Find best split point (at a space)
-  //   int splitIndex = findNearestSpaceToSplit(
-  //       text, approxIndex, maxHeight, riskAssessmentModel);
-
-  //   return splitIndex;
-  // }
-
-  /* ************************************** */
-  // FIND NEAREST SPACE TO SPLIT
-  /* ************************************** */
-  // int findNearestSpaceToSplit(
-  //     String text, int approxIndex, double maxHeight, RaPdfData model) {
-  //   // Binary search approach to find optimal split point
-  //   int low = 0;
-  //   int high = text.length;
-  //   int bestSplitIndex = 0;
-
-  //   while (low <= high) {
-  //     int mid = (low + high) ~/ 2;
-  //     int spaceIndex = findPreviousSpace(text, mid);
-
-  //     if (spaceIndex <= 0) {
-  //       low = mid + 1;
-  //       continue;
-  //     }
-
-  //     // Check if text up to this space fits
-  //     String subText = text.substring(0, spaceIndex);
-  //     double subTextHeight = measureTextHeight(subText, model);
-
-  //     if (subTextHeight <= maxHeight) {
-  //       bestSplitIndex = spaceIndex;
-  //       low = mid + 1; // Try to fit more text
-  //     } else {
-  //       high = mid - 1; // Need less text
-  //     }
-  //   }
-
-  //   return bestSplitIndex;
-  // }
 
   int splitText({
     required RaPdfData riskAssessmentModel,
@@ -862,7 +805,7 @@ class TbRaPdfGenerator {
             image: image.memoryImage!,
             opacity: riskAssessmentModel.hazardIconOpacity,
             pdfData: riskAssessmentModel,
-            index: image.index ?? 1,
+            index: count++ ?? 1,
             raPdfPageTitleType: RaPdfPageTitleType.referenceImage,
           ),
         );
@@ -1280,19 +1223,21 @@ class TbRaPdfGenerator {
     );
   }
 
-
-
   Future<void> preparePDFImages(RaPdfData raPdfData) async {
-   
-    if (raPdfData.companyLogo != null) {
+    if ((raPdfData.companyLogo ?? "").isNotEmpty) {
       raPdfData.companyLogoMemoryImage =
           await TbPdfHelper().generateMemoryImageForPath(pdfData.companyLogo!);
     }
 
-    if (raPdfData.userSignature.signature != null) {
+    if ((raPdfData.userSignature.signature ?? "").isNotEmpty) {
       raPdfData.userSignature.signatureMemoryImage =
           await TbPdfHelper().generateMemoryImageForPath(
         raPdfData.userSignature.signature ?? "",
+      );
+    }
+    if ((raPdfData.mapImagePath ?? "").isNotEmpty) {
+      raPdfData.mapMemoryImage = await TbPdfHelper().generateMemoryImageForPath(
+        raPdfData.mapImagePath ?? "",
       );
     }
 
@@ -1302,8 +1247,6 @@ class TbRaPdfGenerator {
         pdfData.reviewSignature?.signature ?? "",
       );
     }
-
-
 
     if ((raPdfData.signOffUsers ?? []).isNotEmpty) {
       await Future.forEach(raPdfData.signOffUsers ?? [], (element) async {
@@ -1316,7 +1259,6 @@ class TbRaPdfGenerator {
         }
       });
     }
-    
 
     if ((raPdfData.referenceImages ?? []).isNotEmpty) {
       await Future.forEach(raPdfData.referenceImages ?? [], (element) async {
