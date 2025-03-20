@@ -276,13 +276,13 @@ class HazardPdfModel {
       'harm': harm,
       'worstCase': worstCase,
       'likelihoods': likelihoods,
-      'additionalLikelihood': additionalLikelihood,
+      'additionalLiklihood': additionalLikelihood,
       'score': score,
       'rating': rating,
       'additionalRating': additionalRating,
       'additionalScore': additionalScore,
       'cellRiskNumber': cellRiskNumber,
-      'imageURL': imageURL,
+      'imagePath': imageURL,
       'existingControls': existingControls,
       'additionalControls': additionalControls,
     };
@@ -296,13 +296,15 @@ class HazardPdfModel {
       harm: json['harm'] as String?,
       worstCase: json['worstCase'] as String,
       likelihoods: json['likelihoods'],
-      additionalLikelihood: json['additionalLikelihood'],
+      // additionalLikelihood: json['additionalLikelihood'],
+      additionalLikelihood:  json['additionalLiklihood'],
       score: json['score'],
       rating: json['rating'],
+      
       additionalRating: json['additionalRating'],
       additionalScore: json['additionalScore'],
       cellRiskNumber: json['cellRiskNumber'],
-      imageURL: json['imageURL'],
+      imageURL: json['imagePath'],
       existingControls: json['existingControls'] == null
           ? []
           : List<String>.from(json['existingControls']),
