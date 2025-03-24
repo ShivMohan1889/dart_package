@@ -51,6 +51,8 @@ class TbRaPdfColors {
   static PdfColor upgradeToUnlockColor = PdfColor.fromHex("#077BB7");
 
   static PdfColor lightGreySignatureBgColor = PdfColor.fromHex("#fafcf9");
+
+  static PdfColor gridHazardBackground = PdfColor.fromHex("#6d6d6d");
 }
 
 class TbRaPdfBoxDecorations {

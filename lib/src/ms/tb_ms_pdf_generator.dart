@@ -17,7 +17,6 @@ import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart';
 
-
 import 'ms_pdf_widget/ms_footer_section.dart';
 import 'ms_pdf_widget/ms_header_row.dart';
 import 'ms_pdf_widget/ms_review_signature_section.dart';
@@ -129,7 +128,7 @@ class TbMsPdfGenerator {
             context: context,
           );
 
-          showSignOffUserWithData(
+          showSignOffUserData(
             signOffUsers: pdfData.signOffSignatures ?? [],
             pdfHelper: pdfHelper,
             signOffStatement: pdfData.signOffStatement,
@@ -284,9 +283,9 @@ class TbMsPdfGenerator {
           context: context,
         );
       }
-    } else if ((headerRow.hazardIcons ??  []).isNotEmpty) {
+    } else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
       showMsStatementIconsOnPdf(hazardIconData: headerRow.hazardIcons ?? []);
-    } else if ((headerRow.statements ??  []).isNotEmpty) {
+    } else if ((headerRow.statements ?? []).isNotEmpty) {
       for (HeaderStatementData statementData in headerRow.statements ?? []) {
         Widget w = MsStatementRow(
           statementName: statementData.text,
@@ -670,6 +669,122 @@ class TbMsPdfGenerator {
     listIconImageItems = [];
   }
 
+  void showSignOffUserData({
+    required Context context,
+    required List<ReviewSignOffSignatureData> signOffUsers,
+    required TbPdfHelper pdfHelper,
+    required String? signOffStatement,
+  }) {
+    if (signOffUsers.isEmpty) return;
+
+    final List<Widget> signOffSection = [];
+
+    // Section title and sign-off statement
+    signOffSection.add(
+      Container(
+        padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "SIGN OFF USERS",
+              style: TbPdfHelper().textStyleGenerator(
+                font: Theme.of(context).header0.fontBold,
+                color: TbMsPdfColors.black,
+                fontSize: 12,
+              ),
+            ),
+            SizedBox(height: 5),
+            if (signOffStatement != null)
+              Text(
+                signOffStatement,
+                style: TbPdfHelper().textStyleGenerator(
+                  font: Theme.of(context).header0.fontNormal,
+                  color: TbMsPdfColors.black,
+                  fontSize: 9,
+                ),
+              ),
+            if ((signOffStatement ?? "").isNotEmpty)
+              Container(
+                height: 3,
+              ),
+          ],
+        ),
+      ),
+    );
+
+    // Process sign-off users in pairs
+    for (int i = 0; i < signOffUsers.length; i += 2) {
+      List<Widget> rowChildren = [];
+
+      rowChildren.add(Container(
+        width: TbMsPdfWidth.pageWidth / 2 - 25,
+        decoration: BoxDecoration(
+          color: TbMsPdfColors.lightGreyBackground,
+          border: Border.all(width: 0.5, color: PdfColors.grey300),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        margin: const EdgeInsets.only(right: 10),
+        child: MsSignOffSection(
+          user: signOffUsers[i],
+        ),
+      ));
+
+      if (i + 1 < signOffUsers.length) {
+        rowChildren.add(
+          MsSignOffSection(
+            user: signOffUsers[i + 1],
+          ),
+        );
+      } else {
+        rowChildren.add(Container(
+          width: TbMsPdfWidth.pageWidth / 2 - 25,
+        ));
+      }
+
+      signOffSection.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: rowChildren,
+          ),
+        ),
+      );
+    }
+
+    // **Ensure content does not split across pages**
+    msPdfItems.add(
+      Container(
+        // padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: TbMsPdfColors.white,
+        ),
+        child: Wrap(
+          alignment: WrapAlignment.start,
+          crossAxisAlignment: WrapCrossAlignment.start,
+          spacing: 10, // Adjust spacing if needed
+          runSpacing: 10,
+
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: 0,
+                maxHeight: TbMsPdfWidth.pageHeight *
+                    0.8, // Ensures content stays together
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: signOffSection,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> preparePDFImages(MsPdfData pdfData) async {
     if (pdfData.siteImage != null) {
       pdfData.siteMemoryImage =
@@ -696,7 +811,7 @@ class TbMsPdfGenerator {
     }
     await _processReviewSignOff(
         signOffSignatures: pdfData.signOffSignatures ?? []);
-        
+
     await _processHeadersMemoryImagesRecursively(pdfData.headers);
   }
 
@@ -705,9 +820,9 @@ class TbMsPdfGenerator {
     for (var header in headers) {
       // Process immediate content of this header
       await Future.wait([
-        _processStatements(header.statements ??  []),
+        _processStatements(header.statements ?? []),
         _processHazardIcons(header.hazardIcons ?? []),
-        _processReferenceImages(header.images ??  []),
+        _processReferenceImages(header.images ?? []),
       ]);
 
       // Process any nested headers recursively

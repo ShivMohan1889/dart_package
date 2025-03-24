@@ -1,4 +1,5 @@
 import 'package:dart_pdf_package/src/ra/ra_pdf_data.dart';
+import 'package:dart_pdf_package/src/ra/tb_ra_pdf_constants.dart';
 import 'package:dart_pdf_package/src/utils/enums/ra_pdf_title_type.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
@@ -145,10 +146,11 @@ class AssessmentImageSection extends StatelessWidget {
                 width: 0.25,
                 color: PdfColors.black,
               ),
-              color: PdfColors.grey300,
+              // color: PdfColors.grey300,
+              color: TbRaPdfColors.gridHazardBackground,
             ),
-            child: Stack(
-              children: [
+            child:
+             Stack(children: [
               (iconImage != null)
                   ? Center(
                       child: Image(
@@ -168,8 +170,12 @@ class AssessmentImageSection extends StatelessWidget {
                   height: 15,
                   width: 15,
                   child: Center(
-                    child: Text((entity.cellRiskNumber ?? 0).toString(),
-                        style: const TextStyle(color: PdfColors.white)),
+                    child: Text(
+                      (entity.cellRiskNumber ?? 0).toString(),
+                      style: const TextStyle(
+                        color: PdfColors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),

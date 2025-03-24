@@ -48,9 +48,13 @@ class MsReviewSignatureSection extends StatelessWidget {
       subHeading = "Person created & reviewed the assessment";
     }
 
-    return Container(
-        width: TbMsPdfWidth.pageWidth,
-        child: Column(
+    return Wrap(
+      direction: Axis.horizontal,
+      verticalDirection: VerticalDirection.down,
+      children: [
+        Container(
+          width: TbMsPdfWidth.pageWidth,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -85,6 +89,9 @@ class MsReviewSignatureSection extends StatelessWidget {
                     SizedBox(height: 5),
                   ],
                 ),
+              ),
+              SizedBox(
+                height: 5,
               ),
               Container(
                 padding:
@@ -124,8 +131,12 @@ class MsReviewSignatureSection extends StatelessWidget {
                       ),
                   ],
                 ),
-              )
-            ]));
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget drawUserSignature(Context context) {
@@ -186,26 +197,46 @@ class MsReviewSignatureSection extends StatelessWidget {
               color: TbMsPdfColors.black,
             ),
           ),
+
           // Signature image or empty container with white background
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 5),
-            height: 60,
-            width: 80,
-            // decoration: BoxDecoration(
-            //   color: PdfColors.white,
-            //   border: Border.all(
-            //     width: 0.5,
-            //     color: PdfColors.grey200,
-            //   ),
-            // ),
-            child: userSignature != null
-                ? Image(
-                    userSignature!,
-                    height: 60,
-                    width: 80,
-                  )
-                : null,
+          // Container(
+          //   margin: const EdgeInsets.symmetric(vertical: 5),
+          //   height: 60,
+          //   width: 80,
+          //   // decoration: BoxDecoration(
+          //   //   color: PdfColors.white,
+          //   //   border: Border.all(
+          //   //     width: 0.5,
+          //   //     color: PdfColors.grey200,
+          //   //   ),
+          //   // ),
+          //   child: userSignature != null
+          //       ? Image(
+          //           userSignature!,
+          //           height: 60,
+          //           width: 80,
+          //         )
+          //       : null,
+          // ),
+
+          Expanded(
+            child: Container(
+              // padding: EdgeInsets.all(5),
+              padding: EdgeInsets.only(
+                top: 10,
+                right: 20,
+              ),
+              color: TbMsPdfColors.lightGreyBackground,
+              alignment: Alignment.centerLeft,
+              child: userSignature != null
+                  ? Image(
+                      userSignature!,
+                      fit: BoxFit.contain,
+                    )
+                  : Container(),
+            ),
           ),
+
           SizedBox(height: 4.0),
           Row(
             children: [
@@ -281,23 +312,40 @@ class MsReviewSignatureSection extends StatelessWidget {
             ),
           ),
           // Signature image or empty container with white background
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 5),
-            height: 60,
-            width: 80,
-            // decoration: BoxDecoration(
-            //   color: PdfColors.white,
-            //   border: Border.all(width: 0.5, color: PdfColors.grey200,
+          // Container(
+          //   margin: const EdgeInsets.symmetric(vertical: 5),
+          //   height: 60,
+          //   width: 80,
+          //   // decoration: BoxDecoration(
+          //   //   color: PdfColors.white,
+          //   //   border: Border.all(width: 0.5, color: PdfColors.grey200,
 
-            //   ),
-            // ),
-            child: reviewSignatureImage != null
-                ? Image(
-                    reviewSignatureImage!,
-                    height: 60,
-                    width: 80,
-                  )
-                : null,
+          //   //   ),
+          //   // ),
+          //   child: reviewSignatureImage != null
+          //       ? Image(
+          //           reviewSignatureImage!,
+          //           height: 60,
+          //           width: 80,
+          //         )
+          //       : null,
+          // ),
+
+          Expanded(
+            child: Container(
+              color: TbMsPdfColors.lightGreyBackground,
+              padding: EdgeInsets.only(
+                top: 10,
+                right: 20,
+              ),
+              alignment: Alignment.centerLeft,
+              child: reviewSignatureImage != null
+                  ? Image(
+                      reviewSignatureImage!,
+                      fit: BoxFit.contain,
+                    )
+                  : Container(),
+            ),
           ),
           SizedBox(height: 4.0),
           Row(

@@ -32,7 +32,8 @@ class RaFooterRow extends StatelessWidget {
   Widget build(Context context) {
     if (pageNo != 1) {
       return Container(
-        height: TbRaPdfSectionHeights.SECOND_PAGE_FOOTER_HEIGHT,
+        // color: PdfColors.amber,
+        height: TbRaPdfSectionHeights.SECOND_PAGE_FOOTER_HEIGHT + 1.3,
         padding: const EdgeInsets.only(
           // bottom: 6,
           bottom: 10,
@@ -51,6 +52,7 @@ class RaFooterRow extends StatelessWidget {
       }
       return Container(
         padding: const EdgeInsets.only(top: 5, right: 15),
+        // color: PdfColors.pink,
         height: TbRaPdfSectionHeights.FIRST_PAGE_FOOTER_HEIGHT,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,8 +78,10 @@ class RaFooterRow extends StatelessWidget {
                 context: context,
               ),
             ),
+            SizedBox(height: 1),
             drawPageNoRow(
               context: context,
+              isForFirstPage: true,
             )
           ],
         ),
@@ -97,16 +101,20 @@ class RaFooterRow extends StatelessWidget {
         SizedBox(width: 15.0),
         pdfData.reviewSignature != null ||
                 pdfData.approvalMode == ReviewSignOffMode.manual
-            ? reviewSignature(pdfData.reviewSignature, context)
+            ? reviewSignature(
+                pdfData.reviewSignature,
+                context,
+              )
             : Container(),
       ],
     );
   }
 
   Widget userSignature({required Context context}) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.only(
-        top: 8,
+        // top: 8,
+        top: 5,
       ),
       child: Container(
         width: 223,
@@ -145,11 +153,11 @@ class RaFooterRow extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(5),
                 color: TbMsPdfColors.lightGreyBackground,
+                alignment: Alignment.center,
                 child: pdfData.userSignature.signatureMemoryImage != null
-                    ? Center(
-                        child: Image(
-                          pdfData.userSignature.signatureMemoryImage!,
-                        ),
+                    ? Image(
+                        pdfData.userSignature.signatureMemoryImage!,
+                        fit: BoxFit.contain,
                       )
                     : Container(),
               ),
@@ -174,7 +182,8 @@ class RaFooterRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
         left: 15.0,
-        top: 8,
+        // top: 8,
+        top: 5,
       ),
       child: Container(
         width: 223,
@@ -208,8 +217,12 @@ class RaFooterRow extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.all(5),
                 color: TbMsPdfColors.lightGreyBackground,
+                alignment: Alignment.center,
                 child: user?.signatureMemoryImage != null
-                    ? Center(child: Image(user!.signatureMemoryImage!))
+                    ? Image(
+                        user!.signatureMemoryImage!,
+                        fit: BoxFit.contain,
+                      )
                     : Container(),
               ),
             ),
@@ -261,16 +274,24 @@ class RaFooterRow extends StatelessWidget {
   Widget buildGuide({
     required Context context,
   }) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.only(
         left: 15.0,
-        top: 10,
+        // top: 10,
+        // top: 8,
+        // top: 6,
+        top: 5,
       ),
       child: Container(
         width: TbRaPdfSectionHeights.RATING_GUIDE_WIDTH,
-        height: TbRaPdfSectionHeights.FIRST_PAGE_FOOTER_HEIGHT - 65,
+        // height: TbRaPdfSectionHeights.FIRST_PAGE_FOOTER_HEIGHT - 65,
         decoration: TbRaPdfBoxDecorations.boxDecorationSignature,
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+
+        height: TbRaPdfSectionHeights.FIRST_PAGE_FOOTER_HEIGHT - 61,
+
+        // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -632,92 +653,102 @@ class RaFooterRow extends StatelessWidget {
   Widget drawPageNoRow({
     bool isForSignOff = false,
     required Context context,
+    bool isForFirstPage = false,
   }) {
     return Container(
-      padding: const EdgeInsets.only(
-        left: 15, top: 3,
+      padding: EdgeInsets.only(
+        left: 15,
+
+        top: isForFirstPage ? 3 : 1.8,
+        right: isForFirstPage ? 5 : 0,
+        // top: 3,
 
         // right: 15,
       ),
-      alignment: Alignment.bottomLeft,
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Container(
-          padding: const EdgeInsets.only(top: 0),
-          child: Text(
-              "It's important you understand this report. If you don't you should seek\nproper Risk Assessment Training.",
-              style: isForSignOff
-                  // ? raPdfTextStyles.normalWhite8()
-                  ? TbPdfHelper().textStyleGenerator(
-                      font: Theme.of(context).header0.font,
-                      color: TbRaPdfColors.white,
-                      fontSize: 8,
-                    )
-                  // : raPdfTextStyles.normalBlack8(),
-                  : TbPdfHelper().textStyleGenerator(
-                      font: Theme.of(context).header0.font,
-                      color: TbRaPdfColors.black,
-                      fontSize: 8,
-                    )),
-        ),
-        Container(
-          padding: isForSignOff
-              ? const EdgeInsets.only(
-                  top: 0,
-                  right: 15,
-                )
-              : const EdgeInsets.only(),
-          child: Text(
-            "Page No: $pageNoToRender${getReferenceNumber()}",
-            // style: raPdfTextStyles.italicBlack8(),
-            style: TbPdfHelper().textStyleGenerator(
-              font: Theme.of(context).header0.fontItalic,
-              color: TbRaPdfColors.black,
-              fontSize: 8,
+      // alignment: Alignment.bottomLeft,
+      alignment: Alignment.bottomRight,
+      child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              padding: const EdgeInsets.only(top: 0),
+              child: Text(
+                  "It's important you understand this report. If you don't you should seek\nproper Risk Assessment Training.",
+                  style: isForSignOff
+                      // ? raPdfTextStyles.normalWhite8()
+                      ? TbPdfHelper().textStyleGenerator(
+                          font: Theme.of(context).header0.font,
+                          color: TbRaPdfColors.white,
+                          fontSize: 8,
+                        )
+                      // : raPdfTextStyles.normalBlack8(),
+                      : TbPdfHelper().textStyleGenerator(
+                          font: Theme.of(context).header0.font,
+                          color: TbRaPdfColors.black,
+                          fontSize: 8,
+                        )),
             ),
-          ),
-        ),
-        // Container(
-        //   padding: const EdgeInsets.only(top: 0, left: 30),
-        //   child: Row(children: [
-        //     Text(
-        //       'Created using the Risk Assessor - ',
-        //       style: isForSignOff
-        //           // ? raPdfTextStyles.normalWhite8()
-        //           ? TbPdfHelper().textStyleGenerator(
-        //               font: Theme.of(context).header0.font,
-        //               fontSize: 8,
-        //               color: TbRaPdfColors.white,
-        //             )
-        //           :
-        //           // raPdfTextStyles.normalBlack8(),
-        //           TbPdfHelper().textStyleGenerator(
-        //               font: Theme.of(context).header0.font,
-        //               fontSize: 8,
-        //               color: TbRaPdfColors.black,
-        //             ),
-        //     ),
-        //     RichText(
-        //       text: TextSpan(
-        //           text: "www.riskassessor.net",
-        //           style: isForSignOff
-        //               ?
-        //               // ? raPdfTextStyles.normalWhite8()
-        //               TbPdfHelper().textStyleGenerator(
-        //                   font: Theme.of(context).header0.font,
-        //                   fontSize: 8,
-        //                   color: TbRaPdfColors.white,
-        //                 )
-        //               // : raPdfTextStyles.linkBlue8(),
-        //               : TbPdfHelper().textStyleGenerator(
-        //                   fontSize: 8,
-        //                   color: TbRaPdfColors.blue,
-        //                   font: Theme.of(context).header0.font,
-        //                   textDecoration: TextDecoration.underline,
-        //                 )),
-        //     ),
-        //   ]),
-        // )
-      ]),
+            Container(
+              // color: PdfColors.green,
+              padding: isForSignOff
+                  ? const EdgeInsets.only(
+                      top: 0,
+                      right: 20,
+                    )
+                  : const EdgeInsets.only(),
+              child: Text(
+                "Page No: $pageNoToRender${getReferenceNumber()}",
+                // style: raPdfTextStyles.italicBlack8(),
+                style: TbPdfHelper().textStyleGenerator(
+                  font: Theme.of(context).header0.fontItalic,
+                  color: TbRaPdfColors.black,
+                  fontSize: 8,
+                ),
+              ),
+            ),
+            // Container(
+            //   padding: const EdgeInsets.only(top: 0, left: 30),
+            //   child: Row(children: [
+            //     Text(
+            //       'Created using the Risk Assessor - ',
+            //       style: isForSignOff
+            //           // ? raPdfTextStyles.normalWhite8()
+            //           ? TbPdfHelper().textStyleGenerator(
+            //               font: Theme.of(context).header0.font,
+            //               fontSize: 8,
+            //               color: TbRaPdfColors.white,
+            //             )
+            //           :
+            //           // raPdfTextStyles.normalBlack8(),
+            //           TbPdfHelper().textStyleGenerator(
+            //               font: Theme.of(context).header0.font,
+            //               fontSize: 8,
+            //               color: TbRaPdfColors.black,
+            //             ),
+            //     ),
+            //     RichText(
+            //       text: TextSpan(
+            //           text: "www.riskassessor.net",
+            //           style: isForSignOff
+            //               ?
+            //               // ? raPdfTextStyles.normalWhite8()
+            //               TbPdfHelper().textStyleGenerator(
+            //                   font: Theme.of(context).header0.font,
+            //                   fontSize: 8,
+            //                   color: TbRaPdfColors.white,
+            //                 )
+            //               // : raPdfTextStyles.linkBlue8(),
+            //               : TbPdfHelper().textStyleGenerator(
+            //                   fontSize: 8,
+            //                   color: TbRaPdfColors.blue,
+            //                   font: Theme.of(context).header0.font,
+            //                   textDecoration: TextDecoration.underline,
+            //                 )),
+            //     ),
+            //   ]),
+            // )
+          ]),
     );
   }
 
@@ -762,7 +793,7 @@ class RaFooterRow extends StatelessWidget {
 
   String getReferenceNumber() {
     if ((pdfData.referenceNumber ?? "").isNotEmpty) {
-      return " / ${pdfData.referenceNumber ?? ''}";
+      return "/${pdfData.referenceNumber ?? ''}";
     } else {
       return "";
     }

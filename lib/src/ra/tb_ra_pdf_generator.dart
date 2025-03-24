@@ -270,12 +270,29 @@ class TbRaPdfGenerator {
           );
         },
         footer: (context) {
-          return RaFooterRow(
-            pageNoToRender: context.pageNumber,
-            pageNo: context.pageNumber,
-            isSignOffFooter: true,
-            pdfData: pdfData,
+          return Container(
+            padding: EdgeInsets.only(
+              // bottom: 15,
+              bottom: 15,
+
+              right: 20,
+            ),
+            alignment: Alignment.bottomRight,
+            child: Text(
+              "Page No: ${context.pageNumber}${(pdfData.referenceNumber ?? "").isNotEmpty ? '/${pdfData.referenceNumber}' : ''}",
+              style: pdfHelper.textStyleGenerator(
+                font: Theme.of(context).header0.fontItalic,
+                color: TbRaPdfColors.black,
+                fontSize: 8,
+              ),
+            ),
           );
+          // return RaFooterRow(
+          //   pageNoToRender: context.pageNumber,
+          //   pageNo: context.pageNumber,
+          //   isSignOffFooter: true,
+          //   pdfData: pdfData,
+          // );
         },
       ),
     );
@@ -557,8 +574,6 @@ class TbRaPdfGenerator {
     }
   }
 
-
-
   int splitText({
     required RaPdfData riskAssessmentModel,
     required String text,
@@ -768,7 +783,11 @@ class TbRaPdfGenerator {
           build: (context) => imageWidgets,
           footer: (context) => Container(
             alignment: Alignment.bottomRight,
-            padding: EdgeInsets.only(bottom: 15, right: 20),
+            padding: EdgeInsets.only(
+              // bottom: 15 ,
+              bottom: 15,
+              right: 20,
+            ),
             child: Text(
               "Page No: ${context.pageNumber}${(riskAssessmentModel.referenceNumber ?? "").isNotEmpty ? '/${riskAssessmentModel.referenceNumber}' : ''}",
               style: pdfHelper.textStyleGenerator(
@@ -829,7 +848,11 @@ class TbRaPdfGenerator {
           ),
           build: (context) => imageWidgets,
           footer: (context) => Container(
-            padding: EdgeInsets.only(bottom: 15, right: 20),
+            padding: EdgeInsets.only(
+              // bottom: 15,
+              bottom: 15,
+              right: 20,
+            ),
             alignment: Alignment.bottomRight,
             child: Text(
               "Page No: ${context.pageNumber}${(riskAssessmentModel.referenceNumber ?? "").isNotEmpty ? '/${riskAssessmentModel.referenceNumber}' : ''}",
@@ -943,13 +966,18 @@ class TbRaPdfGenerator {
             weather: (riskAssessmentModel.weatherItems ?? [])[i],
             context: context));
 
-        // if (i == 2) {
-        //   widgets.add(buildWeatherLicenseInfo(context: context));
-        // }
+        if (i == 2) {
+          widgets.add(mapDisclaimerWidget(context: context));
+        }
       }
+      
 
       // Add license info at the end
       // widgets.add(buildWeatherLicenseInfo(context: context));
+      
+      widgets.add(
+         mapDisclaimerWidget(context: context)
+      );
     }
 
     return widgets;
@@ -1222,6 +1250,28 @@ class TbRaPdfGenerator {
       ),
     );
   }
+
+
+    Widget mapDisclaimerWidget({
+    required Context context,
+  }) {
+    String disclaimerText =
+        """The forecast data is licensed under the Attribution 4.0 International (CC BY 4.0), available at https://creativecommons.org/licenses/by/4.0/""";
+    return Container(
+      padding: EdgeInsets.only(
+          left: TbRaPdfPaddings.pageHorizontalPadding.left, top: 7),
+      child: Text(
+        disclaimerText,
+        // style: raPdfTextStyles.italicBlack9(),
+        style: TbPdfHelper().textStyleGenerator(
+          font: Theme.of(context).header0.fontBoldItalic,
+          fontSize: 9,
+          color: TbRaPdfColors.black,
+        ),
+      ),
+    );
+  }
+
 
   Future<void> preparePDFImages(RaPdfData raPdfData) async {
     if ((raPdfData.companyLogo ?? "").isNotEmpty) {

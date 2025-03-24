@@ -1,4 +1,5 @@
 import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
 import '../../utils/pdf/tb_pdf_helper.dart';
@@ -38,8 +39,15 @@ class MsSignOffSection extends StatelessWidget {
                 color: TbMsPdfColors.black,
               ),
             ),
+         
             Expanded(
               child: Container(
+                padding:  EdgeInsets.only(
+                  top:   5,
+                  bottom: 5
+                  // top:   10,
+                  // bottom:  10 
+                ),
                 child: user?.signatureMemoryImage != null
                     ? Image(
                         user!.signatureMemoryImage!,
@@ -47,6 +55,7 @@ class MsSignOffSection extends StatelessWidget {
                     : null,
               ),
             ),
+        
             Row(
               children: [
                 Text(

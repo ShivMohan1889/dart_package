@@ -1,5 +1,4 @@
 import 'package:dart_pdf_package/dart_pdf_package.dart';
-import 'package:dart_pdf_package/src/ra/ra_pdf_data.dart';
 import 'package:dart_pdf_package/src/ra/tb_ra_pdf_constants.dart';
 import 'package:pdf/widgets.dart';
 
