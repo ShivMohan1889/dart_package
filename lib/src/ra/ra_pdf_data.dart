@@ -421,7 +421,7 @@ class WeatherPdfModel {
       sunset: json['sunset'],
       chancesOfRain: json['chancesOfRain'],
       humidity: json['humidity'],
-      windSpeed: json['windSpeed'],
+      windSpeed: json['windspeed'],
       pressure: json['pressure'],
       visibility: json['visibility'],
       uvIndex: json['uvIndex'],
