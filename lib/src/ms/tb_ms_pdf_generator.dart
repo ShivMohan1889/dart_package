@@ -11,7 +11,6 @@ import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_project_details_section
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_sign_off_section.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_site_photo.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_statement_row.dart';
-import 'package:dart_pdf_package/src/ms/ms_pdf_widget/non_splitting_widget.dart';
 import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 
 import 'package:pdf/pdf.dart';
@@ -63,7 +62,7 @@ class TbMsPdfGenerator {
       pdf = pdfDocumentFromRa!;
     }
 
-    if (pdfData.raPdfData != null && showMsFirst) {
+    if (pdfData.raPdfData != null && showMsFirst==false) {
       // RiskAssessmentEntity riskAssessmentEntity =
       //     msAssessmentEntity!.riskAssessmentEntity!;
 
@@ -162,7 +161,7 @@ class TbMsPdfGenerator {
     // String msPdfPath = FileManager.msPdfPath(
     //      msAssessmentUniqueKey: msAssessmentDto?.uniqueKey ?? "");
 
-    if (pdfData.raPdfData != null && !showMsFirst) {
+    if (pdfData.raPdfData != null && showMsFirst) {
       // RiskAssessmentEntity riskAssessmentEntity =
       //     msAssessmentEntity!.riskAssessmentEntity!;
 
@@ -236,7 +235,7 @@ class TbMsPdfGenerator {
     required Context context,
   }) {
     for (HeaderRows headerRow in pdfData.headers) {
-      createHeaderWidgets(
+      createHeaderWithWidgets(
         headerRow: headerRow,
         context: context,
       );
@@ -244,12 +243,7 @@ class TbMsPdfGenerator {
     print(headerWidget);
   }
 
-/* ************************************** */
-//  CREATE HEADER WIDGET
-  /// responsible to iterate headers /statements and create widgets
-/* ************************************** */
-
-  void createHeaderWidgets({
+  void createHeaderWithWidgets({
     required HeaderRows headerRow,
     required Context context,
   }) {
@@ -275,40 +269,11 @@ class TbMsPdfGenerator {
       widget.rowType = 1;
     }
 
-    if (headerRow.level == 0) {
-      NonSplittingWidget headerColumn = NonSplittingWidget(
-        children: [widget],
-      );
-
-      // Add to headerWidget list
-      headerWidget.add(headerColumn);
-    } else {
-      if (headerWidget.last is NonSplittingWidget) {
-        // Get the column (last widget)
-        NonSplittingWidget column = headerWidget.last as NonSplittingWidget;
-
-        // Remove the column
-        headerWidget.removeLast();
-
-        // Add first icon row to column's children
-        List<Widget> updatedChildren = List.from(column.children);
-        updatedChildren.add(widget);
-
-        // Create new column with updated children
-        NonSplittingWidget updatedColumn = NonSplittingWidget(
-          children: updatedChildren,
-        );
-
-        // Add updated column back to headerWidget
-        headerWidget.add(updatedColumn);
-      } else {
-        headerWidget.add(widget);
-      }
-    }
+    headerWidget.add(widget);
 
     if ((headerRow.headerRows ?? []).isNotEmpty) {
       for (HeaderRows headerRow in headerRow.headerRows ?? []) {
-        createHeaderWidgets(
+        createHeaderWithWidgets(
           headerRow: headerRow,
           context: context,
         );
@@ -325,29 +290,7 @@ class TbMsPdfGenerator {
             fontSize: 11,
           ),
         );
-        // headerWidget.add(w);
-
-        if (headerWidget.last is NonSplittingWidget) {
-          // Get the column (last widget)
-          NonSplittingWidget column = headerWidget.last as NonSplittingWidget;
-
-          // Remove the column
-          headerWidget.removeLast();
-
-          // Add first icon row to column's children
-          List<Widget> updatedChildren = List.from(column.children);
-          updatedChildren.add(w);
-
-          // Create new column with updated children
-          NonSplittingWidget updatedColumn = NonSplittingWidget(
-            children: updatedChildren,
-          );
-
-          // Add updated column back to headerWidget
-          headerWidget.add(updatedColumn);
-        } else {
-          headerWidget.add(w);
-        }
+        headerWidget.add(w);
 
         if ((statementData.memoryImages ?? []).isNotEmpty) {
           headerWidget.addAll(
@@ -374,12 +317,6 @@ class TbMsPdfGenerator {
       );
     }
   }
-
-  /* *********************************** / 
-    // SHOW STATEMENT IMAGE ON PDF  
-    
-    /// 
-   / ************************************ */
 
   List<Widget> showStatementImagesOnPdf({
     List<MemoryImage>? images,
@@ -496,10 +433,127 @@ class TbMsPdfGenerator {
     listIconImageItems = [];
   }
 
-  /// ***********************************
-  ///   SHOW SIGN OFF USER WITH DATA
-  /// this method is responsible showing the sign off in pdf
-  /// ***********************************
+  // /* *********************************** / 
+  //  //  SHOW SIGN OFF USER DATA 
+   
+  //  /// this is responsible for showing the ms sign off
+  // / ************************************ */
+  // void showSignOffUserData({
+  //   required Context context,
+  //   required List<ReviewSignOffSignatureData> signOffUsers,
+  //   required TbPdfHelper pdfHelper,
+  //   required String? signOffStatement,
+  // }) {
+  //   if (signOffUsers.isEmpty) return;
+
+  //   final List<Widget> signOffSection = [];
+
+  //   // Section title and sign-off statement
+  //   signOffSection.add(
+  //     Container(
+  //       padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             "SIGN OFF USERS",
+  //             style: TbPdfHelper().textStyleGenerator(
+  //               font: Theme.of(context).header0.fontBold,
+  //               color: TbMsPdfColors.black,
+  //               fontSize: 12,
+  //             ),
+  //           ),
+  //           SizedBox(height: 5),
+  //           if (signOffStatement != null)
+  //             Text(
+  //               signOffStatement,
+  //               style: TbPdfHelper().textStyleGenerator(
+  //                 font: Theme.of(context).header0.fontNormal,
+  //                 color: TbMsPdfColors.black,
+  //                 fontSize: 9,
+  //               ),
+  //             ),
+  //           if ((signOffStatement ?? "").isNotEmpty)
+  //             Container(
+  //               height: 3,
+  //             ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+
+  //   // Process sign-off users in pairs
+  //   for (int i = 0; i < signOffUsers.length; i += 2) {
+  //     List<Widget> rowChildren = [];
+
+  //     rowChildren.add(Container(
+  //       width: TbMsPdfWidth.pageWidth / 2 - 25,
+  //       decoration: BoxDecoration(
+  //         color: TbMsPdfColors.lightGreyBackground,
+  //         border: Border.all(width: 0.5, color: PdfColors.grey300),
+  //         borderRadius: BorderRadius.circular(4),
+  //       ),
+  //       margin: const EdgeInsets.only(right: 10),
+  //       child: MsSignOffSection(
+  //         user: signOffUsers[i],
+  //       ),
+  //     ));
+
+  //     if (i + 1 < signOffUsers.length) {
+  //       rowChildren.add(
+  //         MsSignOffSection(
+  //           user: signOffUsers[i + 1],
+  //         ),
+  //       );
+  //     } else {
+  //       rowChildren.add(Container(
+  //         width: TbMsPdfWidth.pageWidth / 2 - 25,
+  //       ));
+  //     }
+
+  //     signOffSection.add(
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: rowChildren,
+  //         ),
+  //       ),
+  //     );
+  //   }
+
+  //   // **Ensure content does not split across pages**
+  //   msPdfItems.add(
+  //     Container(
+  //       // padding: const EdgeInsets.all(10),
+  //       decoration: BoxDecoration(
+  //         color: TbMsPdfColors.white,
+  //       ),
+  //       child: Wrap(
+  //         alignment: WrapAlignment.start,
+  //         crossAxisAlignment: WrapCrossAlignment.start,
+  //         spacing: 10, // Adjust spacing if needed
+  //         runSpacing: 10,
+
+  //         children: [
+  //           ConstrainedBox(
+  //             constraints: BoxConstraints(
+  //               minHeight: 0,
+  //               maxHeight: TbMsPdfWidth.pageHeight *
+  //                   0.8, // Ensures content stays together
+  //             ),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: signOffSection,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
   void showSignOffUserWithData({
     required Context context,
     required List<ReviewSignOffSignatureData> signOffUsers,
@@ -575,7 +629,7 @@ class TbMsPdfGenerator {
       }
 
       if (i == 0) {
-        msPdfItems.add(Container(
+        msPdfItems.add(Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
