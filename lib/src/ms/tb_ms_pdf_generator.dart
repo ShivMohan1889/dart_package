@@ -123,17 +123,17 @@ class TbMsPdfGenerator {
 
           msPdfItems.addAll(headerWidget);
 
-          showUserDetailsAndReviewUserOnPdf(
-            pdfData: pdfData,
-            context: context,
-          );
+          // showUserDetailsAndReviewUserOnPdf(
+          //   pdfData: pdfData,
+          //   context: context,
+          // );
 
-          showSignOffUserWithData(
-            signOffUsers: pdfData.signOffSignatures ?? [],
-            pdfHelper: pdfHelper,
-            signOffStatement: pdfData.signOffStatement,
-            context: context,
-          );
+          // showSignOffUserWithData(
+          //   signOffUsers: pdfData.signOffSignatures ?? [],
+          //   pdfHelper: pdfHelper,
+          //   signOffStatement: pdfData.signOffStatement,
+          //   context: context,
+          // );
 
           return msPdfItems;
         },
@@ -262,122 +262,124 @@ class TbMsPdfGenerator {
   /// responsible to iterate headers /statements and create widgets
 /* ************************************** */
 
-  List<Widget> createHeaderWidgets({
-    required HeaderRows headerRow,
-    required Context context,
-  }) {
-    List<Widget> result = [];
+  // List<Widget> createHeaderWidgets({
+  //   required HeaderRows headerRow,
+  //   required Context context,
+  // }) {
+  //   List<Widget> result = [];
 
-    // Create the header widget
-    Widget widget = MsPdfCustomText(
-      text: headerRow.name,
-      padding: headerRow.level == 0
-          ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
-          : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
-      textStyle: headerRow.level == 0
-          ? TbPdfHelper().textStyleGenerator(
-              font: Theme.of(context).header0.fontBold,
-              color: TbMsPdfColors.black,
-              fontSize: 12,
-            )
-          : TbPdfHelper().textStyleGenerator(
-              font: Theme.of(context).header0.fontBold,
-              color: TbMsPdfColors.black,
-              fontSize: 11,
-            ),
-    );
+  //   // Create the header widget
+  //   Widget widget = MsPdfCustomText(
+  //     text: headerRow.name,
+  //     padding: headerRow.level == 0
+  //         ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
+  //         : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
+  //     textStyle: headerRow.level == 0
+  //         ? TbPdfHelper().textStyleGenerator(
+  //             font: Theme.of(context).header0.fontBold,
+  //             color: TbMsPdfColors.black,
+  //             fontSize: 12,
+  //           )
+  //         : TbPdfHelper().textStyleGenerator(
+  //             font: Theme.of(context).header0.fontBold,
+  //             color: TbMsPdfColors.black,
+  //             fontSize: 11,
+  //           ),
+  //   );
 
-    if (widget is MsPdfCustomText) {
-      widget.rowType = 1;
-    }
+  //   if (widget is MsPdfCustomText) {
+  //     widget.rowType = 1;
+  //   }
 
-    // Add the header to our result list
-    result.add(widget);
+  //   // Add the header to our result list
+  //   result.add(widget);
 
-    // Now handle the different cases for what follows the header
-    if ((headerRow.headerRows ?? []).isNotEmpty) {
-      // Process subheaders recursively
-      for (HeaderRows subHeader in headerRow.headerRows ?? []) {
-        List<Widget> subHeaderWidgets = createHeaderWidgets(
-          headerRow: subHeader,
-          context: context,
-        );
-        result.addAll(subHeaderWidgets);
-      }
-    } else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
-      // Add hazard icons
-      List<Widget> iconRows = [];
-      showMsStatementIconsOnPdf(
-        hazardIconData: headerRow.hazardIcons ?? [],
-        outputList: iconRows,
-      );
-      result.addAll(iconRows);
-    } else if ((headerRow.statements ?? []).isNotEmpty) {
-      // For statements, we'll wrap the header with the first statement
-      List<Widget> statementWidgets = [];
+  //   // Now handle the different cases for what follows the header
+  //   if ((headerRow.headerRows ?? []).isNotEmpty) {
+  //     // Process subheaders recursively
+  //     for (HeaderRows subHeader in headerRow.headerRows ?? []) {
+  //       List<Widget> subHeaderWidgets = createHeaderWidgets(
+  //         headerRow: subHeader,
+  //         context: context,
+  //       );
+  //       result.addAll(subHeaderWidgets);
+  //     }
+  //   } else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
+  //     // Add hazard icons
+  //     List<Widget> iconRows = [];
+  //     showMsStatementIconsOnPdf(
+  //       hazardIconData: headerRow.hazardIcons ?? [],
+  //       outputList: iconRows,
+  //     );
+  //     result.addAll(iconRows);
+  //   } else if ((headerRow.statements ?? []).isNotEmpty) {
+  //     // For statements, we'll wrap the header with the first statement
+  //     List<Widget> statementWidgets = [];
 
-      for (HeaderStatementData statementData in headerRow.statements ?? []) {
-        Widget statementWidget = MsStatementRow(
-          statementName: statementData.text,
-          statmentTextStyle: TbPdfHelper().textStyleGenerator(
-            font: Theme.of(context).header0.font,
-            color: MsPdfColors.black,
-            fontSize: 11,
-          ),
-        );
-        statementWidgets.add(statementWidget);
+  //     for (HeaderStatementData statementData in headerRow.statements ?? []) {
+  //       Widget statementWidget = MsStatementRow(
+  //         statementName: statementData.text,
+  //         statmentTextStyle: TbPdfHelper().textStyleGenerator(
+  //           font: Theme.of(context).header0.font,
+  //           color: MsPdfColors.black,
+  //           fontSize: 11,
+  //         ),
+  //       );
+  //       statementWidgets.add(statementWidget);
 
-        if ((statementData.memoryImages ?? []).isNotEmpty) {
-          statementWidgets.addAll(
-            showStatementImagesOnPdf(
-              images: statementData.memoryImages ?? [],
-            ),
-          );
-        }
-      }
+  //       if ((statementData.memoryImages ?? []).isNotEmpty) {
+  //         statementWidgets.addAll(
+  //           showStatementImagesOnPdf(
+  //             images: statementData.memoryImages ?? [],
+  //           ),
+  //         );
+  //       }
+  //     }
 
-      // If there are statements, take the first one and group it with the header
-      if (statementWidgets.isNotEmpty) {
-        // Remove the header from result as we'll add it back grouped
-        result.removeLast();
+  //     // If there are statements, take the first one and group it with the header
+  //     if (statementWidgets.isNotEmpty) {
+  //       // Remove the header from result as we'll add it back grouped
+  //       result.removeLast();
 
-        // Create a group with header and first statement
-        Widget headerWithFirstStatement = Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            widget, // The header
-            statementWidgets.first, // The first statement
-          ],
-        );
+  //       // Create a group with header and first statement
+  //       Widget headerWithFirstStatement = Row(children: [
+  //         Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             widget, // The header
+  //             statementWidgets.first, // The first statement
+  //           ],
+  //         ),
+  //       ]);
 
-        result.add(headerWithFirstStatement);
+  //       result.add(headerWithFirstStatement);
 
-        // Add remaining statements (if any)
-        if (statementWidgets.length > 1) {
-          result.addAll(statementWidgets.sublist(1));
-        }
-      }
-    }
+  //       // Add remaining statements (if any)
+  //       if (statementWidgets.length > 1) {
+  //         result.addAll(statementWidgets.sublist(1));
+  //       }
+  //     }
+  //   }
 
-    // Add any header images
-    if ((headerRow.images ?? []).isNotEmpty) {
-      List<MemoryImage> images = [];
+  //   // Add any header images
+  //   if ((headerRow.images ?? []).isNotEmpty) {
+  //     List<MemoryImage> images = [];
 
-      for (HeaderReferenceImageData image in headerRow.images ?? []) {
-        if (image.memoryImage != null) {
-          images.add(image.memoryImage!);
-        }
-      }
+  //     for (HeaderReferenceImageData image in headerRow.images ?? []) {
+  //       if (image.memoryImage != null) {
+  //         images.add(image.memoryImage!);
+  //       }
+  //     }
 
-      result.addAll(
-        showStatementImagesOnPdf(
-          images: images,
-        ),
-      );
-    }
+  //     result.addAll(
+  //       showStatementImagesOnPdf(
+  //         images: images,
+  //       ),
+  //     );
+  //   }
 
-    return result;
-  }
+  //   return result;
+  // }
 
   // void createHeaderWidgets({
   //   required HeaderRows headerRow,
@@ -502,6 +504,159 @@ class TbMsPdfGenerator {
     }
 
     return imageRowWidgets;
+  }
+
+  List<Widget> createHeaderWidgets({
+    required HeaderRows headerRow,
+    required Context context,
+  }) {
+    List<Widget> result = [];
+
+    // Create the header widget
+    Widget headerWidget = MsPdfCustomText(
+      text: headerRow.name,
+      padding: headerRow.level == 0
+          ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
+          : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
+      textStyle: headerRow.level == 0
+          ? TbPdfHelper().textStyleGenerator(
+              font: Theme.of(context).header0.fontBold,
+              color: TbMsPdfColors.black,
+              fontSize: 12,
+            )
+          : TbPdfHelper().textStyleGenerator(
+              font: Theme.of(context).header0.fontBold,
+              color: TbMsPdfColors.black,
+              fontSize: 11,
+            ),
+    );
+
+    if (headerWidget is MsPdfCustomText) {
+      headerWidget.rowType = 1;
+    }
+
+    // Check if this is a leaf header (has statements or icons but no subheaders)
+    if ((headerRow.headerRows ?? []).isEmpty) {
+      // It's a leaf header
+      if ((headerRow.statements ?? []).isNotEmpty) {
+        // Has statements - group header with first statement
+        List<Widget> statementWidgets = [];
+
+        // Process first statement only
+        HeaderStatementData firstStatement = headerRow.statements!.first;
+        Widget statementWidget = MsStatementRow(
+          statementName: firstStatement.text,
+          statmentTextStyle: TbPdfHelper().textStyleGenerator(
+            font: Theme.of(context).header0.font,
+            color: MsPdfColors.black,
+            fontSize: 11,
+          ),
+        );
+        statementWidgets.add(statementWidget);
+
+        // Add statement images if any
+        if ((firstStatement.memoryImages ?? []).isNotEmpty) {
+          statementWidgets.addAll(
+            showStatementImagesOnPdf(
+              images: firstStatement.memoryImages ?? [],
+            ),
+          );
+        }
+
+        // Group header with first statement
+        result.add(Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              headerWidget,
+              ...statementWidgets,
+            ],
+          ),
+        ));
+
+        // Add remaining statements separately
+        for (int i = 1; i < (headerRow.statements ?? []).length; i++) {
+          HeaderStatementData statementData = headerRow.statements![i];
+          Widget statementWidget = MsStatementRow(
+            statementName: statementData.text,
+            statmentTextStyle: TbPdfHelper().textStyleGenerator(
+              font: Theme.of(context).header0.font,
+              color: MsPdfColors.black,
+              fontSize: 11,
+            ),
+          );
+          result.add(statementWidget);
+
+          if ((statementData.memoryImages ?? []).isNotEmpty) {
+            result.addAll(
+              showStatementImagesOnPdf(
+                images: statementData.memoryImages ?? [],
+              ),
+            );
+          }
+        }
+      } else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
+        // Has hazard icons - group header with icons
+        List<Widget> iconRows = [];
+        showMsStatementIconsOnPdf(
+          hazardIconData: headerRow.hazardIcons ?? [],
+          outputList: iconRows,
+        );
+
+        result.add(Container(
+            child: Row(children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              headerWidget,
+              ...iconRows,
+            ],
+          ),
+        ])));
+      } else {
+        // Just a header with no content
+        result.add(headerWidget);
+      }
+
+      // Add header images if any
+      if ((headerRow.images ?? []).isNotEmpty) {
+        List<MemoryImage> images = [];
+        for (HeaderReferenceImageData image in headerRow.images ?? []) {
+          if (image.memoryImage != null) {
+            images.add(image.memoryImage!);
+          }
+        }
+        result.addAll(
+          showStatementImagesOnPdf(
+            images: images,
+          ),
+        );
+      }
+    } else {
+      // It's a parent header with subheaders
+      // Process all subheaders
+      List<Widget> allSubheaderWidgets = [];
+
+      for (HeaderRows subHeader in headerRow.headerRows!) {
+        List<Widget> subHeaderWidgets = createHeaderWidgets(
+          headerRow: subHeader,
+          context: context,
+        );
+        allSubheaderWidgets.addAll(subHeaderWidgets);
+      }
+
+      // Group this header with its subheaders
+      result.add(Container(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          headerWidget,
+          ...allSubheaderWidgets,
+        ],
+      )));
+    }
+
+    return result;
   }
 
 /* ****************************/
