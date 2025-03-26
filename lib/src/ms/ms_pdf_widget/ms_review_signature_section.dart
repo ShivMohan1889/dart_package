@@ -59,7 +59,7 @@ class MsReviewSignatureSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(height: 15),
-              MsBorder(),
+              // MsBorder(),
               Container(
                 padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
                 child: Column(
