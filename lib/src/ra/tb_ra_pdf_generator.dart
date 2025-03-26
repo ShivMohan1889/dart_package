@@ -452,10 +452,15 @@ class TbRaPdfGenerator {
   /* ************************************** */
   void processRowForPages(TbHazardRowModel row, RaPdfData riskAssessmentModel) {
     // Check if row fits in current page
-    if (remainingHeight < 19) {
-      // Minimum threshold
+    // Check if remaining space is at least 120% of what the row needs
+    if (remainingHeight < (row.height * 1.1)) {
       remainingHeight = TbRaPdfSectionHeights.SECOND_PAGE_HEIGHT;
     }
+
+    // if (remainingHeight < 19) {
+    // Minimum threshold
+    //   remainingHeight = TbRaPdfSectionHeights.SECOND_PAGE_HEIGHT;
+    // }
 
     if (row.height > remainingHeight) {
       // Split the row if it doesn't fit
@@ -511,9 +516,9 @@ class TbRaPdfGenerator {
       additionalRating: row.additionalRating,
       additionalScore: row.additionalScore,
       name: "",
-      gridRef:  "",
-      worstCase:  "",
-      likelihood:  "",
+      gridRef: "",
+      worstCase: "",
+      likelihood: "",
       // gridRef: row.gridRef,
       // worstCase: row.worstCase,
       // likelihood: row.likelihood,
@@ -975,14 +980,11 @@ class TbRaPdfGenerator {
           widgets.add(mapDisclaimerWidget(context: context));
         }
       }
-      
 
       // Add license info at the end
       // widgets.add(buildWeatherLicenseInfo(context: context));
-      
-      widgets.add(
-         mapDisclaimerWidget(context: context)
-      );
+
+      widgets.add(mapDisclaimerWidget(context: context));
     }
 
     return widgets;
@@ -1256,8 +1258,7 @@ class TbRaPdfGenerator {
     );
   }
 
-
-    Widget mapDisclaimerWidget({
+  Widget mapDisclaimerWidget({
     required Context context,
   }) {
     String disclaimerText =
@@ -1276,7 +1277,6 @@ class TbRaPdfGenerator {
       ),
     );
   }
-
 
   Future<void> preparePDFImages(RaPdfData raPdfData) async {
     if ((raPdfData.companyLogo ?? "").isNotEmpty) {
