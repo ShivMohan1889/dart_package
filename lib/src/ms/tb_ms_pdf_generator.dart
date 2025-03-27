@@ -62,7 +62,7 @@ class TbMsPdfGenerator {
       pdf = pdfDocumentFromRa!;
     }
 
-    if (pdfData.raPdfData != null && showMsFirst==false) {
+    if (pdfData.raPdfData != null && showMsFirst == false) {
       // RiskAssessmentEntity riskAssessmentEntity =
       //     msAssessmentEntity!.riskAssessmentEntity!;
 
@@ -433,9 +433,9 @@ class TbMsPdfGenerator {
     listIconImageItems = [];
   }
 
-  // /* *********************************** / 
-  //  //  SHOW SIGN OFF USER DATA 
-   
+  // /* *********************************** /
+  //  //  SHOW SIGN OFF USER DATA
+
   //  /// this is responsible for showing the ms sign off
   // / ************************************ */
   // void showSignOffUserData({
@@ -629,50 +629,55 @@ class TbMsPdfGenerator {
       }
 
       if (i == 0) {
-        msPdfItems.add(Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                // padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-                child: Column(
+        msPdfItems.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              children: [
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title in bold
-                    Text(
-                      "SIGN OFF USERS",
-                      style: TbPdfHelper().textStyleGenerator(
-                        font: Theme.of(context).header0.fontBold,
-                        color: TbMsPdfColors.black,
-                        fontSize: 12,
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title in bold
+                          Text(
+                            "SIGN OFF USERS",
+                            style: TbPdfHelper().textStyleGenerator(
+                              font: Theme.of(context).header0.fontBold,
+                              color: TbMsPdfColors.black,
+                              fontSize: 12,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          // Sign-off statement
+                          if (signOffStatement != null)
+                            Text(
+                              signOffStatement,
+                              style: TbPdfHelper().textStyleGenerator(
+                                font: Theme.of(context).header0.fontNormal,
+                                color: TbMsPdfColors.black,
+                                fontSize: 9,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 5),
-                    // Sign-off statement
-                    if (signOffStatement != null)
-                      Text(
-                        signOffStatement,
-                        style: TbPdfHelper().textStyleGenerator(
-                          font: Theme.of(context).header0.fontNormal,
-                          color: TbMsPdfColors.black,
-                          fontSize: 9,
-                        ),
-                      ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: rowChildren,
+                    ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: rowChildren,
-              ),
-            ],
+              ],
+            ),
           ),
-        ));
+        );
       } else {
         msPdfItems.add(Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
