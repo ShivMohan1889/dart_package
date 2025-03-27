@@ -62,7 +62,7 @@ class TbMsPdfGenerator {
       pdf = pdfDocumentFromRa!;
     }
 
-    if (pdfData.raPdfData != null && showMsFirst) {
+    if (pdfData.raPdfData != null && showMsFirst == false) {
       // RiskAssessmentEntity riskAssessmentEntity =
       //     msAssessmentEntity!.riskAssessmentEntity!;
 
@@ -161,7 +161,7 @@ class TbMsPdfGenerator {
     // String msPdfPath = FileManager.msPdfPath(
     //      msAssessmentUniqueKey: msAssessmentDto?.uniqueKey ?? "");
 
-    if (pdfData.raPdfData != null && !showMsFirst) {
+    if (pdfData.raPdfData != null && showMsFirst) {
       // RiskAssessmentEntity riskAssessmentEntity =
       //     msAssessmentEntity!.riskAssessmentEntity!;
 
@@ -235,7 +235,7 @@ class TbMsPdfGenerator {
     required Context context,
   }) {
     for (HeaderRows headerRow in pdfData.headers) {
-      createHeaderWidgets(
+      createHeaderWithWidgets(
         headerRow: headerRow,
         context: context,
       );
@@ -243,12 +243,7 @@ class TbMsPdfGenerator {
     print(headerWidget);
   }
 
-/* ************************************** */
-//  CREATE HEADER WIDGET
-  /// responsible to iterate headers /statements and create widgets
-/* ************************************** */
-
-  void createHeaderWidgets({
+  void createHeaderWithWidgets({
     required HeaderRows headerRow,
     required Context context,
   }) {
@@ -278,7 +273,7 @@ class TbMsPdfGenerator {
 
     if ((headerRow.headerRows ?? []).isNotEmpty) {
       for (HeaderRows headerRow in headerRow.headerRows ?? []) {
-        createHeaderWidgets(
+        createHeaderWithWidgets(
           headerRow: headerRow,
           context: context,
         );
@@ -322,12 +317,6 @@ class TbMsPdfGenerator {
       );
     }
   }
-
-  /* *********************************** / 
-    // SHOW STATEMENT IMAGE ON PDF  
-    
-    /// 
-   / ************************************ */
 
   List<Widget> showStatementImagesOnPdf({
     List<MemoryImage>? images,
@@ -444,10 +433,127 @@ class TbMsPdfGenerator {
     listIconImageItems = [];
   }
 
-  /// ***********************************
-  ///   SHOW SIGN OFF USER WITH DATA
-  /// this method is responsible showing the sign off in pdf
-  /// ***********************************
+  // /* *********************************** /
+  //  //  SHOW SIGN OFF USER DATA
+
+  //  /// this is responsible for showing the ms sign off
+  // / ************************************ */
+  // void showSignOffUserData({
+  //   required Context context,
+  //   required List<ReviewSignOffSignatureData> signOffUsers,
+  //   required TbPdfHelper pdfHelper,
+  //   required String? signOffStatement,
+  // }) {
+  //   if (signOffUsers.isEmpty) return;
+
+  //   final List<Widget> signOffSection = [];
+
+  //   // Section title and sign-off statement
+  //   signOffSection.add(
+  //     Container(
+  //       padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Text(
+  //             "SIGN OFF USERS",
+  //             style: TbPdfHelper().textStyleGenerator(
+  //               font: Theme.of(context).header0.fontBold,
+  //               color: TbMsPdfColors.black,
+  //               fontSize: 12,
+  //             ),
+  //           ),
+  //           SizedBox(height: 5),
+  //           if (signOffStatement != null)
+  //             Text(
+  //               signOffStatement,
+  //               style: TbPdfHelper().textStyleGenerator(
+  //                 font: Theme.of(context).header0.fontNormal,
+  //                 color: TbMsPdfColors.black,
+  //                 fontSize: 9,
+  //               ),
+  //             ),
+  //           if ((signOffStatement ?? "").isNotEmpty)
+  //             Container(
+  //               height: 3,
+  //             ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+
+  //   // Process sign-off users in pairs
+  //   for (int i = 0; i < signOffUsers.length; i += 2) {
+  //     List<Widget> rowChildren = [];
+
+  //     rowChildren.add(Container(
+  //       width: TbMsPdfWidth.pageWidth / 2 - 25,
+  //       decoration: BoxDecoration(
+  //         color: TbMsPdfColors.lightGreyBackground,
+  //         border: Border.all(width: 0.5, color: PdfColors.grey300),
+  //         borderRadius: BorderRadius.circular(4),
+  //       ),
+  //       margin: const EdgeInsets.only(right: 10),
+  //       child: MsSignOffSection(
+  //         user: signOffUsers[i],
+  //       ),
+  //     ));
+
+  //     if (i + 1 < signOffUsers.length) {
+  //       rowChildren.add(
+  //         MsSignOffSection(
+  //           user: signOffUsers[i + 1],
+  //         ),
+  //       );
+  //     } else {
+  //       rowChildren.add(Container(
+  //         width: TbMsPdfWidth.pageWidth / 2 - 25,
+  //       ));
+  //     }
+
+  //     signOffSection.add(
+  //       Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: rowChildren,
+  //         ),
+  //       ),
+  //     );
+  //   }
+
+  //   // **Ensure content does not split across pages**
+  //   msPdfItems.add(
+  //     Container(
+  //       // padding: const EdgeInsets.all(10),
+  //       decoration: BoxDecoration(
+  //         color: TbMsPdfColors.white,
+  //       ),
+  //       child: Wrap(
+  //         alignment: WrapAlignment.start,
+  //         crossAxisAlignment: WrapCrossAlignment.start,
+  //         spacing: 10, // Adjust spacing if needed
+  //         runSpacing: 10,
+
+  //         children: [
+  //           ConstrainedBox(
+  //             constraints: BoxConstraints(
+  //               minHeight: 0,
+  //               maxHeight: TbMsPdfWidth.pageHeight *
+  //                   0.8, // Ensures content stays together
+  //             ),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: signOffSection,
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
+
   void showSignOffUserWithData({
     required Context context,
     required List<ReviewSignOffSignatureData> signOffUsers,
@@ -523,50 +629,55 @@ class TbMsPdfGenerator {
       }
 
       if (i == 0) {
-        msPdfItems.add(Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                // padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-                child: Column(
+        msPdfItems.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Row(
+              children: [
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title in bold
-                    Text(
-                      "SIGN OFF USERS",
-                      style: TbPdfHelper().textStyleGenerator(
-                        font: Theme.of(context).header0.fontBold,
-                        color: TbMsPdfColors.black,
-                        fontSize: 12,
+                    Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Title in bold
+                          Text(
+                            "SIGN OFF USERS",
+                            style: TbPdfHelper().textStyleGenerator(
+                              font: Theme.of(context).header0.fontBold,
+                              color: TbMsPdfColors.black,
+                              fontSize: 12,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          // Sign-off statement
+                          if (signOffStatement != null)
+                            Text(
+                              signOffStatement,
+                              style: TbPdfHelper().textStyleGenerator(
+                                font: Theme.of(context).header0.fontNormal,
+                                color: TbMsPdfColors.black,
+                                fontSize: 9,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 5),
-                    // Sign-off statement
-                    if (signOffStatement != null)
-                      Text(
-                        signOffStatement,
-                        style: TbPdfHelper().textStyleGenerator(
-                          font: Theme.of(context).header0.fontNormal,
-                          color: TbMsPdfColors.black,
-                          fontSize: 9,
-                        ),
-                      ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: rowChildren,
+                    ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: rowChildren,
-              ),
-            ],
+              ],
+            ),
           ),
-        ));
+        );
       } else {
         msPdfItems.add(Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
