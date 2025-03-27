@@ -57,6 +57,39 @@ class TbMsPdfGenerator {
   MemoryImage? companyLogo;
 
   Future<Uint8List?> generatePDF() async {
+    // Define constants for page layout
+    double pageHeight = 842; // A4 height in points
+    double headerHeight = 95; // Estimated header height
+    double footerHeight = 30; // Estimated footer height
+
+    headerHeight = pdfHelper.calculateHeightOfWidget(
+      widget: MsHeaderRow(
+        pagesNo: 1,
+        companyDetails: pdfData.companyDetails,
+        companyPhoneEmail: pdfData.companyPhoneEmail ?? "",
+        titleForPdf: "METHOD ASSESSMENT",
+        companyLogoMemoryImage: pdfData.companyLogoMemoryImage,
+      ),
+      width: TbMsPdfWidth.pageWidth,
+    );
+
+    footerHeight = pdfHelper.calculateHeightOfWidget(
+      widget: MsFooterSection(
+        isSubscribed: pdfData.isSubscribed,
+        referenceNo: pdfData.referenceNo,
+        // pageNumber: context.pageNumber.toString(),
+        pageNumber: "1",
+      ),
+      width: TbMsPdfWidth.pageWidth,
+    );
+
+    double contentHeight = pageHeight - headerHeight - footerHeight;
+
+    // We'll maintain a list of pages, each with their own content
+    List<List<Widget>> pages = [[]];
+    int currentPageIndex = 0;
+
+    double remainingHeight = contentHeight;
     Document pdf = Document();
     if (pdfDocumentFromRa != null) {
       pdf = pdfDocumentFromRa!;
@@ -91,18 +124,61 @@ class TbMsPdfGenerator {
       projectDetailsSideRight: pdfData.projectDetails['rightColumn'] ?? [],
     );
 
-    msPdfItems.add(projectDetailsSection);
+    double projectDetailsHeight = pdfHelper.calculateHeightOfWidget(
+      widget: projectDetailsSection,
+      width: TbMsPdfWidth.pageWidth,
+    );
 
-    msPdfItems.add(MsBorder());
+    if (projectDetailsHeight <= remainingHeight) {
+      pages[currentPageIndex].add(projectDetailsSection);
+      remainingHeight -= projectDetailsHeight;
+    } else {
+      // Start a new page
+      pages.add([projectDetailsSection]);
+      currentPageIndex++;
+      remainingHeight = contentHeight - projectDetailsHeight;
+    }
+
+    // Add border
+    double borderHeight = 1;
+    pages[currentPageIndex].add(MsBorder());
+    remainingHeight -= borderHeight;
+
+    // msPdfItems.add(projectDetailsSection);
+
+    // msPdfItems.add(MsBorder());
 
     if (pdfData.siteMemoryImage != null) {
-      msPdfItems.add(
-        MsSitePhoto(
-          memoryImage: pdfData.siteMemoryImage,
-        ),
+      var sitePhoto = MsSitePhoto(
+        memoryImage: pdfData.siteMemoryImage,
       );
+
+      double sitePhotoHeight = pdfHelper.calculateHeightOfWidget(
+        widget: sitePhoto,
+        width: TbMsPdfWidth.pageWidth,
+      );
+
+      if (sitePhotoHeight <= remainingHeight) {
+        pages[currentPageIndex].add(sitePhoto);
+        remainingHeight -= sitePhotoHeight;
+      } else {
+        // Start a new page
+        pages.add([sitePhoto]);
+        currentPageIndex++;
+        remainingHeight = contentHeight - sitePhotoHeight;
+      }
+
+      // Add border after site photo
+      pages[currentPageIndex].add(MsBorder());
+      remainingHeight -= borderHeight;
     }
-    msPdfItems.add(MsBorder());
+    // msPdfItems.add(
+    //   MsSitePhoto(
+    //     memoryImage: pdfData.siteMemoryImage,
+    //   ),
+    // );
+
+    // msPdfItems.add(MsBorder());
 
     pdf.addPage(
       MultiPage(
@@ -117,25 +193,35 @@ class TbMsPdfGenerator {
         ),
         build: (context) {
           iterateHeadersForPdfWidets(
+            contentHeight: contentHeight,
+            currentPageIndex: currentPageIndex,
+            pages: pages,
+            remainingHeight: remainingHeight,
             pdfData: pdfData,
             context: context,
           );
 
-          msPdfItems.addAll(headerWidget);
+          // msPdfItems.addAll(headerWidget);
 
-          showUserDetailsAndReviewUserOnPdf(
-            pdfData: pdfData,
-            context: context,
-          );
+          // showUserDetailsAndReviewUserOnPdf(
+          //   pdfData: pdfData,
+          //   context: context,
+          // );
 
-          showSignOffUserWithData(
-            signOffUsers: pdfData.signOffSignatures ?? [],
-            pdfHelper: pdfHelper,
-            signOffStatement: pdfData.signOffStatement,
-            context: context,
-          );
+          // showSignOffUserWithData(
+          //   signOffUsers: pdfData.signOffSignatures ?? [],
+          //   pdfHelper: pdfHelper,
+          //   signOffStatement: pdfData.signOffStatement,
+          //   context: context,
+          // );
 
-          return msPdfItems;
+          List<Widget> allContent = [];
+          for (var page in pages) {
+            allContent.addAll(page);
+          }
+          return allContent;
+
+          // return msPdfItems;
         },
         header: (context) {
           return MsHeaderRow(
@@ -233,27 +319,39 @@ class TbMsPdfGenerator {
   void iterateHeadersForPdfWidets({
     required MsPdfData pdfData,
     required Context context,
+    required List<List<Widget>> pages,
+    required double remainingHeight,
+    required double contentHeight,
+    required int currentPageIndex,
   }) {
     for (HeaderRows headerRow in pdfData.headers) {
-      createHeaderWithWidgets(
+      processHeaderWithPageBreaks(
+        currentPageIndex: currentPageIndex,
         headerRow: headerRow,
         context: context,
+        pages: pages,
+        contentHeight: contentHeight,
+        remainingHeight: remainingHeight,
       );
     }
     print(headerWidget);
   }
 
-  void createHeaderWithWidgets({
+  void processHeaderWithPageBreaks({
     required HeaderRows headerRow,
-    required Context context,
+    required List<List<Widget>> pages,
+    required int currentPageIndex,
+    required double remainingHeight,
+    required double contentHeight,
+    required Context context, // Add context parameter
   }) {
-    Widget widget = MsPdfCustomText(
+    // Create header title widget
+    Widget headerTitleWidget = MsPdfCustomText(
       text: headerRow.name,
       padding: headerRow.level == 0
           ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
           : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
       textStyle: headerRow.level == 0
-          // ? msPdfTextStyle.msMainHeaderTextStyle()
           ? TbPdfHelper().textStyleGenerator(
               font: Theme.of(context).header0.fontBold,
               color: TbMsPdfColors.black,
@@ -264,57 +362,344 @@ class TbMsPdfGenerator {
               color: TbMsPdfColors.black,
               fontSize: 11,
             ),
+      rowType: 1,
     );
-    if (widget is MsPdfCustomText) {
-      widget.rowType = 1;
+
+    // Calculate header title height
+    double headerTitleHeight = pdfHelper.calculateHeightOfWidget(
+      widget: headerTitleWidget,
+      width: TbMsPdfWidth.pageWidth,
+    );
+    // double headerTitleHeight =
+    //     calculateHeaderColumnHeight(headerRow: headerRow, context: context);
+
+    // Check if header title fits on current page
+    if (headerTitleHeight > remainingHeight) {
+      // Start a new page
+      pages.add([]);
+      currentPageIndex++;
+      remainingHeight = contentHeight;
     }
 
-    headerWidget.add(widget);
+    // Add header title to current page
+    pages[currentPageIndex].add(headerTitleWidget);
+    remainingHeight -= headerTitleHeight;
 
+    // Process nested headers if they exist
     if ((headerRow.headerRows ?? []).isNotEmpty) {
-      for (HeaderRows headerRow in headerRow.headerRows ?? []) {
-        createHeaderWithWidgets(
-          headerRow: headerRow,
+      for (HeaderRows nestedHeader in headerRow.headerRows!) {
+        processHeaderWithPageBreaks(
+          headerRow: nestedHeader,
+          pages: pages,
+          currentPageIndex: currentPageIndex,
+          remainingHeight: remainingHeight,
+          contentHeight: contentHeight,
           context: context,
         );
       }
-    } else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
-      showMsStatementIconsOnPdf(hazardIconData: headerRow.hazardIcons ?? []);
-    } else if ((headerRow.statements ?? []).isNotEmpty) {
-      for (HeaderStatementData statementData in headerRow.statements ?? []) {
-        Widget w = MsStatementRow(
-          statementName: statementData.text,
-          statmentTextStyle: TbPdfHelper().textStyleGenerator(
-            font: Theme.of(context).header0.font,
-            color: MsPdfColors.black,
-            fontSize: 11,
-          ),
+    }
+    // Process hazard icons if they exist
+    else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
+      processHazardIcons(
+          hazardIcons: headerRow.hazardIcons!,
+          pages: pages,
+          currentPageIndex: currentPageIndex,
+          remainingHeight: remainingHeight,
+          contentHeight: contentHeight,
+      );
+    }
+    // Process statements if they exist
+    else if ((headerRow.statements ?? []).isNotEmpty) {
+      for (HeaderStatementData statement in headerRow.statements!) {
+        processStatement(
+          statement: statement,
+          pages: pages,
+          currentPageIndex: currentPageIndex,
+          remainingHeight: remainingHeight,
+          contentHeight: contentHeight,
+          context: context,
         );
-        headerWidget.add(w);
-
-        if ((statementData.memoryImages ?? []).isNotEmpty) {
-          headerWidget.addAll(
-            showStatementImagesOnPdf(
-              images: statementData.memoryImages ?? [],
-            ),
-          );
-        }
       }
     }
 
+    // Process header images if they exist
     if ((headerRow.images ?? []).isNotEmpty) {
       List<MemoryImage> images = [];
 
-      for (HeaderReferenceImageData image in headerRow.images ?? []) {
+      for (HeaderReferenceImageData image in headerRow.images!) {
         if (image.memoryImage != null) {
           images.add(image.memoryImage!);
         }
       }
-      headerWidget.addAll(
-        showStatementImagesOnPdf(
+
+      if (images.isNotEmpty) {
+        processImages(
           images: images,
-        ),
+          pages: pages,
+          currentPageIndex: currentPageIndex,
+          remainingHeight: remainingHeight,
+          contentHeight: contentHeight,
+        );
+      }
+    }
+  }
+
+  void processStatement({
+    required HeaderStatementData statement,
+    required List<List<Widget>> pages,
+    required int currentPageIndex,
+    required double remainingHeight,
+    required double contentHeight,
+    required Context context,
+  }) {
+    // Create statement widget
+    Widget statementWidget = MsStatementRow(
+      statementName: statement.text,
+      statmentTextStyle: TbPdfHelper().textStyleGenerator(
+        font: Theme.of(context).header0.font,
+        color: MsPdfColors.black,
+        fontSize: 11,
+      ),
+    );
+
+    // Calculate statement height
+    double statementHeight = pdfHelper.calculateHeightOfWidget(
+      widget: statementWidget,
+      width: TbMsPdfWidth.pageWidth,
+    );
+
+    // Check if statement fits on current page
+    if (statementHeight > remainingHeight) {
+      // Start a new page
+      pages.add([]);
+      currentPageIndex++;
+      remainingHeight = contentHeight;
+    }
+
+    // Add statement to current page
+    pages[currentPageIndex].add(statementWidget);
+    remainingHeight -= statementHeight;
+
+    // Process statement images if they exist
+    if ((statement.memoryImages ?? []).isNotEmpty) {
+      processImages(
+        images: statement.memoryImages!,
+        pages: pages,
+        currentPageIndex: currentPageIndex,
+        remainingHeight: remainingHeight,
+        contentHeight: contentHeight,
       );
+    }
+  }
+
+  void processImages({
+    required List<MemoryImage> images,
+    required List<List<Widget>> pages,
+    required int currentPageIndex,
+    required double remainingHeight,
+    required double contentHeight,
+  }) {
+    // Add padding before images
+    Widget paddingWidget = Container(height: 8);
+    double paddingHeight = pdfHelper.calculateHeightOfWidget(
+      widget: paddingWidget,
+      width: TbMsPdfWidth.pageWidth,
+    );
+
+    if (paddingHeight > remainingHeight) {
+      // Start a new page
+      pages.add([]);
+      currentPageIndex++;
+      remainingHeight = contentHeight;
+    }
+
+    pages[currentPageIndex].add(paddingWidget);
+    remainingHeight -= paddingHeight;
+
+    // Process images in pairs (two per row)
+    List<Widget> rowChildren = [];
+
+    for (int i = 0; i < images.length; i++) {
+      // Create image box widget
+      MemoryImage memoryImage = images[i];
+      Widget imageBox = MsAssessmentImageBox(
+        image: memoryImage,
+        index: i + 1,
+      );
+
+      rowChildren.add(imageBox);
+      rowChildren.add(Container(width: 10)); // Add spacing between images
+
+      // Create a row when we have 2 images or at the last image
+      if (rowChildren.length == 4 || i == images.length - 1) {
+        Widget imageRow = MsAssessmentImageRow(
+          listChildren: List.from(rowChildren),
+        );
+
+        double imageRowHeight = pdfHelper.calculateHeightOfWidget(
+          widget: imageRow,
+          width: TbMsPdfWidth.pageWidth,
+        );
+
+        // Check if row fits on current page
+        if (imageRowHeight > remainingHeight) {
+          // Start a new page
+          pages.add([]);
+          currentPageIndex++;
+          remainingHeight = contentHeight;
+        }
+
+        // Add image row to current page
+        pages[currentPageIndex].add(imageRow);
+        remainingHeight -= imageRowHeight;
+
+        // Add vertical spacing after row
+        Widget spacingWidget = Container(height: 10);
+        double spacingHeight = pdfHelper.calculateHeightOfWidget(
+          widget: spacingWidget,
+          width: TbMsPdfWidth.pageWidth,
+        );
+
+        pages[currentPageIndex].add(spacingWidget);
+        remainingHeight -= spacingHeight;
+
+        // Reset row children for next row
+        rowChildren = [];
+      }
+    }
+  }
+
+  // void createHeaderWithWidgets({
+  //   required HeaderRows headerRow,
+  //   required Context context,
+  // }) {
+  //   Widget widget = MsPdfCustomText(
+  //     text: headerRow.name,
+  //     padding: headerRow.level == 0
+  //         ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
+  //         : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
+  //     textStyle: headerRow.level == 0
+  //         // ? msPdfTextStyle.msMainHeaderTextStyle()
+  //         ? TbPdfHelper().textStyleGenerator(
+  //             font: Theme.of(context).header0.fontBold,
+  //             color: TbMsPdfColors.black,
+  //             fontSize: 12,
+  //           )
+  //         : TbPdfHelper().textStyleGenerator(
+  //             font: Theme.of(context).header0.fontBold,
+  //             color: TbMsPdfColors.black,
+  //             fontSize: 11,
+  //           ),
+  //   );
+  //   if (widget is MsPdfCustomText) {
+  //     widget.rowType = 1;
+  //   }
+
+  //   headerWidget.add(widget);
+
+  //   if ((headerRow.headerRows ?? []).isNotEmpty) {
+  //     for (HeaderRows headerRow in headerRow.headerRows ?? []) {
+  //       createHeaderWithWidgets(
+  //         headerRow: headerRow,
+  //         context: context,
+  //       );
+  //     }
+  //   } else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
+  //     showMsStatementIconsOnPdf(hazardIconData: headerRow.hazardIcons ?? []);
+  //   } else if ((headerRow.statements ?? []).isNotEmpty) {
+  //     for (HeaderStatementData statementData in headerRow.statements ?? []) {
+  //       Widget w = MsStatementRow(
+  //         statementName: statementData.text,
+  //         statmentTextStyle: TbPdfHelper().textStyleGenerator(
+  //           font: Theme.of(context).header0.font,
+  //           color: MsPdfColors.black,
+  //           fontSize: 11,
+  //         ),
+  //       );
+  //       headerWidget.add(w);
+
+  //       if ((statementData.memoryImages ?? []).isNotEmpty) {
+  //         headerWidget.addAll(
+  //           showStatementImagesOnPdf(
+  //             images: statementData.memoryImages ?? [],
+  //           ),
+  //         );
+  //       }
+  //     }
+  //   }
+
+  //   if ((headerRow.images ?? []).isNotEmpty) {
+  //     List<MemoryImage> images = [];
+
+  //     for (HeaderReferenceImageData image in headerRow.images ?? []) {
+  //       if (image.memoryImage != null) {
+  //         images.add(image.memoryImage!);
+  //       }
+  //     }
+  //     headerWidget.addAll(
+  //       showStatementImagesOnPdf(
+  //         images: images,
+  //       ),
+  //     );
+  //   }
+  // }
+
+  void processHazardIcons({
+    required List<HazardIconData> hazardIcons,
+    required List<List<Widget>> pages,
+    required int currentPageIndex,
+    required double remainingHeight,
+    required double contentHeight,
+  }) {
+    // We'll group hazard icons in rows of up to 6 icons per row
+    List<Widget> iconRows = [];
+    List<Widget> currentRowIcons = [];
+
+    for (int i = 0; i < hazardIcons.length; i++) {
+      HazardIconData iconData = hazardIcons[i];
+
+      if (iconData.iconMemoryImage != null) {
+        Widget iconWidget = MsStatementHazardIconItem(
+          iconImage: iconData.iconMemoryImage!,
+        );
+
+        currentRowIcons.add(iconWidget);
+
+        // Create a row when we have 6 icons or we're at the last icon
+        if (currentRowIcons.length == 6 || i == hazardIcons.length - 1) {
+          Widget iconRow = MsStatementHazardIconsRow(
+            iconsImageList: List.from(currentRowIcons),
+          );
+
+          double iconRowHeight = pdfHelper.calculateHeightOfWidget(
+            widget: iconRow,
+            width: TbMsPdfWidth.pageWidth,
+          );
+
+          // Check if row fits on current page
+          if (iconRowHeight > remainingHeight) {
+            // Add the rows we have so far to the current page
+            if (iconRows.isNotEmpty) {
+              pages[currentPageIndex].addAll(iconRows);
+            }
+
+            // Start a new page
+            pages.add([]);
+            currentPageIndex++;
+            remainingHeight = contentHeight;
+            iconRows = [];
+          }
+
+          iconRows.add(iconRow);
+          remainingHeight -= iconRowHeight;
+          currentRowIcons = [];
+        }
+      }
+    }
+
+    // Add any remaining icon rows to the current page
+    if (iconRows.isNotEmpty) {
+      pages[currentPageIndex].addAll(iconRows);
     }
   }
 
@@ -791,5 +1176,111 @@ class TbMsPdfGenerator {
             await TbPdfHelper().generateMemoryImageForPath(image.image!);
       }
     }
+  }
+
+  /* *********************************** / 
+   //  CALCULATE HEADER COLUMN HEIGHT 
+   
+   /// 
+  / ************************************ */
+
+  double calculateHeaderColumnHeight({
+    required HeaderRows headerRow,
+    required Context context,
+  }) {
+    double totalHeight = 0.0;
+
+    // Step 1: Calculate header title height
+    Widget headerTitleWidget = MsPdfCustomText(
+      text: headerRow.name,
+      padding: headerRow.level == 0
+          ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
+          : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
+      textStyle: headerRow.level == 0
+          ? TbPdfHelper().textStyleGenerator(
+              font: Theme.of(context).header0.fontBold,
+              color: TbMsPdfColors.black,
+              fontSize: 12,
+            )
+          : TbPdfHelper().textStyleGenerator(
+              font: Theme.of(context).header0.fontBold,
+              color: TbMsPdfColors.black,
+              fontSize: 11,
+            ),
+      rowType: 1,
+    );
+
+    double headerTitleHeight = pdfHelper.calculateHeightOfWidget(
+      widget: headerTitleWidget,
+      width: TbMsPdfWidth.pageWidth,
+    );
+
+    totalHeight += headerTitleHeight;
+
+    // Step 2: Calculate first subheader height (if available)
+    if ((headerRow.headerRows ?? []).isNotEmpty) {
+      HeaderRows firstSubHeader = headerRow.headerRows!.first;
+
+      double subHeaderHeight = calculateHeaderColumnHeight(
+        headerRow: firstSubHeader,
+        context: context,
+      );
+
+      totalHeight += subHeaderHeight;
+    }
+
+    // Step 3: Calculate first statement height (if available)
+    if ((headerRow.statements ?? []).isNotEmpty) {
+      HeaderStatementData firstStatement = headerRow.statements!.first;
+
+      Widget statementWidget = MsPdfCustomText(
+        text: firstStatement.text, // Assuming statementText contains the text
+        textStyle: TbPdfHelper().textStyleGenerator(
+          font: Theme.of(context).header0.fontNormal,
+          color: TbMsPdfColors.black,
+          fontSize: 10,
+        ),
+        padding: TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
+        rowType: 1,
+      );
+
+      double statementHeight = pdfHelper.calculateHeightOfWidget(
+        widget: statementWidget,
+        width: TbMsPdfWidth.pageWidth,
+      );
+
+      totalHeight += statementHeight;
+    } else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
+      double hazardHeight =
+          calculateHazardIconsHeight(headerRow.hazardIcons ?? []);
+      totalHeight += hazardHeight;
+    }
+
+    return totalHeight;
+  }
+
+  double calculateHazardIconsHeight(List<HazardIconData> hazardIcons) {
+    double totalHeight = 0;
+    List<Widget> currentRowIcons = [];
+    for (int i = 0; i < hazardIcons.length; i++) {
+      HazardIconData iconData = hazardIcons[i];
+      if (iconData.iconMemoryImage != null) {
+        Widget iconWidget = MsStatementHazardIconItem(
+          iconImage: iconData.iconMemoryImage!,
+        );
+        currentRowIcons.add(iconWidget);
+        if (currentRowIcons.length == 6 || i == hazardIcons.length - 1) {
+          Widget iconRow = MsStatementHazardIconsRow(
+            iconsImageList: List.from(currentRowIcons),
+          );
+          totalHeight += pdfHelper.calculateHeightOfWidget(
+            widget: iconRow,
+            width: TbMsPdfWidth.pageWidth,
+          );
+          currentRowIcons = [];
+        }
+      }
+    }
+    return totalHeight;
   }
 }

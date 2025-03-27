@@ -425,7 +425,9 @@ class TbRaPdfGenerator {
       );
 
       double rowHeight = pdfHelper.calculateHeightOfWidget(
-          widget: tableRow, width: TbRaPdfWidth.pageWidth);
+        widget: tableRow,
+        width: TbRaPdfWidth.pageWidth,
+      );
       row.height = rowHeight;
 
       // Process for page breaks
