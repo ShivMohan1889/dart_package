@@ -11,7 +11,6 @@ import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_project_details_section
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_sign_off_section.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_site_photo.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_statement_row.dart';
-import 'package:dart_pdf_package/src/ms/ms_pdf_widget/non_splitting_widget.dart';
 import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 
 import 'package:pdf/pdf.dart';
@@ -275,36 +274,7 @@ class TbMsPdfGenerator {
       widget.rowType = 1;
     }
 
-    if (headerRow.level == 0) {
-      NonSplittingWidget headerColumn = NonSplittingWidget(
-        children: [widget],
-      );
-
-      // Add to headerWidget list
-      headerWidget.add(headerColumn);
-    } else {
-      if (headerWidget.last is NonSplittingWidget) {
-        // Get the column (last widget)
-        NonSplittingWidget column = headerWidget.last as NonSplittingWidget;
-
-        // Remove the column
-        headerWidget.removeLast();
-
-        // Add first icon row to column's children
-        List<Widget> updatedChildren = List.from(column.children);
-        updatedChildren.add(widget);
-
-        // Create new column with updated children
-        NonSplittingWidget updatedColumn = NonSplittingWidget(
-          children: updatedChildren,
-        );
-
-        // Add updated column back to headerWidget
-        headerWidget.add(updatedColumn);
-      } else {
-        headerWidget.add(widget);
-      }
-    }
+    headerWidget.add(widget);
 
     if ((headerRow.headerRows ?? []).isNotEmpty) {
       for (HeaderRows headerRow in headerRow.headerRows ?? []) {
@@ -325,29 +295,7 @@ class TbMsPdfGenerator {
             fontSize: 11,
           ),
         );
-        // headerWidget.add(w);
-
-        if (headerWidget.last is NonSplittingWidget) {
-          // Get the column (last widget)
-          NonSplittingWidget column = headerWidget.last as NonSplittingWidget;
-
-          // Remove the column
-          headerWidget.removeLast();
-
-          // Add first icon row to column's children
-          List<Widget> updatedChildren = List.from(column.children);
-          updatedChildren.add(w);
-
-          // Create new column with updated children
-          NonSplittingWidget updatedColumn = NonSplittingWidget(
-            children: updatedChildren,
-          );
-
-          // Add updated column back to headerWidget
-          headerWidget.add(updatedColumn);
-        } else {
-          headerWidget.add(w);
-        }
+        headerWidget.add(w);
 
         if ((statementData.memoryImages ?? []).isNotEmpty) {
           headerWidget.addAll(
