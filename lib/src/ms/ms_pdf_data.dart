@@ -131,6 +131,8 @@ class HeaderRows {
   List<HazardIconData>? hazardIcons;
   List<HeaderReferenceImageData>? images;
   List<HeaderRows>?headerRows;
+  String? statmentText;
+  
 
   HeaderRows({
     required this.name,
