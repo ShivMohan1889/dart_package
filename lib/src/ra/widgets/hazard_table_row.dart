@@ -45,7 +45,10 @@ class HazardTableRow extends StatelessWidget {
     return Container(
       padding: TbRaPdfPaddings.pageHorizontalPadding,
       child: Table(
-        border: TableBorder.all(width: 0.5, color: TbRaPdfColors.greyBorder),
+        border: TableBorder.all(
+          width: 0.5,
+          color: TbRaPdfColors.greyBorder,
+        ),
         children: [
           TableRow(
             verticalAlignment: TableCellVerticalAlignment.full,

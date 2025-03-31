@@ -494,10 +494,11 @@ class TbRaPdfGenerator {
   }) {
     // Split text fields to fit maxHeight
     int nameIndex = splitText(
-        text: row.name,
-        maxHeight: maxHeight,
-        height: row.height,
-        riskAssessmentModel: riskAssessmentModel);
+      text: row.name,
+      maxHeight: maxHeight,
+      height: row.height,
+      riskAssessmentModel: riskAssessmentModel,
+    );
 
     int controlIndex = splitText(
         text: row.controlInPlace,
@@ -506,10 +507,11 @@ class TbRaPdfGenerator {
         riskAssessmentModel: riskAssessmentModel);
 
     int additionalControlIndex = splitText(
-        text: row.additionalControl ?? "",
-        maxHeight: maxHeight,
-        height: row.height,
-        riskAssessmentModel: riskAssessmentModel);
+      text: row.additionalControl ?? "",
+      maxHeight: maxHeight,
+      height: row.height,
+      riskAssessmentModel: riskAssessmentModel,
+    );
 
     // Create second row to hold overflow content
     TbHazardRowModel second = TbHazardRowModel(
@@ -714,10 +716,12 @@ class TbRaPdfGenerator {
     List<pw.Widget> tableWidgets = [];
 
     for (var row in hazardRows) {
-      tableWidgets.add(HazardTableRow(
-        row: row,
-        isStandard: riskAssessmentModel.assessmentType ?? 0,
-      ));
+      tableWidgets.add(
+        HazardTableRow(
+          row: row,
+          isStandard: riskAssessmentModel.assessmentType ?? 0,
+        ),
+      );
     }
 
     return tableWidgets;

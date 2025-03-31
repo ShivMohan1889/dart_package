@@ -1,22 +1,32 @@
+import 'package:dart_pdf_package/dart_pdf_package.dart';
+import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
+import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
 import '../tb_ms_pdf_constants.dart';
 
 class MsStatementRow extends StatelessWidget {
-  final String? statementName;
+  // final String? statementName;
+  final  TbStatementRowModel statementRowModel;
   final TextStyle? statmentTextStyle;
 
   final EdgeInsets? padding;
 
+   double ? height;
+
+
   MsStatementRow({
-    this.statementName,
+    // this.statementName,
     this.statmentTextStyle,
     this.padding,
+    this.height,
+    required  this.statementRowModel,
+
   });
   @override
   Widget build(Context context) {
-    var arr = statementName?.split('/n') ?? [];
+    var arr = statementRowModel.statementName.split('/n') ?? [];
     var first = arr.first;
 
     arr.removeAt(0);
@@ -47,7 +57,12 @@ class MsStatementRow extends StatelessWidget {
           width: TbMsPdfWidth.statementWidth,
           child: Text(
             first,
-            style: statmentTextStyle,
+            style: statmentTextStyle ??
+                TbPdfHelper().textStyleGenerator(
+                  font: Theme.of(context).header0.font,
+                  color: MsPdfColors.black,
+                  fontSize: 11,
+                ),
           ),
         ),
       ],
