@@ -176,7 +176,7 @@ class TbRaPdfGenerator {
             headerWidgets[pageNo] = h;
             return h;
           }
-
+          /// Create new header
           // Create new header
         },
         footer: (context) {
