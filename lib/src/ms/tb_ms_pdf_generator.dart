@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/header_row.dart';
 
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_assessment_image_box.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_assessment_image_row.dart';
@@ -360,45 +361,63 @@ class TbMsPdfGenerator {
   }) {
     // Create header title widget
 
-    Widget headerTitleWidget = MsPdfCustomText(
-      text: headerRow.name,
-      padding: headerRow.level == 0
-          ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
-          : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
-      textStyle: headerRow.level == 0
-          ? TbPdfHelper().textStyleGenerator(
-              font: Theme.of(context).header0.fontBold,
-              color: TbMsPdfColors.black,
-              fontSize: 12,
-            )
-          : TbPdfHelper().textStyleGenerator(
-              font: Theme.of(context).header0.fontBold,
-              color: TbMsPdfColors.black,
-              fontSize: 11,
-            ),
-      rowType: 1,
+    // TbHeaderRowModel tbHeaderRowModel = TbHeaderRowModel(
+    //   headerName: headerRow.name,
+    //   headerLevel: headerRow.level,
+    // );
+
+    // HeaderRow headerRowWidget = HeaderRow(
+    //   tbHeaderRowModel: tbHeaderRowModel,
+    //   rowType: 1,
+    // );
+
+    // double headerRowWidgetHeight = pdfHelper.calculateHeightOfWidget(
+    //   widget: headerRowWidget,
+    //   width: MsPdfWidth.pageWidth,
+    // );
+
+    processMsHeader(
+      headerRow: headerRow,
+      pages: pages,
+      contentHeight: contentHeight,
+      context: context,
     );
 
+    // Widget headerTitleWidget = MsPdfCustomText(
+    //   text: headerRow.name,
+    //   padding: headerRow.level == 0
+    //       ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
+    //       : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
+    //   textStyle: headerRow.level == 0
+    //       ? TbPdfHelper().textStyleGenerator(
+    //           font: Theme.of(context).header0.fontBold,
+    //           color: TbMsPdfColors.black,
+    //           fontSize: 12,
+    //         )
+    //       : TbPdfHelper().textStyleGenerator(
+    //           font: Theme.of(context).header0.fontBold,
+    //           color: TbMsPdfColors.black,
+    //           fontSize: 11,
+    //         ),
+    //   rowType: 1,
+    // );
+
     // Calculate header title height
-    double headerTitleHeight = pdfHelper.calculateHeightOfWidget(
-      widget: headerTitleWidget,
-      width: TbMsPdfWidth.pageWidth,
-    );
 
     // double headerTitleHeight =
     //     calculateHeaderColumnHeight(headerRow: headerRow, context: context);
 
     // Check if header title fits on current page
-    if (headerTitleHeight > remainingMainPdfHeight) {
-      // Start a new page
-      pages.add([]);
-      currentPageIndex++;
-      remainingMainPdfHeight = contentHeight;
-    }
+    // if (headerRowWidgetHeight > remainingMainPdfHeight) {
+    //   // Start a new page
+    //   pages.add([]);
+    //   currentPageIndex++;
+    //   remainingMainPdfHeight = contentHeight;
+    // }
 
-    // Add header title to current page
-    pages[currentPageIndex].add(headerTitleWidget);
-    remainingMainPdfHeight -= headerTitleHeight;
+    // // Add header title to current page
+    // pages[currentPageIndex].add(headerRowWidget);
+    // remainingMainPdfHeight -= headerRowWidgetHeight;
 
     // Process nested headers if they exist
     if ((headerRow.headerRows ?? []).isNotEmpty) {
@@ -460,12 +479,36 @@ class TbMsPdfGenerator {
   }
 
   void processMsHeader({
-     required HeaderRows headerRow,
-     required List<List<Widget>> pages,
-     required double contentHeight,
-     required Context context,
+    required HeaderRows headerRow,
+    required List<List<Widget>> pages,
+    required double contentHeight,
+    required Context context,
+  }) {
+    TbHeaderRowModel tbHeaderRowModel = TbHeaderRowModel(
+      headerName: headerRow.name,
+      headerLevel: headerRow.level,
+    );
 
-  })
+    HeaderRow headerRowWidget = HeaderRow(
+      tbHeaderRowModel: tbHeaderRowModel,
+      rowType: 1,
+    );
+
+    double headerRowWidgetHeight = pdfHelper.calculateHeightOfWidget(
+      widget: headerRowWidget,
+      width: MsPdfWidth.pageWidth,
+    );
+
+    tbHeaderRowModel.height = headerRowWidgetHeight;
+
+    processMsHeaderForPages(
+      msHeaderRow: headerRowWidget,
+      tbHeaderRowModel: tbHeaderRowModel,
+      pdfData: pdfData,
+      pages: pages,
+      contentHeight: contentHeight,
+    );
+  }
 
   void processStatement({
     required HeaderStatementData statement,
@@ -475,8 +518,6 @@ class TbMsPdfGenerator {
     required double contentHeight,
     required Context context,
   }) {
-    
-
     TbStatementRowModel statementRowModel = TbStatementRowModel(
       statementName: statement.text,
     );
@@ -496,6 +537,36 @@ class TbMsPdfGenerator {
     );
 
     statementRowModel.height = statementWidgetHeight;
+
+    if (remainingMainPdfHeight < (statementRowModel.height ?? 0.0)) {
+      var listHeader = addHeaderToTheNextPage(
+        contentHeight: contentHeight,
+        pages: pages,
+      );
+
+      if (listHeader.isNotEmpty) {
+        currentPageIndex++;
+        pages.add([]);
+
+        pages[currentPageIndex].add(
+          Container(
+            color: PdfColors.red,
+            // height: remainingMainPdfHeight,
+            height: 30,
+          ),
+        );
+
+        pages[currentPageIndex].addAll(listHeader);
+
+        remainingMainPdfHeight = contentHeight - 30;
+
+        // pages[currentPageIndex].add(
+        //   Container(
+        //     height: 30,
+        //   )
+        // );
+      }
+    }
 
     processMsStatementForPages(
       statementRowModel: statementRowModel,
@@ -518,7 +589,50 @@ class TbMsPdfGenerator {
     }
   }
 
-  
+  List<Widget> addHeaderToTheNextPage({
+    //  required List<Pages>
+    required double contentHeight,
+    required List<List<Widget>> pages,
+  }) {
+    List<Widget> listHeaderRow = [];
+
+    for (int i = pages[currentPageIndex].length - 1; i >= 0; i--) {
+      Widget page = pages[currentPageIndex][i]; // Get the widget
+
+      if (page is MsStatementHazardIconsRow || page is MsStatementRow || page is MsAssessmentImageRow) {
+        return listHeaderRow; // Skip these widgets
+      } else {
+        listHeaderRow.add(page);
+        pages[currentPageIndex].removeAt(i); // Remove the element safely
+      }
+    }
+
+    return listHeaderRow;
+
+    // for( int i = pages[currentPageIndex].length -1; pages[currentPageIndex].length;i--){
+
+    //  if (pages[i] is MsStatementHazardIconsRow || page is MsStatementRow) {
+    //   } else {
+    //     listHeaderRow.add(
+    //       pages[],
+    //     );
+    //     pages[currentPageIndex].removeAt(index);
+    //   }
+    // }
+    // // for (Widget page in pages[currentPageIndex]) {
+    // //   int index = pages[currentPageIndex].indexOf(page);
+
+    // //   if (page is MsStatementHazardIconsRow || page is MsStatementRow) {
+    // //   } else {
+    // //     listHeaderRow.add(
+    // //       page,
+    // //     );
+    // //     pages[currentPageIndex].removeAt(index);
+    // //   }
+    // // }
+
+    // return listHeaderRow;
+  }
 
   void processImages({
     required List<MemoryImage> images,
@@ -602,6 +716,7 @@ class TbMsPdfGenerator {
     required String text,
     required double maxHeight,
     required double height,
+    dynamic msModel,
   }) {
     if (text.isEmpty) return 0;
 
@@ -621,15 +736,24 @@ class TbMsPdfGenerator {
 
       // Measure height of current text plus this word
       double testHeight = measureTextHeight(
-        testText,
-        msPdfData,
+        // text: ,
+        // testText,
+        // msPdfData,
+        msModel: msModel,
+        text: testText,
+        model: msPdfData,
       );
 
       // Check if adding this word exceeds the max height
       if (testHeight > maxHeight) {
         // If this is the first word and it doesn't fit, we need to split within the word
         if (i == 0) {
-          return findSplitPositionInWord(words[0], maxHeight, msPdfData);
+          // return findSplitPositionInWord(words[0], maxHeight, msPdfData);
+          return findSplitPositionInWord(
+              word: words[0],
+              maxHeight: maxHeight,
+              msPdfData: msPdfData,
+              msModel: msModel);
         }
 
         // Otherwise return the position after the last good word
@@ -651,7 +775,13 @@ class TbMsPdfGenerator {
 
 // Helper method to split within a word if the first word is too long
   int findSplitPositionInWord(
-      String word, double maxHeight, MsPdfData msPdfData) {
+      // String word, double maxHeight, MsPdfData msPdfData,
+      {
+    required String word,
+    required double maxHeight,
+    required MsPdfData msPdfData,
+    required dynamic msModel,
+  }) {
     // Binary search to find how many characters of this word will fit
     int low = 1; // At least one character
     int high = word.length;
@@ -661,7 +791,12 @@ class TbMsPdfGenerator {
       int mid = (low + high) ~/ 2;
       String subWord = word.substring(0, mid);
 
-      double height = measureTextHeight(subWord, msPdfData);
+      // double height = measureTextHeight(subWord, msPdfData);
+      double height = measureTextHeight(
+        text: subWord,
+        model: msPdfData,
+        msModel: msModel,
+      );
 
       if (height <= maxHeight) {
         // This fits, try to fit more
@@ -676,19 +811,38 @@ class TbMsPdfGenerator {
     return best;
   }
 
-  double measureTextHeight(String text, MsPdfData model) {
-    TbStatementRowModel tbStatementRowModel = TbStatementRowModel(
-      statementName: text,
-    );
+  double measureTextHeight({
+    required String text,
+    required MsPdfData model,
+    required dynamic msModel,
+  }) {
+    if (msModel is TbStatementRowModel) {
+      TbStatementRowModel tbStatementRowModel = TbStatementRowModel(
+        statementName: text,
+      );
 
-    MsStatementRow tempRow = MsStatementRow(
-      statementRowModel: tbStatementRowModel,
-    );
+      MsStatementRow tempRow = MsStatementRow(
+        statementRowModel: tbStatementRowModel,
+      );
 
-    return pdfHelper.calculateHeightOfWidget(
-      widget: tempRow,
-      width: MsPdfWidth.pageWidth,
-    );
+      return pdfHelper.calculateHeightOfWidget(
+        widget: tempRow,
+        width: MsPdfWidth.pageWidth,
+      );
+    } else {
+      TbHeaderRowModel tbHeaderRowModel = msModel as TbHeaderRowModel;
+
+      TbHeaderRowModel headerRowModel = TbHeaderRowModel(
+        headerName: text,
+        headerLevel: tbHeaderRowModel.headerLevel,
+      );
+
+      HeaderRow headerRow = HeaderRow(
+        tbHeaderRowModel: headerRowModel,
+      );
+      return pdfHelper.calculateHeightOfWidget(
+          widget: headerRow, width: MsPdfWidth.pageWidth);
+    }
   }
 
   void processHazardIcons({
@@ -749,81 +903,6 @@ class TbMsPdfGenerator {
       pages[currentPageIndex].addAll(iconRows);
     }
   }
-
-  // void createHeaderWithWidgets({
-  //   required HeaderRows headerRow,
-  //   required Context context,
-  // }) {
-  //   Widget widget = MsPdfCustomText(
-  //     text: headerRow.name,
-  //     padding: headerRow.level == 0
-  //         ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
-  //         : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
-  //     textStyle: headerRow.level == 0
-  //         // ? msPdfTextStyle.msMainHeaderTextStyle()
-  //         ? TbPdfHelper().textStyleGenerator(
-  //             font: Theme.of(context).header0.fontBold,
-  //             color: TbMsPdfColors.black,
-  //             fontSize: 12,
-  //           )
-  //         : TbPdfHelper().textStyleGenerator(
-  //             font: Theme.of(context).header0.fontBold,
-  //             color: TbMsPdfColors.black,
-  //             fontSize: 11,
-  //           ),
-  //   );
-  //   if (widget is MsPdfCustomText) {
-  //     widget.rowType = 1;
-  //   }
-
-  //   headerWidget.add(widget);
-
-  //   if ((headerRow.headerRows ?? []).isNotEmpty) {
-  //     for (HeaderRows headerRow in headerRow.headerRows ?? []) {
-  //       createHeaderWithWidgets(
-  //         headerRow: headerRow,
-  //         context: context,
-  //       );
-  //     }
-  //   } else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
-  //     showMsStatementIconsOnPdf(hazardIconData: headerRow.hazardIcons ?? []);
-  //   } else if ((headerRow.statements ?? []).isNotEmpty) {
-  //     for (HeaderStatementData statementData in headerRow.statements ?? []) {
-  //       Widget w = MsStatementRow(
-  //         statementName: statementData.text,
-  //         statmentTextStyle: TbPdfHelper().textStyleGenerator(
-  //           font: Theme.of(context).header0.font,
-  //           color: MsPdfColors.black,
-  //           fontSize: 11,
-  //         ),
-  //       );
-  //       headerWidget.add(w);
-
-  //       if ((statementData.memoryImages ?? []).isNotEmpty) {
-  //         headerWidget.addAll(
-  //           showStatementImagesOnPdf(
-  //             images: statementData.memoryImages ?? [],
-  //           ),
-  //         );
-  //       }
-  //     }
-  //   }
-
-  //   if ((headerRow.images ?? []).isNotEmpty) {
-  //     List<MemoryImage> images = [];
-
-  //     for (HeaderReferenceImageData image in headerRow.images ?? []) {
-  //       if (image.memoryImage != null) {
-  //         images.add(image.memoryImage!);
-  //       }
-  //     }
-  //     headerWidget.addAll(
-  //       showStatementImagesOnPdf(
-  //         images: images,
-  //       ),
-  //     );
-  //   }
-  // }
 
   List<Widget> showStatementImagesOnPdf({
     List<MemoryImage>? images,
@@ -939,127 +1018,6 @@ class TbMsPdfGenerator {
 
     listIconImageItems = [];
   }
-
-  // /* *********************************** /
-  //  //  SHOW SIGN OFF USER DATA
-
-  //  /// this is responsible for showing the ms sign off
-  // / ************************************ */
-  // void showSignOffUserData({
-  //   required Context context,
-  //   required List<ReviewSignOffSignatureData> signOffUsers,
-  //   required TbPdfHelper pdfHelper,
-  //   required String? signOffStatement,
-  // }) {
-  //   if (signOffUsers.isEmpty) return;
-
-  //   final List<Widget> signOffSection = [];
-
-  //   // Section title and sign-off statement
-  //   signOffSection.add(
-  //     Container(
-  //       padding: const EdgeInsets.only(top: 15, left: 20, right: 20),
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           Text(
-  //             "SIGN OFF USERS",
-  //             style: TbPdfHelper().textStyleGenerator(
-  //               font: Theme.of(context).header0.fontBold,
-  //               color: TbMsPdfColors.black,
-  //               fontSize: 12,
-  //             ),
-  //           ),
-  //           SizedBox(height: 5),
-  //           if (signOffStatement != null)
-  //             Text(
-  //               signOffStatement,
-  //               style: TbPdfHelper().textStyleGenerator(
-  //                 font: Theme.of(context).header0.fontNormal,
-  //                 color: TbMsPdfColors.black,
-  //                 fontSize: 9,
-  //               ),
-  //             ),
-  //           if ((signOffStatement ?? "").isNotEmpty)
-  //             Container(
-  //               height: 3,
-  //             ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-
-  //   // Process sign-off users in pairs
-  //   for (int i = 0; i < signOffUsers.length; i += 2) {
-  //     List<Widget> rowChildren = [];
-
-  //     rowChildren.add(Container(
-  //       width: TbMsPdfWidth.pageWidth / 2 - 25,
-  //       decoration: BoxDecoration(
-  //         color: TbMsPdfColors.lightGreyBackground,
-  //         border: Border.all(width: 0.5, color: PdfColors.grey300),
-  //         borderRadius: BorderRadius.circular(4),
-  //       ),
-  //       margin: const EdgeInsets.only(right: 10),
-  //       child: MsSignOffSection(
-  //         user: signOffUsers[i],
-  //       ),
-  //     ));
-
-  //     if (i + 1 < signOffUsers.length) {
-  //       rowChildren.add(
-  //         MsSignOffSection(
-  //           user: signOffUsers[i + 1],
-  //         ),
-  //       );
-  //     } else {
-  //       rowChildren.add(Container(
-  //         width: TbMsPdfWidth.pageWidth / 2 - 25,
-  //       ));
-  //     }
-
-  //     signOffSection.add(
-  //       Padding(
-  //         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-  //         child: Row(
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: rowChildren,
-  //         ),
-  //       ),
-  //     );
-  //   }
-
-  //   // **Ensure content does not split across pages**
-  //   msPdfItems.add(
-  //     Container(
-  //       // padding: const EdgeInsets.all(10),
-  //       decoration: BoxDecoration(
-  //         color: TbMsPdfColors.white,
-  //       ),
-  //       child: Wrap(
-  //         alignment: WrapAlignment.start,
-  //         crossAxisAlignment: WrapCrossAlignment.start,
-  //         spacing: 10, // Adjust spacing if needed
-  //         runSpacing: 10,
-
-  //         children: [
-  //           ConstrainedBox(
-  //             constraints: BoxConstraints(
-  //               minHeight: 0,
-  //               maxHeight: TbMsPdfWidth.pageHeight *
-  //                   0.8, // Ensures content stays together
-  //             ),
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: signOffSection,
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   void showSignOffUserWithData({
     required Context context,
@@ -1268,228 +1226,6 @@ class TbMsPdfGenerator {
     }
   }
 
-  // /* *********************************** /
-  //  //  CALCULATE HEADER COLUMN HEIGHT
-
-  //  ///
-  // / ************************************ */
-
-  // double calculateHeaderColumnHeight({
-  //   required HeaderRows headerRow,
-  //   required Context context,
-  // }) {
-  //   double totalHeight = 0.0;
-
-  //   // Step 1: Calculate header title height
-  //   Widget headerTitleWidget = MsPdfCustomText(
-  //     text: headerRow.name,
-  //     padding: headerRow.level == 0
-  //         ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
-  //         : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
-  //     textStyle: headerRow.level == 0
-  //         ? TbPdfHelper().textStyleGenerator(
-  //             font: Theme.of(context).header0.fontBold,
-  //             color: TbMsPdfColors.black,
-  //             fontSize: 12,
-  //           )
-  //         : TbPdfHelper().textStyleGenerator(
-  //             font: Theme.of(context).header0.fontBold,
-  //             color: TbMsPdfColors.black,
-  //             fontSize: 11,
-  //           ),
-  //     rowType: 1,
-  //   );
-
-  //   double headerTitleHeight = pdfHelper.calculateHeightOfWidget(
-  //     widget: headerTitleWidget,
-  //     width: TbMsPdfWidth.pageWidth,
-  //   );
-
-  //   totalHeight += headerTitleHeight;
-
-  //   // Step 2: Calculate first subheader height (if available)
-  //   if ((headerRow.headerRows ?? []).isNotEmpty) {
-  //     HeaderRows firstSubHeader = headerRow.headerRows!.first;
-
-  //     Widget subHeaderWidget = MsPdfCustomText(
-  //       text: firstSubHeader.name,
-  //       padding: firstSubHeader.level == 0
-  //           ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
-  //           : TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
-  //       textStyle: firstSubHeader.level == 0
-  //           ? TbPdfHelper().textStyleGenerator(
-  //               font: Theme.of(context).header0.fontBold,
-  //               color: TbMsPdfColors.black,
-  //               fontSize: 12,
-  //             )
-  //           : TbPdfHelper().textStyleGenerator(
-  //               font: Theme.of(context).header0.fontBold,
-  //               color: TbMsPdfColors.black,
-  //               fontSize: 11,
-  //             ),
-  //       rowType: 1,
-  //     );
-
-  //     double subHeaderHeight = pdfHelper.calculateHeightOfWidget(
-  //       widget: subHeaderWidget,
-  //       width: MsPdfWidth.pageWidth,
-  //     );
-
-  //     // double subHeaderHeight = calculateHeaderColumnHeight(
-  //     //   headerRow: firstSubHeader,
-  //     //   context: context,
-  //     // );
-
-  //     totalHeight += subHeaderHeight;
-  //   }
-
-  //   // Step 3: Calculate first statement height (if available)
-  //   if ((headerRow.statements ?? []).isNotEmpty) {
-  //     HeaderStatementData firstStatement = headerRow.statements!.first;
-
-  //     Widget statementWidget = MsPdfCustomText(
-  //       text: firstStatement.text, // Assuming statementText contains the text
-  //       textStyle: TbPdfHelper().textStyleGenerator(
-  //         font: Theme.of(context).header0.fontNormal,
-  //         color: TbMsPdfColors.black,
-  //         fontSize: 10,
-  //       ),
-  //       padding: TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelNotZero,
-  //       rowType: 1,
-  //     );
-
-  //     double statementHeight = pdfHelper.calculateHeightOfWidget(
-  //       widget: statementWidget,
-  //       width: TbMsPdfWidth.pageWidth,
-  //     );
-
-  //     totalHeight += statementHeight;
-  //   } else if ((headerRow.hazardIcons ?? []).isNotEmpty) {
-  //     double hazardHeight =
-  //         calculateHazardIconsHeight(headerRow.hazardIcons ?? []);
-  //     totalHeight += hazardHeight;
-  //   } else if ((headerRow.images ?? []).isNotEmpty) {
-  //     List<MemoryImage> listMemoryImage =
-  //         (headerRow.images ?? []).map((e) => e.memoryImage!).toList();
-  //     double imageRowHeight = calculateHeaderImageHeight(
-  //       images: listMemoryImage,
-  //     );
-
-  //     totalHeight += imageRowHeight;
-  //   }
-
-  //   return totalHeight;
-  // }
-
-  // double calculateHazardIconsHeight(List<HazardIconData> hazardIcons) {
-  //   double totalHeight = 0;
-  //   List<Widget> currentRowIcons = [];
-  //   for (int i = 0; i < hazardIcons.length; i++) {
-  //     HazardIconData iconData = hazardIcons[i];
-  //     if (iconData.iconMemoryImage != null) {
-  //       Widget iconWidget = MsStatementHazardIconItem(
-  //         iconImage: iconData.iconMemoryImage!,
-  //       );
-  //       currentRowIcons.add(iconWidget);
-  //       if (currentRowIcons.length == 6 || i == hazardIcons.length - 1) {
-  //         Widget iconRow = MsStatementHazardIconsRow(
-  //           iconsImageList: List.from(currentRowIcons),
-  //         );
-  //         totalHeight += pdfHelper.calculateHeightOfWidget(
-  //           widget: iconRow,
-  //           width: TbMsPdfWidth.pageWidth,
-  //         );
-  //         currentRowIcons = [];
-  //       }
-  //     }
-  //   }
-  //   return totalHeight;
-  // }
-
-  // double calculateHeaderImageHeight({
-  //   required List<MemoryImage> images,
-  //   // required List<List<Widget>> pages,
-  //   // required int currentPageIndex,
-  //   // required double remainingHeight,
-  //   // required double contentHeight,
-  // }) {
-  //   double totalHeight = 0;
-
-  //   // Add padding before images
-  //   Widget paddingWidget = Container(height: 8);
-  //   double paddingHeight = pdfHelper.calculateHeightOfWidget(
-  //     widget: paddingWidget,
-  //     width: TbMsPdfWidth.pageWidth,
-  //   );
-
-  //   // if (paddingHeight > remainingHeight) {
-  //   //   // Start a new page
-  //   //   pages.add([]);
-  //   //   currentPageIndex++;
-  //   //   remainingHeight = contentHeight;
-  //   // }
-
-  //   // pages[currentPageIndex].add(paddingWidget);
-  //   // remainingHeight -= paddingHeight;
-  //   totalHeight += paddingHeight;
-
-  //   // Process images in pairs (two per row)
-  //   List<Widget> rowChildren = [];
-
-  //   for (int i = 0; i < images.length; i++) {
-  //     // Create image box widget
-  //     MemoryImage memoryImage = images[i];
-  //     Widget imageBox = MsAssessmentImageBox(
-  //       image: memoryImage,
-  //       index: i + 1,
-  //     );
-
-  //     rowChildren.add(imageBox);
-  //     rowChildren.add(Container(width: 10)); // Add spacing between images
-
-  //     // Create a row when we have 2 images or at the last image
-  //     if (rowChildren.length == 4 || i == images.length - 1) {
-  //       Widget imageRow = MsAssessmentImageRow(
-  //         listChildren: List.from(rowChildren),
-  //       );
-
-  //       double imageRowHeight = pdfHelper.calculateHeightOfWidget(
-  //         widget: imageRow,
-  //         width: TbMsPdfWidth.pageWidth,
-  //       );
-
-  //       // Check if row fits on current page
-  //       // if (imageRowHeight > remainingHeight) {
-  //       //   // Start a new page
-  //       //   // pages.add([]);
-  //       //   currentPageIndex++;
-  //       //   remainingHeight = contentHeight;
-  //       // }
-
-  //       // Add image row to current page
-  //       // pages[currentPageIndex].add(imageRow);
-  //       // remainingHeight -= imageRowHeight;
-  //       totalHeight += imageRowHeight;
-
-  //       // Add vertical spacing after row
-  //       Widget spacingWidget = Container(height: 10);
-  //       double spacingHeight = pdfHelper.calculateHeightOfWidget(
-  //         widget: spacingWidget,
-  //         width: TbMsPdfWidth.pageWidth,
-  //       );
-
-  //       // pages[currentPageIndex].add(spacingWidget);
-  //       // remainingHeight -= spacingHeight;
-  //       totalHeight += spacingHeight;
-
-  //       // Reset row children for next row
-  //       rowChildren = [];
-  //     }
-  //   }
-
-  //   return totalHeight;
-  // }
-
   String joinStatementText(List<String> statementList) {
     if (statementList.isEmpty) return "";
 
@@ -1503,6 +1239,67 @@ class TbMsPdfGenerator {
     return result;
   }
 
+  /* *********************************** / 
+   // PROCESS MS HEADER FOR PAGES 
+   
+   /// 
+  / ************************************ */
+  void processMsHeaderForPages({
+    required HeaderRow msHeaderRow,
+    required TbHeaderRowModel tbHeaderRowModel,
+    required MsPdfData pdfData,
+    required List<List<Widget>> pages,
+    required double contentHeight,
+  }) {
+    // Check if the statement fits in the remaining height of the current page
+    if (remainingMainPdfHeight < 19) {
+      // Minimum threshold
+      remainingMainPdfHeight = contentHeight;
+      pages.add([]);
+      currentPageIndex++;
+    }
+
+    if ((tbHeaderRowModel.height ?? 0.0) > remainingMainPdfHeight) {
+      // Split the statement if it doesn't fit
+      var splitStatements = splitHeaderRow(
+        headerRowModel: tbHeaderRowModel,
+        maxHeight: remainingMainPdfHeight,
+        pdfData: pdfData,
+      );
+
+      // Add the first part of the split statement to the current page
+      // pages[currentPageIndex].add(splitStatements.first);
+      pages[currentPageIndex].add(HeaderRow(
+        tbHeaderRowModel: splitStatements.first,
+      ));
+
+      if (splitStatements.length == 2) {
+        remainingMainPdfHeight = contentHeight;
+        pages.add([]);
+        currentPageIndex++;
+
+        // Recursively process the remaining part
+        processMsHeaderForPages(
+          tbHeaderRowModel: splitStatements.last,
+          pdfData: pdfData,
+          pages: pages,
+          contentHeight: contentHeight,
+          msHeaderRow: msHeaderRow,
+        );
+      }
+      // Start a new page for the remaining part
+    } else {
+      // Add the statement to the current page
+      pages[currentPageIndex].add(
+        HeaderRow(
+          // statementRowModel: statementRowModel,
+          tbHeaderRowModel: tbHeaderRowModel,
+        ),
+      );
+      remainingMainPdfHeight -= tbHeaderRowModel.height ?? 0.0;
+    }
+  }
+
   void processMsStatementForPages({
     required MsStatementRow statementRow,
     required TbStatementRowModel statementRowModel,
@@ -1511,7 +1308,7 @@ class TbMsPdfGenerator {
     required double contentHeight,
   }) {
     // Check if the statement fits in the remaining height of the current page
-    if (remainingMainPdfHeight < 19) {
+    if (remainingMainPdfHeight < 19.0) {
       // Minimum threshold
       remainingMainPdfHeight = contentHeight;
       pages.add([]);
@@ -1528,16 +1325,17 @@ class TbMsPdfGenerator {
 
       // Add the first part of the split statement to the current page
       // pages[currentPageIndex].add(splitStatements.first);
-      pages[currentPageIndex].add(MsStatementRow(
-        statementRowModel: splitStatements.first,
-      ));
+      pages[currentPageIndex].add(
+        MsStatementRow(
+          statementRowModel: splitStatements.first,
+        ),
+      );
 
       if (splitStatements.length == 2) {
         remainingMainPdfHeight = contentHeight;
         pages.add([]);
         currentPageIndex++;
 
-        
         // Recursively process the remaining part
         processMsStatementForPages(
           statementRowModel: splitStatements.last,
@@ -1551,47 +1349,81 @@ class TbMsPdfGenerator {
     } else {
       // Add the statement to the current page
       pages[currentPageIndex].add(
-          MsStatementRow(statementRowModel: 
-            statementRowModel,
-           ),
+        MsStatementRow(
+          statementRowModel: statementRowModel,
+        ),
       );
       remainingMainPdfHeight -= statementRowModel.height ?? 0.0;
     }
   }
 
+  /// ***********************************
+  ///   SPLIT MS HEADER ROW
+  ///
+  ///
+  /// ***********************************
+  List<TbHeaderRowModel> splitHeaderRow({
+    required TbHeaderRowModel headerRowModel,
+    required double maxHeight,
+    required MsPdfData pdfData,
+  }) {
+    // Split the statement text to fit within the maxHeight
+    int splitIndex = splitText(
+      text: headerRowModel.headerName,
+      maxHeight: maxHeight,
+      msPdfData: pdfData,
+      height: headerRowModel.height ?? 0.0,
+      msModel: headerRowModel,
+    );
 
-   /// ***********************************
-   ///   SPLIT MS HEADER ROW
-   /// 
-   /// 
-   /// ***********************************  
-  List<TbHeaderRowModel> splitMsHeaderRow({
-      required TbHeaderRowModel tbHeaderRowModel,
-      required double maxHeight,
-      required MsPdfData pdfData,
+    print(headerRowModel.headerName.length);
 
-  }){
-   
+    if (splitIndex > 0) {}
 
-   
+    // Create two parts of the statement
+    String firstPart =
+        (headerRowModel.headerName ?? "").substring(0, splitIndex).trim();
+    String secondPart =
+        (headerRowModel.headerName ?? "").substring(splitIndex).trim();
 
-    
+    TbHeaderRowModel firstHeaderRowModel = TbHeaderRowModel(
+      headerName: firstPart,
+      headerLevel: headerRowModel.headerLevel,
+    );
+    TbHeaderRowModel secondHeaderRowModel = TbHeaderRowModel(
+      headerName: secondPart,
+      headerLevel: headerRowModel.headerLevel,
+      // statementName: secondPart,
+    );
 
+    // Create the first part of the statement row
+    HeaderRow firstRow = HeaderRow(
+        // statementRowModel: firstTbStatementRowModel,
+        tbHeaderRowModel: firstHeaderRowModel
+        // statmentTextStyle: statementRow.statmentTextStyle,
+        );
 
-    
-     
+    // Create the second part of the statement row
+    HeaderRow secondRow = HeaderRow(
+      tbHeaderRowModel: secondHeaderRowModel,
+    );
 
+    // Calculate the heights of the split rows
+    firstHeaderRowModel.height = pdfHelper.calculateHeightOfWidget(
+      widget: firstRow,
+      width: TbMsPdfWidth.pageWidth,
+    );
 
-    
-     
-
+    secondHeaderRowModel.height = pdfHelper.calculateHeightOfWidget(
+      widget: secondRow,
+      width: TbMsPdfWidth.pageWidth,
+    );
+    if (splitIndex > 0) {
+      return [firstHeaderRowModel, secondHeaderRowModel];
+    } else {
+      return [firstHeaderRowModel];
+    }
   }
-  
-
-
-
-  
-    
 
   List<TbStatementRowModel> splitMsStatementRow({
     required TbStatementRowModel statementRow,
@@ -1604,6 +1436,7 @@ class TbMsPdfGenerator {
       maxHeight: maxHeight,
       msPdfData: pdfData,
       height: statementRow.height ?? 0.0,
+      msModel: statementRow,
     );
 
     print(statementRow.statementName.length);
@@ -1657,7 +1490,6 @@ class TbMsPdfGenerator {
   }
 }
 
-
 class TbStatementRowModel {
   String statementName;
   double? height;
@@ -1668,14 +1500,14 @@ class TbStatementRowModel {
   });
 }
 
-class TbHeaderRowModel {  
+class TbHeaderRowModel {
+  String headerName;
+  double? height;
+  int? headerLevel;
 
-   String headerName;
-   double ? height;
-
-   TbHeaderRowModel({
-     required this.headerName,
-     this.height,
-
-   })
+  TbHeaderRowModel({
+    required this.headerName,
+    this.height,
+    this.headerLevel,
+  });
 }
