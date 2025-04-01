@@ -1296,7 +1296,7 @@ class TbRaPdfGenerator {
       );
     }
 
-    if (raPdfData.reviewSignature?.signature != null) {
+    if ((raPdfData.reviewSignature?.signature ?? "").isNotEmpty) {
       raPdfData.reviewSignature?.signatureMemoryImage =
           await TbPdfHelper().generateMemoryImageForPath(
         pdfData.reviewSignature?.signature ?? "",
