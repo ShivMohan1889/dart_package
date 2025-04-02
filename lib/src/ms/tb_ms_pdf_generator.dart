@@ -518,6 +518,10 @@ class TbMsPdfGenerator {
     required double contentHeight,
     required Context context,
   }) {
+    if (statement.text.contains(
+        "First Aid and safety notice board must be present and visible with relevant information at all times.")) {
+      print("a");
+    }
     TbStatementRowModel statementRowModel = TbStatementRowModel(
       statementName: statement.text,
     );
@@ -538,7 +542,8 @@ class TbMsPdfGenerator {
 
     statementRowModel.height = statementWidgetHeight;
 
-    if (remainingMainPdfHeight < (statementRowModel.height ?? 0.0)) {
+    if (remainingMainPdfHeight < (statementRowModel.height ?? 0.0) &&
+        remainingMainPdfHeight < 19.0) {
       var listHeader = addHeaderToTheNextPage(
         contentHeight: contentHeight,
         pages: pages,
@@ -548,17 +553,19 @@ class TbMsPdfGenerator {
         currentPageIndex++;
         pages.add([]);
 
-        pages[currentPageIndex].add(
-          Container(
-            color: PdfColors.red,
-            // height: remainingMainPdfHeight,
-            height: 30,
-          ),
-        );
+        pages[currentPageIndex].add(Container(
+          height: 10,
+          // color:  PdfColors.red
+        )
+            // Container(
+            //   // height: remainingMainPdfHeight,
+            //   height: 30,
+            // ),
+            );
 
         pages[currentPageIndex].addAll(listHeader);
 
-        remainingMainPdfHeight = contentHeight - 30;
+        remainingMainPdfHeight = contentHeight - 10;
 
         // pages[currentPageIndex].add(
         //   Container(
@@ -599,7 +606,9 @@ class TbMsPdfGenerator {
     for (int i = pages[currentPageIndex].length - 1; i >= 0; i--) {
       Widget page = pages[currentPageIndex][i]; // Get the widget
 
-      if (page is MsStatementHazardIconsRow || page is MsStatementRow || page is MsAssessmentImageRow) {
+      if (page is MsStatementHazardIconsRow ||
+          page is MsStatementRow ||
+          page is MsAssessmentImageRow) {
         return listHeaderRow; // Skip these widgets
       } else {
         listHeaderRow.add(page);
@@ -880,15 +889,35 @@ class TbMsPdfGenerator {
           // Check if row fits on current page
           if (iconRowHeight > remainingMainPdfHeight) {
             // Add the rows we have so far to the current page
+
             if (iconRows.isNotEmpty) {
               pages[currentPageIndex].addAll(iconRows);
             }
 
-            // Start a new page
-            pages.add([]);
-            currentPageIndex++;
-            remainingMainPdfHeight = contentHeight;
-            iconRows = [];
+            var listHeader = addHeaderToTheNextPage(
+              contentHeight: contentHeight,
+              pages: pages,
+            );
+
+            if (listHeader.isNotEmpty) {
+              double calculateHeightHeader = pdfHelper.calculateHeightOfWidget(
+                  widget: listHeader.first, width: TbMsPdfWidth.pageWidth);
+
+              // Start a new page
+
+              currentPageIndex++;
+              pages.add([]);
+              pages[currentPageIndex].add(
+                Container(
+                  height: iconRowHeight + calculateHeightHeader,
+                ),
+              );
+
+              pages[currentPageIndex].addAll(listHeader);
+
+              remainingMainPdfHeight = contentHeight;
+              iconRows = [];
+            }
           }
 
           iconRows.add(iconRow);
