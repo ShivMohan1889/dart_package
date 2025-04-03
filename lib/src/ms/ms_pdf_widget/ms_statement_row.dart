@@ -8,80 +8,91 @@ import '../tb_ms_pdf_constants.dart';
 
 class MsStatementRow extends StatelessWidget {
   // final String? statementName;
-  final  TbStatementRowModel statementRowModel;
+  final TbStatementRowModel statementRowModel;
   final TextStyle? statmentTextStyle;
 
   final EdgeInsets? padding;
 
-   double ? height;
-
+  double? height;
 
   MsStatementRow({
     // this.statementName,
     this.statmentTextStyle,
     this.padding,
     this.height,
-    required  this.statementRowModel,
-
+    required this.statementRowModel,
   });
   @override
   Widget build(Context context) {
-    var arr = statementRowModel.statementName.split('/n') ?? [];
-    var first = arr.first;
 
-    arr.removeAt(0);
+
+    // var arr = statementRowModel.statementName.split('\n') ?? [];
+    // var first = arr.first;
+
+    // arr.removeAt(0);
     List<Widget> arrStatement = [];
 
-    var row = Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 5,
-          ),
-          child: Container(
-            height: 3,
-            width: 3,
-            decoration: BoxDecoration(
-              color: PdfColors.black,
-              shape: BoxShape.circle,
-              borderRadius: BorderRadius.circular(3),
+    var row = Container(
+  
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 5,
+            ),
+            child: Container(
+              height: 3,
+              width: 3,
+              decoration: BoxDecoration(
+                color: PdfColors.black,
+                shape: BoxShape.circle,
+                borderRadius: BorderRadius.circular(3),
+              ),
             ),
           ),
-        ),
-        Container(
-          width: 5,
-        ),
-        Container(
-          width: TbMsPdfWidth.statementWidth,
-          child: Text(
-            first,
-            style: statmentTextStyle ??
-                TbPdfHelper().textStyleGenerator(
-                  font: Theme.of(context).header0.font,
-                  color: MsPdfColors.black,
-                  fontSize: 11,
-                ),
+          Container(
+            width: 5,
           ),
-        ),
-      ],
+          Container(
+         
+            width: TbMsPdfWidth.statementWidth,
+            child: Text(
+              // statementRowModel.statementName,
+              statementRowModel.statementName,
+              style: statmentTextStyle ??
+                  TbPdfHelper().textStyleGenerator(
+                    font: Theme.of(context).header0.font,
+                    color: MsPdfColors.black,
+                    fontSize: 11,
+                  ),
+            ),
+          ),
+        ],
+      ),
     );
 
     arrStatement.add(row);
-    for (var s in arr) {
-      arrStatement.add(Text(
-        s.trim(),
-        style: statmentTextStyle,
-      ));
-    }
-    return Padding(
+    // for (var s in arr) {
+    //   arrStatement.add(
+    //     Container(
+    //       child: Text(
+    //         s.trim(),
+    //         style: statmentTextStyle,
+    //       ),
+    //     ),
+    //   );
+    // }
+    return Container(
+  
       padding: padding ?? TbMsPdfPaddings.paddingTbMsStatementRow,
       child: Container(
-        child: Wrap(
+        child: Column(
           children: arrStatement,
-          direction: Axis.horizontal,
-          verticalDirection: VerticalDirection.down,
+
+          // direction: Axis.horizontal,
+          // verticalDirection: VerticalDirection.down,
         ),
       ),
     );
