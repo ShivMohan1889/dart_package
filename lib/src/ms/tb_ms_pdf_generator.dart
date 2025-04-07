@@ -249,6 +249,14 @@ class TbMsPdfGenerator {
     required Context context,
   }) {
     for (HeaderRows headerRow in pdfData.headers) {
+      headerWidget.add(
+        Container(
+          height: 10,
+          // color: PdfColors.red,
+        ),
+      );
+      remainingMainPdfHeight -= 10;
+
       processHeaderWithPageBreaks(
         headerRow: headerRow,
         context: context,

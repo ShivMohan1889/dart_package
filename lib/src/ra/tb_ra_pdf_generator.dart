@@ -455,14 +455,14 @@ class TbRaPdfGenerator {
   void processRowForPages(TbHazardRowModel row, RaPdfData riskAssessmentModel) {
     // Check if row fits in current page
     // Check if remaining space is at least 120% of what the row needs
-    if (remainingHeight < (row.height * 1.1)) {
-      remainingHeight = TbRaPdfSectionHeights.SECOND_PAGE_HEIGHT;
-    }
-
-    // if (remainingHeight < 19) {
-    // Minimum threshold
+    // if (remainingHeight < (row.height * 1.1)) {
     //   remainingHeight = TbRaPdfSectionHeights.SECOND_PAGE_HEIGHT;
     // }
+
+    if (remainingHeight < 19) {
+    // Minimum threshold
+      remainingHeight = TbRaPdfSectionHeights.SECOND_PAGE_HEIGHT;
+    }
 
     if (row.height > remainingHeight) {
       // Split the row if it doesn't fit
