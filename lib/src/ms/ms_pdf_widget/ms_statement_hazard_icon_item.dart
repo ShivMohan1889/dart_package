@@ -1,49 +1,62 @@
+import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
-/// this widget is used to show icon image and icon name
 class MsStatementHazardIconItem extends StatelessWidget {
-  /// holds the ms statement hazard icon image
   final MemoryImage iconImage;
+  final String? iconText;
 
   MsStatementHazardIconItem({
     required this.iconImage,
+    this.iconText,
   });
+
   @override
   Widget build(Context context) {
-    // return Container(
-    //   // color: PdfColors.red,
-    //   // padding: const EdgeInsets.only(
-    //   //   left: 10,
-    //   //   right: 10,
-    //   // ),
-    //   color: PdfColors.amber,
-    //   margin: const EdgeInsets.all(5),
-    //   child: Center(
-    //     child: Image(
-    //       iconImage,
-    //       height: 90,
-    //       width: 90,
-    //     ),
-    //   ),
-    // );
+    // Calculate the actual width based on the container
+    double containerWidth =
+        (TbMsPdfWidth.pageWidth - 90) / 6; // Account for margins and spacing
 
     return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: PdfColors.grey,
+          width: 0.5,
+        ),
+        borderRadius: BorderRadius.circular(3),
+      ),
+      width: containerWidth,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image(
-            alignment: Alignment.center,
-            iconImage,
-            height: 90,
-            width: 80,
-
-            // height: 90,
-            // width: 100,
-          ),
+          // Image container
           Container(
-            width: 10,
+            padding: const EdgeInsets.all(5),
+            child: Image(
+              iconImage,
+              height: 70, // Slightly reduce height
+              width: containerWidth - 10, // Account for padding
+              fit: BoxFit.contain,
+            ),
           ),
+
+          // Text container with dark gray background
+          if ((iconText ?? "").isNotEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              color: PdfColors.grey600,
+              child: Text(
+                iconText!,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: PdfColors.white,
+                  fontSize: 7, // Slightly smaller text
+                ),
+              ),
+            ),
         ],
       ),
     );
