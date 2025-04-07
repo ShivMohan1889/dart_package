@@ -24,8 +24,6 @@ class MsStatementRow extends StatelessWidget {
   });
   @override
   Widget build(Context context) {
-
-
     // var arr = statementRowModel.statementName.split('\n') ?? [];
     // var first = arr.first;
 
@@ -33,30 +31,30 @@ class MsStatementRow extends StatelessWidget {
     List<Widget> arrStatement = [];
 
     var row = Container(
-  
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 5,
-            ),
-            child: Container(
-              height: 3,
-              width: 3,
-              decoration: BoxDecoration(
-                color: PdfColors.black,
-                shape: BoxShape.circle,
-                borderRadius: BorderRadius.circular(3),
-              ),
-            ),
-          ),
+          statementRowModel.isShowBulletPoint
+              ? Padding(
+                  padding: const EdgeInsets.only(
+                    top: 5,
+                  ),
+                  child: Container(
+                    height: 3,
+                    width: 3,
+                    decoration: BoxDecoration(
+                      color: PdfColors.black,
+                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                )
+              : Container(),
           Container(
             width: 5,
           ),
           Container(
-         
             width: TbMsPdfWidth.statementWidth,
             child: Text(
               // statementRowModel.statementName,
@@ -85,7 +83,6 @@ class MsStatementRow extends StatelessWidget {
     //   );
     // }
     return Container(
-  
       padding: padding ?? TbMsPdfPaddings.paddingTbMsStatementRow,
       child: Container(
         child: Column(
