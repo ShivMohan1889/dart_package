@@ -12,11 +12,11 @@ class MsStatementHazardIconsRow extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      // color: PdfColors.green100,
-      padding: TbMsPdfPaddings.marginTbMsStatementHazardIconRow,
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.only(left: 15),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start, // Center the icons
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: iconsImageList,
       ),
     );
