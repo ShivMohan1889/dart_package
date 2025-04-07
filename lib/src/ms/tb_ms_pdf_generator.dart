@@ -436,7 +436,10 @@ class TbMsPdfGenerator {
       );
 
       rowChildren.add(imageBox);
-      rowChildren.add(Container(width: 10)); // Add spacing between images
+      rowChildren.add(Container(
+        width: 10,
+        color: PdfColors.lightGreen,
+      )); // Add spacing between images
 
       // Create a row when we have 2 images or at the last image
       if (rowChildren.length == 4 || i == images.length - 1) {
@@ -459,14 +462,20 @@ class TbMsPdfGenerator {
         remainingMainPdfHeight -= imageRowHeight;
 
         // Add vertical spacing after row
-        Widget spacingWidget = Container(height: 10);
-        double spacingHeight = pdfHelper.calculateHeightOfWidget(
-          widget: spacingWidget,
-          width: TbMsPdfWidth.pageWidth,
-        );
+        // Widget spacingWidget = Container(
+        //   color:  PdfColors.red,
+        //   // height: 7,
+        //   height: 5,
+        //   // height:  10,
+        //   // color: PdfColors.green,
+        // );
+        // double spacingHeight = pdfHelper.calculateHeightOfWidget(
+        //   widget: spacingWidget,
+        //   width: TbMsPdfWidth.pageWidth,
+        // );
 
-        headerWidget.add(spacingWidget);
-        remainingMainPdfHeight -= spacingHeight;
+        // headerWidget.add(spacingWidget);
+        // remainingMainPdfHeight -= spacingHeight;
 
         // Reset row children for next row
         rowChildren = [];
@@ -1163,9 +1172,11 @@ class TbMsPdfGenerator {
       if (splitStatements.length == 2) {
         remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
 
+        var lastStatement = splitStatements.last;
+        lastStatement.isShowBulletPoint = false;
         // Recursively process the remaining part
         processMsStatementForPages(
-          statementRowModel: splitStatements.last,
+          statementRowModel: lastStatement,
           pdfData: pdfData,
           statementRow: statementRow,
         );
@@ -1276,9 +1287,11 @@ class TbMsPdfGenerator {
 
     TbStatementRowModel firstTbStatementRowModel = TbStatementRowModel(
       statementName: firstPart,
+      isShowBulletPoint: statementRow.isShowBulletPoint == false ? false : true,
     );
     TbStatementRowModel secondTbStatementRowModel = TbStatementRowModel(
       statementName: secondPart,
+      isShowBulletPoint: false,
     );
 
     // Create the first part of the statement row
@@ -1318,10 +1331,12 @@ class TbMsPdfGenerator {
 class TbStatementRowModel {
   String statementName;
   double? height;
+  bool isShowBulletPoint;
 
   TbStatementRowModel({
     required this.statementName,
     this.height,
+    this.isShowBulletPoint = true,
   });
 }
 

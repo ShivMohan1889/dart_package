@@ -8,21 +8,19 @@ import '../tb_ms_pdf_constants.dart';
 
 class MsStatementRow extends StatelessWidget {
   // final String? statementName;
-  final  TbStatementRowModel statementRowModel;
+  final TbStatementRowModel statementRowModel;
   final TextStyle? statmentTextStyle;
 
   final EdgeInsets? padding;
 
-   double ? height;
-
+  double? height;
 
   MsStatementRow({
     // this.statementName,
     this.statmentTextStyle,
     this.padding,
     this.height,
-    required  this.statementRowModel,
-
+    required this.statementRowModel,
   });
   @override
   Widget build(Context context) {
@@ -36,20 +34,22 @@ class MsStatementRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 5,
-          ),
-          child: Container(
-            height: 3,
-            width: 3,
-            decoration: BoxDecoration(
-              color: PdfColors.black,
-              shape: BoxShape.circle,
-              borderRadius: BorderRadius.circular(3),
-            ),
-          ),
-        ),
+        statementRowModel.isShowBulletPoint
+            ? Padding(
+                padding: const EdgeInsets.only(
+                  top: 5,
+                ),
+                child: Container(
+                  height: 3,
+                  width: 3,
+                  decoration: BoxDecoration(
+                    color: PdfColors.black,
+                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+              )
+            : Container(),
         Container(
           width: 5,
         ),
@@ -75,7 +75,7 @@ class MsStatementRow extends StatelessWidget {
         style: statmentTextStyle,
       ));
     }
-    return Padding(
+    return Container(
       padding: padding ?? TbMsPdfPaddings.paddingTbMsStatementRow,
       child: Container(
         child: Wrap(

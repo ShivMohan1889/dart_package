@@ -187,7 +187,8 @@ class TbMsPdfPaddings {
   /// padding for TbMs Statement Row Widget
   static const pw.EdgeInsets paddingTbMsStatementRow = pw.EdgeInsets.only(
     left: 20,
-    top: 5,
+    top: 3,
+    bottom: 3,
     right: 20,
   );
 

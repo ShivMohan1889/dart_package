@@ -18,6 +18,7 @@ class MsAssessmentImageBox extends StatelessWidget {
           height: 176,
           width: 269,
           decoration: BoxDecoration(
+     
             border: Border.all(
               width: 0.5,
               color: PdfColors.black,
@@ -25,9 +26,7 @@ class MsAssessmentImageBox extends StatelessWidget {
           ),
           padding: const EdgeInsets.symmetric(
             vertical: 5,
-          
           ),
- 
           child: image == null
               ? Container()
               : Center(

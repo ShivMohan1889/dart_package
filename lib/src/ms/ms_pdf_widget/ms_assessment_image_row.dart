@@ -1,3 +1,4 @@
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
 class MsAssessmentImageRow extends StatelessWidget {
@@ -12,9 +13,12 @@ class MsAssessmentImageRow extends StatelessWidget {
     return Wrap(
       children: [
         Container(
+          padding: EdgeInsets.only(
+            top: 10,
+            // bottom: 10,
+          ),
           // color: PdfColors.amber,
           // padding: MsPdfPaddings.paddingForMsHeaderEntityHeaderLevelNotZero,
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
