@@ -612,7 +612,6 @@ class TbMsPdfGenerator {
     required List<HazardIconData> hazardIcons,
   }) {
     // We'll group hazard icons in rows of up to 6 icons per row
-    List<Widget> iconRows = [];
     List<Widget> currentRowIcons = [];
 
     for (int i = 0; i < hazardIcons.length; i++) {
@@ -635,66 +634,108 @@ class TbMsPdfGenerator {
             widget: iconRow,
             width: TbMsPdfWidth.pageWidth,
           );
+
           // Check if row fits on current page
           if (iconRowHeight > remainingMainPdfHeight) {
-            // Add the rows we have so far to the current page
-
-            if (iconRows.isNotEmpty) {
-              headerWidget.addAll(iconRows);
-            }
-
+            // Need to start a new page
             var listHeader = addHeaderToTheNextPage();
 
+            // Move to a new page with the header
             if (listHeader.isNotEmpty) {
-              double calculateHeightHeader = pdfHelper.calculateHeightOfWidget(
-                  widget: listHeader.first, width: TbMsPdfWidth.pageWidth);
-
-              // Start a new page
-              headerWidget.add(
-                Container(
-                  height: iconRowHeight + calculateHeightHeader,
-                ),
-              );
-
+              // Add spacing and the header to the new page
+              headerWidget.add(Container(height: 10));
               headerWidget.addAll(listHeader);
 
-              remainingMainPdfHeight =
-                  remainingMainPdfHeight - calculateHeightHeader;
-              iconRows = [];
+              // Reset remaining height for the new page
+              remainingMainPdfHeight -= 10;
+
+              // Calculate header total height
+              double headerHeight = 0;
+              for (var item in listHeader) {
+                headerHeight += pdfHelper.calculateHeightOfWidget(
+                    widget: item, width: TbMsPdfWidth.pageWidth);
+              }
+
+              // Subtract header height from remaining height
+              remainingMainPdfHeight -= headerHeight;
+            } else {
+              remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
             }
           }
 
-          iconRows.add(iconRow);
+          // Add the row to the current page
+          headerWidget.add(iconRow);
           remainingMainPdfHeight -= iconRowHeight;
+
+          // Clear for the next row
           currentRowIcons = [];
         }
       }
     }
-
-    // Add any remaining icon rows to the current page
-    if (iconRows.isNotEmpty) {
-      headerWidget.addAll(iconRows);
-    }
   }
 
-  //         if (remainingMainPdfHeight < iconRowHeight) {
-  //           remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
+  // void processHazardIcons({
+  //   required List<HazardIconData> hazardIcons,
+  // }) {
+  //   // We'll group hazard icons in rows of up to 6 icons per row
+  //   List<Widget> iconRows = [];
+  //   List<Widget> currentRowIcons = [];
+
+  //   for (int i = 0; i < hazardIcons.length; i++) {
+  //     HazardIconData iconData = hazardIcons[i];
+
+  //     if (iconData.iconMemoryImage != null) {
+  //       Widget iconWidget = MsStatementHazardIconItem(
+  //         iconImage: iconData.iconMemoryImage!,
+  //       );
+
+  //       currentRowIcons.add(iconWidget);
+
+  //       // Create a row when we have 6 icons or we're at the last icon
+  //       if (currentRowIcons.length == 6 || i == hazardIcons.length - 1) {
+  //         Widget iconRow = MsStatementHazardIconsRow(
+  //           iconsImageList: List.from(currentRowIcons),
+  //         );
+
+  //         double iconRowHeight = pdfHelper.calculateHeightOfWidget(
+  //           widget: iconRow,
+  //           width: TbMsPdfWidth.pageWidth,
+  //         );
+  //         // Check if row fits on current page
+  //         if (iconRowHeight > remainingMainPdfHeight) {
+  //           // Add the rows we have so far to the current page
+
+  //           if (iconRows.isNotEmpty) {
+  //             headerWidget.addAll(iconRows);
+  //           }
+
   //           var listHeader = addHeaderToTheNextPage();
 
   //           if (listHeader.isNotEmpty) {
   //             double calculateHeightHeader = pdfHelper.calculateHeightOfWidget(
   //                 widget: listHeader.first, width: TbMsPdfWidth.pageWidth);
-  //             remainingMainPdfHeight =
-  //                 remainingMainPdfHeight - calculateHeightHeader;
+
+  //             // Start a new page
+  //             headerWidget.add(
+  //               Container(
+  //                 height: iconRowHeight + calculateHeightHeader,
+  //               ),
+  //             );
 
   //             headerWidget.addAll(listHeader);
+
+  //             remainingMainPdfHeight =
+  //                 remainingMainPdfHeight - calculateHeightHeader;
+  //             iconRows.add(iconRow);
+  //             iconRows = [];
+  //             remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
+  //           } else {
+  //             iconRows.add(iconRow);
+  //             iconRows = [];
+  //             remainingMainPdfHeight -= iconRowHeight;
   //           }
   //         }
-  //         headerWidget.add(iconRow);
-  //         remainingMainPdfHeight = remainingMainPdfHeight - iconRowHeight;
-  //         iconRows = [];
 
-  //         iconRows.add(iconRow);
   //         currentRowIcons = [];
   //       }
   //     }
@@ -703,7 +744,6 @@ class TbMsPdfGenerator {
   //   // Add any remaining icon rows to the current page
   //   if (iconRows.isNotEmpty) {
   //     headerWidget.addAll(iconRows);
-
   //   }
   // }
 
