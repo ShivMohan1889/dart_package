@@ -674,7 +674,8 @@ class RaFooterRow extends StatelessWidget {
             Container(
               padding: const EdgeInsets.only(top: 0),
               child: Text(
-                  "It's important you understand this report. If you don't you should seek\nproper Risk Assessment Training.",
+                  //"It's important you understand this report. If you don't you should seek\nproper Risk Assessment Training.",
+                  "It is important that you understand this document and that it makes sense to your work. If you have any questions or concerns please contact your manager and or competent person",
                   style: isForSignOff
                       // ? raPdfTextStyles.normalWhite8()
                       ? TbPdfHelper().textStyleGenerator(
