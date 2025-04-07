@@ -20,7 +20,7 @@ class MsFooterSection extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      color: PdfColors.amber,
+      // color: PdfColors.amber,
       // margin: TbMsPdfPaddings.marginForFooterSection,
       padding: EdgeInsets.only(
         left: TbMsPdfPaddings.rightAndLeftPadding.left,

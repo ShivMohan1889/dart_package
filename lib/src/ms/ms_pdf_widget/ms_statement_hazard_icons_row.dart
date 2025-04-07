@@ -12,7 +12,7 @@ class MsStatementHazardIconsRow extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      color: PdfColors.green100,
+      // color: PdfColors.green100,
       padding: TbMsPdfPaddings.marginTbMsStatementHazardIconRow,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

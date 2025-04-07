@@ -28,7 +28,7 @@ class MsHeaderRow extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      color: PdfColors.amber,
+      // color: PdfColors.amber,
       // padding: EdgeInsets.only(
       //   bottom: 10,
       // ),
