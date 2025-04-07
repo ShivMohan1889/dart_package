@@ -385,6 +385,13 @@ class TbMsPdfGenerator {
       processImages(
         images: statement.memoryImages!,
       );
+
+      headerWidget.add(
+        Container(
+          height: 8,
+        ),
+      );
+      remainingMainPdfHeight -= 8;
     }
   }
 
