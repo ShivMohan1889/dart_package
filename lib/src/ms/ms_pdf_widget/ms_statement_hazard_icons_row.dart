@@ -1,4 +1,5 @@
 import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
 class MsStatementHazardIconsRow extends StatelessWidget {
@@ -11,20 +12,8 @@ class MsStatementHazardIconsRow extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      height: 90,
-
-      margin: TbMsPdfPaddings.marginTbMsStatementHazardIconRow,
-      // margin: const EdgeInsets.only(
-      //   top: 10,
-      //   left: 20,
-      //   right: 20,
-      //   bottom: 10,
-      // ),
-      // color: PdfColors.red,
-      // padding: const EdgeInsets.only(
-      //   left: 5,
-      //   right: ,
-      // ),
+      color: PdfColors.green100,
+      padding: TbMsPdfPaddings.marginTbMsStatementHazardIconRow,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,

@@ -20,8 +20,14 @@ class MsFooterSection extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      margin: TbMsPdfPaddings.marginForFooterSection,
-      padding: TbMsPdfPaddings.rightAndLeftPadding,
+      color: PdfColors.amber,
+      // margin: TbMsPdfPaddings.marginForFooterSection,
+      padding: EdgeInsets.only(
+        left: TbMsPdfPaddings.rightAndLeftPadding.left,
+        right: TbMsPdfPaddings.rightAndLeftPadding.right,
+        bottom: TbMsPdfPaddings.marginForFooterSection.bottom,
+        top: TbMsPdfPaddings.marginForFooterSection.bottom,
+      ),
       child: Row(
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [

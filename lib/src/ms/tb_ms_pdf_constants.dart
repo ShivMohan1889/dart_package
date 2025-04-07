@@ -120,8 +120,8 @@ class TbMsPdfPaddings {
   static const pw.EdgeInsets paddingForTbMsHeaderEntityHeaderLevelZero =
       pw.EdgeInsets.only(
     left: 20,
-    // top: 18,
-    top: 13,
+    top: 6,
+    bottom: 6,
     right: 20,
   );
 
@@ -129,6 +129,7 @@ class TbMsPdfPaddings {
       pw.EdgeInsets.only(
     left: 20,
     top: 5,
+    bottom: 5,
     right: 20,
   );
 
@@ -215,7 +216,7 @@ class TbMsPdfPaddings {
     top: 5,
     left: 20,
     right: 20,
-    bottom: 15,
+    bottom: 5,
   );
 
   /// margin for  TbMs Statement Icon Row Widget
@@ -228,7 +229,7 @@ class TbMsPdfPaddings {
 
   /// margin for  TbMs Statement Icon Row Widget
   static const pw.EdgeInsets marginForFooterSection = pw.EdgeInsets.only(
-    bottom: 20,
+    bottom: 10,
   );
 
   // margin for for ms title row

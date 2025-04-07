@@ -28,14 +28,15 @@ class MsHeaderRow extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      padding: EdgeInsets.only(
-        bottom: 10,
-      ),
+      color: PdfColors.amber,
+      // padding: EdgeInsets.only(
+      //   bottom: 10,
+      // ),
       child: Column(
         children: [
           Container(
             width: TbMsPdfWidth.pageWidth,
-            color: MsPdfColors.white,
+
             // color: PdfColors.amber,
             padding: MsPdfPaddings.rightPadding,
             // padding: MsPdfPaddings.pageHorizontalPadding,

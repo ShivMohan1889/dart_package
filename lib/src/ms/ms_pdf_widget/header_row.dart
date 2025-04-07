@@ -27,6 +27,7 @@ class HeaderRow extends StatelessWidget {
   @override
   Widget build(Context context) {
     return MsPdfCustomText(
+      color: PdfColors.deepOrange,
       text: tbHeaderRowModel?.headerName,
       padding: tbHeaderRowModel?.headerLevel == 0
           ? TbMsPdfPaddings.paddingForTbMsHeaderEntityHeaderLevelZero
