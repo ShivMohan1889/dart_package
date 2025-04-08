@@ -88,8 +88,6 @@ class TbMsPdfGenerator {
       width: TbMsPdfWidth.pageWidth,
     );
 
-    print("s");
-
     pageHeightWithoutHeaderFooter = pageHeight - headerHeight - footerHeight;
 
     remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
@@ -140,9 +138,7 @@ class TbMsPdfGenerator {
         widget: sitePhoto,
         width: TbMsPdfWidth.pageWidth,
       );
-      
-      print("hello world");
-      
+
       if (sitePhotoHeight <= remainingMainPdfHeight) {
         headerWidget.add(sitePhoto);
         // remainingHeight -= sitePhotoHeight;
