@@ -355,9 +355,7 @@ class TbMsPdfGenerator {
     );
 
     tbHeaderRowModel.height = headerRowWidgetHeight;
-    if (tbHeaderRowModel.headerName.contains("7. PPE Requirements")) {
-      print("sn");
-    }
+
 
     processMsHeaderForPages(
       msHeaderRow: headerRowWidget,
