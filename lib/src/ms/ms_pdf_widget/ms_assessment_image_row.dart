@@ -28,8 +28,7 @@ class MsAssessmentImageRow extends StatelessWidget {
             children: [
               (text ?? '').isNotEmpty
                   ? MsPdfCustomText(
-                      // color: PdfColors.red,
-                      text: "Header Reference Images",
+                      text: text,
                       padding: const EdgeInsets.only(
                         left: 20,
                         right: 20,
@@ -37,10 +36,16 @@ class MsAssessmentImageRow extends StatelessWidget {
 
                       // padding: MsPdfPaddings.paddingForMsheaderEntity,
                       textStyle: TbPdfHelper().textStyleGenerator(
-                        font: Theme.of(context).header0.font,
-                        color: MsPdfColors.msBlueThemeColor,
-                        fontSize: 12,
+                        font: Theme.of(context).header0.fontBold,
+                        color: MsPdfColors.black,
+                        // fontSize: 12,
+                        fontSize: 13,
                       ),
+                    )
+                  : Container(),
+              (text ?? '').isNotEmpty
+                  ? Container(
+                      height: 10,
                     )
                   : Container(),
               Container(
