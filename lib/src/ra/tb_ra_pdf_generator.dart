@@ -401,7 +401,7 @@ class TbRaPdfGenerator {
       // Create hazard row
       TbHazardRowModel row = TbHazardRowModel(
         name:
-            '${hazard.name}${(hazard.harm ?? "").isNotEmpty ? "\n\n(${hazard.harm})" : ""}',
+            '${hazard.name}${(hazard.harm ?? "").isNotEmpty ? "\n(${hazard.harm})" : ""}',
         gridRef: hazard.cellPosition,
         worstCase: hazard.worstCase,
         likelihood: hazard.likelihoods,
@@ -460,7 +460,7 @@ class TbRaPdfGenerator {
     // }
 
     if (remainingHeight < 19) {
-    // Minimum threshold
+      // Minimum threshold
       remainingHeight = TbRaPdfSectionHeights.SECOND_PAGE_HEIGHT;
     }
 
