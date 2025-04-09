@@ -26,6 +26,7 @@ class MsAssessmentImageBox extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(
         vertical: 5,
+        horizontal:  5,
       ),
       child: image == null
           ? Container()

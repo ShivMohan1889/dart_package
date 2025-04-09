@@ -93,7 +93,6 @@ class TbMsPdfGenerator {
     headerWidget.add(Container(
       height: remainingMainPdfHeight,
       width: 20,
-      color: PdfColors.red,
     ));
     remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
 
@@ -436,7 +435,16 @@ class TbMsPdfGenerator {
       }
     }
     listHeaderRow.add(widgetToStickWithHeader);
-    return Row(children: [Column(children: listHeaderRow)]);
+    return Container(
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: listHeaderRow,
+          )
+        ],
+      ),
+    );
   }
 
   void processImages({
@@ -501,7 +509,7 @@ class TbMsPdfGenerator {
           headerWidget.add(Container(
             height: remainingMainPdfHeight,
             width: 20,
-            color: PdfColors.red,
+            // color: PdfColors.red,
           ));
           remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
         }
@@ -735,7 +743,6 @@ class TbMsPdfGenerator {
           headerWidget.add(Container(
             height: remainingMainPdfHeight,
             width: 20,
-            color: PdfColors.red,
           ));
           remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
           // Subtract header height from remaining height
@@ -1106,7 +1113,7 @@ class TbMsPdfGenerator {
       remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
     }
 
-    if (tbHeaderRowModel.headerName.contains("2.3 Electrics")) {
+    if (tbHeaderRowModel.headerName.contains("9. PPE Requirements")) {
       print("jdk");
     }
 
@@ -1125,7 +1132,6 @@ class TbMsPdfGenerator {
       if (splitStatements.length == 2) {
         headerWidget.add(Container(
           height: remainingMainPdfHeight,
-          color: PdfColors.red,
           width: 20,
         ));
 
@@ -1147,7 +1153,6 @@ class TbMsPdfGenerator {
         headerWidget.add(Container(
           height: remainingMainPdfHeight,
           width: 20,
-          color: PdfColors.red,
         ));
         remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
       }
@@ -1175,7 +1180,6 @@ class TbMsPdfGenerator {
       headerWidget.add(Container(
         height: remainingMainPdfHeight,
         width: 20,
-        color: PdfColors.red,
       ));
 
       remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
@@ -1218,7 +1222,7 @@ class TbMsPdfGenerator {
         headerWidget.add(Container(
           height: remainingMainPdfHeight,
           width: 20,
-          color: PdfColors.yellow,
+          // color: PdfColors.yellow,
         ));
         remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
 
