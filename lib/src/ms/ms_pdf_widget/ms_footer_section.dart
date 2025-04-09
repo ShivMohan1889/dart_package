@@ -45,7 +45,7 @@ class MsFooterSection extends StatelessWidget {
                           // style: auditPdfTextStyle.urlTextStyle(),
                           style: TbPdfHelper().textStyleGenerator(
                             font: Theme.of(context).header0.fontItalic,
-                            color: TbMsPdfColors.black,
+                            color: TbMsPdfColors.msBlueThemeColor,
                             fontSize: 10,
                           ),
                         )
