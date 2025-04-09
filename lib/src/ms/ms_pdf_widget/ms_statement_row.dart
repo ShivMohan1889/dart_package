@@ -173,6 +173,7 @@ class MsStatementRow extends StatelessWidget {
     //   );
     // }
     return Container(
+      // color: PdfColors.pink,
       padding: padding ?? TbMsPdfPaddings.paddingTbMsStatementRow,
       child: Container(
         child: Column(
