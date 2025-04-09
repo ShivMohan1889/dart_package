@@ -130,17 +130,16 @@ class HeaderRows {
   List<HeaderStatementData>? statements;
   List<HazardIconData>? hazardIcons;
   List<HeaderReferenceImageData>? images;
-  List<HeaderRows>?headerRows;
+  List<HeaderRows>? headerRows;
   String? statmentText;
-  
 
   HeaderRows({
     required this.name,
     required this.level,
     this.statements,
-     this.hazardIcons,
+    this.hazardIcons,
     required this.images,
-     this.headerRows,
+    this.headerRows,
   });
 
   Map<String, dynamic> toJson() {
@@ -163,7 +162,7 @@ class HeaderRows {
               HeaderStatementData.fromJson(item as Map<String, dynamic>))
           .toList(),
       hazardIcons: (json['hazardIcons'] as List<dynamic>?)
-         ?.map((item) => HazardIconData.fromJson(item as Map<String, dynamic>))
+          ?.map((item) => HazardIconData.fromJson(item as Map<String, dynamic>))
           .toList(),
       images: (json['images'] as List<dynamic>?)
           ?.map((item) =>
@@ -259,7 +258,7 @@ class HeaderReferenceImageData {
   factory HeaderReferenceImageData.fromJson(Map<String, dynamic> json) {
     return HeaderReferenceImageData(
       image: json['image'],
-      referenceNo: json['referenceNo'] as String? ,
+      referenceNo: json['referenceNo'] as String?,
     );
   }
 }
@@ -312,11 +311,11 @@ class UserSignatureData {
 
   factory UserSignatureData.fromJson(Map<String, dynamic> json) {
     return UserSignatureData(
-      name: json['name'],
-      position: json['position'],
-      date: json['date'],
-      signature: json["signature"]  // Need to reload this from the path
-    );
+        name: json['name'],
+        position: json['position'],
+        date: json['date'],
+        signature: json["signature"] // Need to reload this from the path
+        );
   }
 }
 

@@ -35,7 +35,7 @@ class TbMsPdfGenerator {
   // this flag is used to show the harm text on the web pdf
   bool harmTextForWeb;
   double pageHeightWithoutHeaderFooter = 0;
-  late double remainingMainPdfHeight;
+  late double remainingMainPdfHeight = 0;
 
   TbMsPdfGenerator({
     required this.pdfData,
@@ -90,6 +90,11 @@ class TbMsPdfGenerator {
 
     pageHeightWithoutHeaderFooter = pageHeight - headerHeight - footerHeight;
 
+    headerWidget.add(Container(
+      height: remainingMainPdfHeight,
+      width: 20,
+      color: PdfColors.red,
+    ));
     remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
 
     Document pdf = Document();
@@ -342,6 +347,7 @@ class TbMsPdfGenerator {
     TbHeaderRowModel tbHeaderRowModel = TbHeaderRowModel(
       headerName: headerRow.name,
       headerLevel: headerRow.level,
+      hasStatement: headerRow.statements?.isNotEmpty ?? false,
     );
 
     HeaderRow headerRowWidget = HeaderRow(
@@ -367,7 +373,7 @@ class TbMsPdfGenerator {
     required HeaderStatementData statement,
     required Context context,
   }) {
-    if (statement.text.contains("No land")) {
+    if (statement.text.contains("Safe use of woodworking machinery.")) {
       print("a");
     }
     TbStatementRowModel statementRowModel = TbStatementRowModel(
@@ -389,17 +395,6 @@ class TbMsPdfGenerator {
     );
 
     statementRowModel.height = statementWidgetHeight;
-
-    if (remainingMainPdfHeight < 19.0) {
-      // var listHeader = addHeaderToTheNextPage();
-
-      // if (listHeader.isNotEmpty) {
-
-      //   headerWidget.addAll(listHeader);
-
-      //   remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
-      // }
-    }
 
     processMsStatementForPages(
       statementRowModel: statementRowModel,
@@ -423,7 +418,9 @@ class TbMsPdfGenerator {
     }
   }
 
-  List<Widget> addHeaderToTheNextPage() {
+  Widget addHeaderToTheNextPage({
+    required Widget widgetToStickWithHeader,
+  }) {
     List<Widget> listHeaderRow = [];
 
     for (int i = headerWidget.length - 1; i >= 0; i--) {
@@ -432,14 +429,14 @@ class TbMsPdfGenerator {
       if (page is MsStatementHazardIconsRow ||
           page is MsStatementRow ||
           page is MsAssessmentImageRow) {
-        return listHeaderRow; // Skip these widgets
+        break;
       } else {
         listHeaderRow.add(page);
         headerWidget.removeAt(i); // Remove the element safely
       }
     }
-
-    return listHeaderRow;
+    listHeaderRow.add(widgetToStickWithHeader);
+    return Row(children: [Column(children: listHeaderRow)]);
   }
 
   void processImages({
@@ -501,6 +498,11 @@ class TbMsPdfGenerator {
 
         // Check if row fits on current page
         if (imageRowHeight > remainingMainPdfHeight) {
+          headerWidget.add(Container(
+            height: remainingMainPdfHeight,
+            width: 20,
+            color: PdfColors.red,
+          ));
           remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
         }
 
@@ -654,6 +656,7 @@ class TbMsPdfGenerator {
       TbHeaderRowModel headerRowModel = TbHeaderRowModel(
         headerName: text,
         headerLevel: tbHeaderRowModel.headerLevel,
+        hasStatement: false,
       );
 
       HeaderRow headerRow = HeaderRow(
@@ -720,211 +723,34 @@ class TbMsPdfGenerator {
         // Check if row fits on current page
         if (iconRowHeight > remainingMainPdfHeight) {
           // Need to start a new page
-          var listHeader = addHeaderToTheNextPage();
+          var header = addHeaderToTheNextPage(widgetToStickWithHeader: iconRow);
 
-          // Move to a new page with the header
-          if (listHeader.isNotEmpty) {
-            // Add spacing and the header to the new page
-            // headerWidget.add(
-            //   Container(
-            //     color:  PdfColors.green,
-            //     // height: 10,
-            //     height:  iconRowHeight,
+          double headerHeight = pdfHelper.calculateHeightOfWidget(
+            widget: header,
+            width: MsPdfWidth.pageWidth,
+          );
 
-            //     // height: iconRowHeight,
-            //     // color: PdfColors.amber,
-            //   ),
-            // );
+          headerWidget.add(header);
 
-            // // remainingMainPdfHeight -= iconRowHeight;
-            // // remainingMainPdfHeight -= iconRowHeight;
-            // headerWidget.addAll(listHeader);
+          headerWidget.add(Container(
+            height: remainingMainPdfHeight,
+            width: 20,
+            color: PdfColors.red,
+          ));
+          remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
+          // Subtract header height from remaining height
+          remainingMainPdfHeight -=
+              pageHeightWithoutHeaderFooter - headerHeight;
 
-            // Reset remaining height for the new page
-
-            double calculateHeight = pdfHelper.calculateHeightOfWidget(
-              widget: listHeader.first,
-              width: MsPdfWidth.pageWidth,
-            );
-
-            // Calculate header total height
-            double headerHeight = 0;
-            for (var item in listHeader) {
-              headerHeight += pdfHelper.calculateHeightOfWidget(
-                widget: item,
-                width: TbMsPdfWidth.pageWidth,
-              );
-            }
-            headerWidget.add(
-              Container(
-                // color: PdfColors.green,
-                // height: 10,
-                height: iconRowHeight + calculateHeight,
-
-                // height: iconRowHeight,
-                // color: PdfColors.amber,
-              ),
-            );
-
-            // remainingMainPdfHeight -= iconRowHeight;
-            // remainingMainPdfHeight -= iconRowHeight;
-            headerWidget.addAll(listHeader);
-
-            // Subtract header height from remaining height
-            remainingMainPdfHeight -= pageHeightWithoutHeaderFooter -
-                headerHeight -
-                iconRowHeight +
-                calculateHeight;
-
-            // remainingMainPdfHeight -= headerHeight;
-          } else {
-            remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
-          }
+          // remainingMainPdfHeight -= headerHeight;
+        } else {
+          // Add the row to the current page
+          headerWidget.add(iconRow);
+          remainingMainPdfHeight -= iconRowHeight;
         }
-
-        // Add the row to the current page
-        headerWidget.add(iconRow);
-        remainingMainPdfHeight -= iconRowHeight;
       }
     }
-  } // void processHazardIcons({
-  //   required List<HazardIconData> hazardIcons,
-  // }) {
-  //   // We'll group hazard icons in rows of up to 6 icons per row
-  //   List<Widget> currentRowIcons = [];
-
-  //   for (int i = 0; i < hazardIcons.length; i++) {
-  //     HazardIconData iconData = hazardIcons[i];
-
-  //     if (iconData.iconMemoryImage != null) {
-  //       Widget iconWidget = MsStatementHazardIconItem(
-  //         iconImage: iconData.iconMemoryImage!,
-  //       );
-
-  //       currentRowIcons.add(iconWidget);
-
-  //       // Create a row when we have 6 icons or we're at the last icon
-  //       if (currentRowIcons.length == 6 || i == hazardIcons.length - 1) {
-  //         Widget iconRow = MsStatementHazardIconsRow(
-  //           iconsImageList: List.from(currentRowIcons),
-  //         );
-
-  //         double iconRowHeight = pdfHelper.calculateHeightOfWidget(
-  //           widget: iconRow,
-  //           width: TbMsPdfWidth.pageWidth,
-  //         );
-
-  //         // Check if row fits on current page
-  //         if (iconRowHeight > remainingMainPdfHeight) {
-  //           // Need to start a new page
-  //           var listHeader = addHeaderToTheNextPage();
-
-  //           // Move to a new page with the header
-  //           if (listHeader.isNotEmpty) {
-  //             // Add spacing and the header to the new page
-  //             headerWidget.add(Container(height: 10));
-  //             headerWidget.addAll(listHeader);
-
-  //             // Reset remaining height for the new page
-  //             remainingMainPdfHeight -= 10;
-
-  //             // Calculate header total height
-  //             double headerHeight = 0;
-  //             for (var item in listHeader) {
-  //               headerHeight += pdfHelper.calculateHeightOfWidget(
-  //                   widget: item, width: TbMsPdfWidth.pageWidth);
-  //             }
-
-  //             // Subtract header height from remaining height
-  //             remainingMainPdfHeight -= headerHeight;
-  //           } else {
-  //             remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
-  //           }
-  //         }
-
-  //         // Add the row to the current page
-  //         headerWidget.add(iconRow);
-  //         remainingMainPdfHeight -= iconRowHeight;
-
-  //         // Clear for the next row
-  //         currentRowIcons = [];
-  //       }
-  //     }
-  //   }
-  // }
-
-  // void processHazardIcons({
-  //   required List<HazardIconData> hazardIcons,
-  // }) {
-  //   // We'll group hazard icons in rows of up to 6 icons per row
-  //   List<Widget> iconRows = [];
-  //   List<Widget> currentRowIcons = [];
-
-  //   for (int i = 0; i < hazardIcons.length; i++) {
-  //     HazardIconData iconData = hazardIcons[i];
-
-  //     if (iconData.iconMemoryImage != null) {
-  //       Widget iconWidget = MsStatementHazardIconItem(
-  //         iconImage: iconData.iconMemoryImage!,
-  //       );
-
-  //       currentRowIcons.add(iconWidget);
-
-  //       // Create a row when we have 6 icons or we're at the last icon
-  //       if (currentRowIcons.length == 6 || i == hazardIcons.length - 1) {
-  //         Widget iconRow = MsStatementHazardIconsRow(
-  //           iconsImageList: List.from(currentRowIcons),
-  //         );
-
-  //         double iconRowHeight = pdfHelper.calculateHeightOfWidget(
-  //           widget: iconRow,
-  //           width: TbMsPdfWidth.pageWidth,
-  //         );
-  //         // Check if row fits on current page
-  //         if (iconRowHeight > remainingMainPdfHeight) {
-  //           // Add the rows we have so far to the current page
-
-  //           if (iconRows.isNotEmpty) {
-  //             headerWidget.addAll(iconRows);
-  //           }
-
-  //           var listHeader = addHeaderToTheNextPage();
-
-  //           if (listHeader.isNotEmpty) {
-  //             double calculateHeightHeader = pdfHelper.calculateHeightOfWidget(
-  //                 widget: listHeader.first, width: TbMsPdfWidth.pageWidth);
-
-  //             // Start a new page
-  //             headerWidget.add(
-  //               Container(
-  //                 height: iconRowHeight + calculateHeightHeader,
-  //               ),
-  //             );
-
-  //             headerWidget.addAll(listHeader);
-
-  //             remainingMainPdfHeight =
-  //                 remainingMainPdfHeight - calculateHeightHeader;
-  //             iconRows.add(iconRow);
-  //             iconRows = [];
-  //             remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
-  //           } else {
-  //             iconRows.add(iconRow);
-  //             iconRows = [];
-  //             remainingMainPdfHeight -= iconRowHeight;
-  //           }
-  //         }
-
-  //         currentRowIcons = [];
-  //       }
-  //     }
-  //   }
-
-  //   // Add any remaining icon rows to the current page
-  //   if (iconRows.isNotEmpty) {
-  //     headerWidget.addAll(iconRows);
-  //   }
-  // }
+  }
 
   List<Widget> showStatementImagesOnPdf({
     List<MemoryImage>? images,
@@ -1273,43 +1099,14 @@ class TbMsPdfGenerator {
   }) {
     // Check if the statement fits in the remaining height of the current page
     if (remainingMainPdfHeight < 19) {
-      // Minimum threshold
-
-      // var listHeader = addHeaderToTheNextPage();
-
-      // if (listHeader.isNotEmpty) {
-      //   double calculateHeight = pdfHelper.calculateHeightOfWidget(
-      //     widget: listHeader.first,
-      //     width: MsPdfWidth.pageWidth,
-      //   );
-
-      //   // Calculate header total height
-      //   double headerHeight = 0;
-      //   for (var item in listHeader) {
-      //     headerHeight += pdfHelper.calculateHeightOfWidget(
-      //       widget: item,
-      //       width: TbMsPdfWidth.pageWidth,
-      //     );
-      //   }
-      //   headerWidget.add(
-      //     Container(
-      //       color: PdfColors.pink,
-      //       // height: 10,
-      //       height: headerHeight,
-
-      //       // height: iconRowHeight,
-      //       // color: PdfColors.amber,
-      //     ),
-      //   );
-      //   headerWidget.addAll(listHeader);
-
-      //   remainingMainPdfHeight = pageHeightWithoutHeaderFooter - headerHeight;
-      // } else {
+      headerWidget.add(Container(
+        height: remainingMainPdfHeight,
+        width: 20,
+      ));
       remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
     }
 
-    if (tbHeaderRowModel.headerName
-        .contains("2.3 Electrics")) {
+    if (tbHeaderRowModel.headerName.contains("2.3 Electrics")) {
       print("jdk");
     }
 
@@ -1326,6 +1123,12 @@ class TbMsPdfGenerator {
       ));
 
       if (splitStatements.length == 2) {
+        headerWidget.add(Container(
+          height: remainingMainPdfHeight,
+          color: PdfColors.red,
+          width: 20,
+        ));
+
         remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
 
         // Recursively process the remaining part
@@ -1338,9 +1141,18 @@ class TbMsPdfGenerator {
       // Start a new page for the remaining part
     } else {
       // Add the statement to the current page
+
+      if (remainingMainPdfHeight < (19.0 + (tbHeaderRowModel.height ?? 0.0)) &&
+          tbHeaderRowModel.hasStatement) {
+        headerWidget.add(Container(
+          height: remainingMainPdfHeight,
+          width: 20,
+          color: PdfColors.red,
+        ));
+        remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
+      }
       headerWidget.add(
         HeaderRow(
-          // statementRowModel: statementRowModel,
           tbHeaderRowModel: tbHeaderRowModel,
         ),
       );
@@ -1353,12 +1165,19 @@ class TbMsPdfGenerator {
     required TbStatementRowModel statementRowModel,
     required MsPdfData pdfData,
   }) {
-    if (statementRowModel.statementName.contains("Crescent Wrench")) {
+    if (statementRowModel.statementName.contains(
+        "Safe use of woodworking machinery. Provision and Use of Work Equipment Regulations 1998 as applied to woodworking machinery. L114 2014 (2nd Ed.) ACOP and Guidance")) {
       print('O');
     }
     // Check if the statement fits in the remaining height of the current page
     if (remainingMainPdfHeight < 19.0) {
       // Minimum threshold
+      headerWidget.add(Container(
+        height: remainingMainPdfHeight,
+        width: 20,
+        color: PdfColors.red,
+      ));
+
       remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
     }
 
@@ -1370,48 +1189,37 @@ class TbMsPdfGenerator {
         pdfData: pdfData,
       );
 
+      MsStatementRow row = MsStatementRow(
+        statementRowModel: splitStatements.first,
+      );
       double msStatementRowHeight = pdfHelper.calculateHeightOfWidget(
-        widget: MsStatementRow(
-          statementRowModel: splitStatements.first,
-        ),
+        widget: row,
         width: MsPdfWidth.pageWidth,
       );
 
       if (remainingMainPdfHeight < msStatementRowHeight) {
-        var listHeader = addHeaderToTheNextPage();
+        var header = addHeaderToTheNextPage(
+          widgetToStickWithHeader: row,
+        );
 
-        if (listHeader.isNotEmpty) {
-          double headerHeight = 0;
-          for (var item in listHeader) {
-            headerHeight += pdfHelper.calculateHeightOfWidget(
-              widget: item,
-              width: TbMsPdfWidth.pageWidth,
-            );
-          }
-          headerWidget.add(
-            Container(
-              // height: 10,
-              height: headerHeight,
+        double headerHeight = pdfHelper.calculateHeightOfWidget(
+          widget: header,
+          width: TbMsPdfWidth.pageWidth,
+        );
 
-              // height: iconRowHeight,
-              // color: PdfColors.amber,
-            ),
-          );
-          headerWidget.addAll(listHeader);
-          // remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
-          remainingMainPdfHeight = pageHeightWithoutHeaderFooter - headerHeight;
-        }
+        headerWidget.add(header);
+        remainingMainPdfHeight = pageHeightWithoutHeaderFooter - headerHeight;
+      } else {
+        headerWidget.add(row);
+        remainingMainPdfHeight -= msStatementRowHeight;
       }
-      // Add the first part of the split statement to the current page
-      // pages[currentPageIndex].add(splitStatements.first);
-
-      headerWidget.add(
-        MsStatementRow(
-          statementRowModel: splitStatements.first,
-        ),
-      );
 
       if (splitStatements.length == 2) {
+        headerWidget.add(Container(
+          height: remainingMainPdfHeight,
+          width: 20,
+          color: PdfColors.yellow,
+        ));
         remainingMainPdfHeight = pageHeightWithoutHeaderFooter;
 
         var lastStatement = splitStatements.last;
@@ -1467,10 +1275,12 @@ class TbMsPdfGenerator {
     TbHeaderRowModel firstHeaderRowModel = TbHeaderRowModel(
       headerName: firstPart,
       headerLevel: headerRowModel.headerLevel,
+      hasStatement: false,
     );
     TbHeaderRowModel secondHeaderRowModel = TbHeaderRowModel(
       headerName: secondPart,
       headerLevel: headerRowModel.headerLevel,
+      hasStatement: headerRowModel.hasStatement,
       // statementName: secondPart,
     );
 
@@ -1586,10 +1396,12 @@ class TbHeaderRowModel {
   String headerName;
   double? height;
   int? headerLevel;
+  bool hasStatement;
 
   TbHeaderRowModel({
     required this.headerName,
     this.height,
     this.headerLevel,
+    required this.hasStatement,
   });
 }
