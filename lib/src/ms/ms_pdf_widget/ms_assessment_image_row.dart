@@ -1,6 +1,7 @@
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_pdf_custom_text.dart';
+import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
 class MsAssessmentImageRow extends StatelessWidget {
@@ -17,6 +18,7 @@ class MsAssessmentImageRow extends StatelessWidget {
     return Wrap(
       children: [
         Container(
+          // color: PdfColors.orange,
           padding: EdgeInsets.only(
             top: 10,
             // bottom: 10,
@@ -50,8 +52,10 @@ class MsAssessmentImageRow extends StatelessWidget {
                   : Container(),
               Container(
                 padding: const EdgeInsets.only(
-                  left: 28,
-                  right: 28,
+                  // left: 28,
+                  // right: 28,
+                  left: 20,
+                  right: 20,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
