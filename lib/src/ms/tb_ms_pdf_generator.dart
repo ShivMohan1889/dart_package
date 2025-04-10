@@ -91,7 +91,7 @@ class TbMsPdfGenerator {
     pageHeightWithoutHeaderFooter = pageHeight - headerHeight - footerHeight;
 
     headerWidget.add(Container(
-      color: PdfColors.amber,
+      // color: PdfColors.amber,
       height: remainingMainPdfHeight,
       width: 20,
     ));
@@ -483,7 +483,7 @@ class TbMsPdfGenerator {
         // Check if row fits on current page
         if (imageRowHeight > remainingMainPdfHeight) {
           headerWidget.add(Container(
-            color: PdfColors.green,
+            // color: PdfColors.green,
             height: remainingMainPdfHeight,
             width: 20,
             // color: PdfColors.red,
@@ -707,7 +707,7 @@ class TbMsPdfGenerator {
         headerWidget.add(Container(
           height: remainingMainPdfHeight + onlyHeaderTitleHeight,
           width: 20,
-          color: PdfColors.red,
+          // color: PdfColors.red,
         ));
         headerWidget.add(header);
 
@@ -1143,7 +1143,7 @@ class TbMsPdfGenerator {
     // Check if the statement fits in the remaining height of the current page
     if (remainingMainPdfHeight < 19) {
       headerWidget.add(Container(
-        color: PdfColors.amber,
+        // color: PdfColors.amber,
         height: remainingMainPdfHeight,
         width: 20,
       ));
@@ -1168,7 +1168,7 @@ class TbMsPdfGenerator {
 
       if (splitStatements.length == 2) {
         headerWidget.add(Container(
-          color: PdfColors.amber,
+          // color: PdfColors.amber,
           height: remainingMainPdfHeight,
           width: 20,
         ));
@@ -1189,7 +1189,7 @@ class TbMsPdfGenerator {
       if (remainingMainPdfHeight < (19.0 + (tbHeaderRowModel.height ?? 0.0)) &&
           tbHeaderRowModel.hasStatement) {
         headerWidget.add(Container(
-          color: PdfColors.amber,
+          // color: PdfColors.amber,
           height: remainingMainPdfHeight,
           width: 20,
         ));
@@ -1217,7 +1217,7 @@ class TbMsPdfGenerator {
     if (remainingMainPdfHeight < 19.0) {
       // Minimum threshold
       headerWidget.add(Container(
-        color: PdfColors.amber,
+        // color: PdfColors.amber,
         height: remainingMainPdfHeight,
         width: 20,
       ));
@@ -1260,7 +1260,7 @@ class TbMsPdfGenerator {
 
       if (splitStatements.length == 2) {
         headerWidget.add(Container(
-          color: PdfColors.amber,
+          // color: PdfColors.amber,
           height: remainingMainPdfHeight,
           width: 20,
           // color: PdfColors.yellow,
