@@ -22,7 +22,7 @@ class AuditProjectDetailSection extends StatelessWidget {
   Widget build(Context context) {
     ProjectDetailsData auditReference = ProjectDetailsData(
       key: "Audit Reference",
-      value: auditAssessmentEntity?.referenceNo ?? "",
+      value: auditAssessmentEntity?.refName ?? "",
     );
 
     ProjectDetailsData dateEntity = ProjectDetailsData(

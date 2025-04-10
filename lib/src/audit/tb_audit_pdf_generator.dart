@@ -5,10 +5,13 @@ import 'package:dart_pdf_package/src/audit/audit_pdf_widgets/audit_project_detai
 import 'package:dart_pdf_package/src/audit/audit_pdf_widgets/audit_question_row.dart';
 import 'package:dart_pdf_package/src/audit/audit_pdf_widgets/audit_question_textinput_answer_section.dart';
 import 'package:dart_pdf_package/src/audit/audit_pdf_widgets/chain_options_for_row.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_assessment_image_box.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_assessment_image_row.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_border.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_footer_section.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_header_row.dart';
 import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_review_signature_section.dart';
+import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 import 'package:dart_pdf_package/src/utils/enums/audit_enum.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -46,7 +49,6 @@ class TbAuditPdfGenerator {
 
     // Add project details section
     auditPdfItems.add(AuditProjectDetailSection(
-      
       auditAssessmentEntity: pdfData,
     ));
     auditPdfItems.add(MsBorder());
@@ -89,13 +91,13 @@ class TbAuditPdfGenerator {
       ),
     );
 
-    // Add images page if there are images
-    if (auditImageList.isNotEmpty) {
-      await _addImagesPage(pdf);
-    }
+    // // Add images page if there are images
+    // if (auditImageList.isNotEmpty) {
+    //   await _addImagesPage(pdf);
+    // }
 
     // Add summary table if needed (based on collected chain option data)
-    if (chainOptionMap.isNotEmpty) {
+    if (pdfData.tableStatus == 1) {
       _addSummaryTable(pdf);
     }
 
@@ -235,6 +237,23 @@ class TbAuditPdfGenerator {
 
             auditPdfItems.add(chainOptionsForPdf);
 
+            if (chainOptionMap.isEmpty) {
+              chainOptionMap.addEntries({question.answer ?? "": 0}.entries);
+            } else {
+              // this condition is applied to check the question Entity values  is exist  in the map or
+              // if it does not exist  then we update question value in map
+              if (chainOptionMap.keys.contains(question.answer) == false) {
+                chainOptionMap.addEntries({question.answer ?? "": 0}.entries);
+              }
+            }
+
+            // this condition applied to update the value in ChainOptionMap
+            if (question.answer != null) {
+              // in this we update value count on basic of  its key in chainOption
+              chainOptionMap.update(
+                  question.answer ?? "", (value) => value + 1);
+            }
+
             // Update the previous chain options to the current one
             previousChainOptions = question.chainOptionsString;
           }
@@ -256,22 +275,91 @@ class TbAuditPdfGenerator {
           );
         }
 
+        List<MemoryImage> listQuestionImage = [];
         // Process question images if available
         if (question.memoryImages != null &&
             question.memoryImages!.isNotEmpty) {
           for (final image in question.memoryImages!) {
-            auditImageList.add(image);
+            // auditImageList.add(image);
+            listQuestionImage.add(image);
+
+            // auditPdfItems.add(
+            //   Container(
+            //     padding: const EdgeInsets.only(left: 40, right: 20),
+            //     child: Text(
+            //       "See image Reference Number - ${listQuestionImage.length}",
+            //       style: TextStyle(fontSize: 10, fontStyle: FontStyle.italic),
+            //     ),
+            //   ),
+            // );
+          }
+
+          if (listQuestionImage.isNotEmpty) {
+            processImages(
+              images: listQuestionImage,
+            );
             auditPdfItems.add(
-              Container(
-                padding: const EdgeInsets.only(left: 40, right: 20),
-                child: Text(
-                  "See image Reference Number - ${auditImageList.length}",
-                  style: TextStyle(fontSize: 10, fontStyle: FontStyle.italic),
-                ),
+              pw.Container(
+                height: 10,
               ),
             );
           }
         }
+      }
+    }
+  }
+
+  void processImages({
+    required List<MemoryImage> images,
+    bool isForHeaderImage = false,
+  }) {
+    List<Widget> rowChildren = [];
+
+    for (int i = 0; i < images.length; i++) {
+      // Create image box widget
+      MemoryImage memoryImage = images[i];
+      Widget imageBox = MsAssessmentImageBox(
+        image: memoryImage,
+        index: i + 1,
+      );
+
+      rowChildren.add(imageBox);
+      rowChildren.add(
+        Container(
+          width: 10,
+        ),
+      ); // Add spacing between images
+
+      // Create a row when we have 2 images or at the last image
+      if (rowChildren.length == 4 || i == images.length - 1) {
+        Widget imageRow;
+        // if (isForHeaderImage && (i == 0 || i == 1)) {
+        //   imageRow = MsAssessmentImageRow(
+        //     text: "Header Reference Images",
+        //     listChildren: List.from(rowChildren),
+        //   );
+        // } else {
+        imageRow = MsAssessmentImageRow(
+          listChildren: List.from(rowChildren),
+        );
+        // }
+
+        double imageRowHeight = pdfHelper.calculateHeightOfWidget(
+          widget: imageRow,
+          width: TbMsPdfWidth.pageWidth,
+        );
+
+        // Check if row fits on current page
+        // if (imageRowHeight > remainingMainPdfHeight) {
+
+        // }
+
+        // Add image row to current page
+        auditPdfItems.add(imageRow);
+        // remainingMainPdfHeight -= imageRowHeight;
+
+        // Reset row children for next row
+        rowChildren = [];
       }
     }
   }

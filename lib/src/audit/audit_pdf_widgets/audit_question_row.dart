@@ -68,7 +68,8 @@ class AuditQuestionRow extends StatelessWidget {
                     // style: auditPdfTextStyle.questionNameTextStyle(),
                     style: TbPdfHelper().textStyleGenerator(
                       font: Theme.of(context).header0.font,
-                      color: AuditPdfColors.companyDetailsTextColor,
+                      // color: AuditPdfColors.companyDetailsTextColor,
+                      color: PdfColors.black,
                       fontSize: 12,
                     ),
                   ),
@@ -83,31 +84,30 @@ class AuditQuestionRow extends StatelessWidget {
           ),
           (questionEntity?.listChainOption ?? []).isEmpty
               ?
-              //show only the values of those question entity whose answer type is equal to dateType
-              questionEntity?.runtimeType == AnswerType.date
-                  ? Container(
-                      width: AuditPdfDimension.pageWidth -
-                          AuditPdfDimension.questionWidth -
-                          20 -
-                          20,
-                      padding: const EdgeInsets.only(
-                        left: 138,
-                      ),
-                      child: Text(
-                        // "${questionEntity?.values}",
+              // //show only the values of those question entity whose answer type is equal to dateType
+              // questionEntity?.runtimeType == AnswerType.date
+              Container(
+                  width: AuditPdfDimension.pageWidth -
+                      AuditPdfDimension.questionWidth -
+                      20 -
+                      20,
+                  padding: const EdgeInsets.only(
+                    left: 138,
+                  ),
+                  child: Text(
+                    // "${questionEntity?.values}",
 
-                        questionEntity?.answer ?? "",
-                        // localeName:
+                    questionEntity?.answer ?? "",
+                    // localeName:
 
-                        // style: auditPdfTextStyle.questionNameTextStyle(),
-                        style: TbPdfHelper().textStyleGenerator(
-                          font: Theme.of(context).header0.fontItalic,
-                          fontSize: 11,
-                          color: AuditPdfColors.companyDetailsTextColor,
-                        ),
-                      ),
-                    )
-                  : Container()
+                    // style: auditPdfTextStyle.questionNameTextStyle(),
+                    style: TbPdfHelper().textStyleGenerator(
+                      font: Theme.of(context).header0.fontItalic,
+                      fontSize: 11,
+                      color: AuditPdfColors.companyDetailsTextColor,
+                    ),
+                  ),
+                )
               : Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

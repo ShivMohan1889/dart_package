@@ -17,6 +17,9 @@ class AuditPdfData {
   String? referenceNo;
   final int isSubscribed;
   final List<AuditPdfSection> sectionsData;
+  String refName;
+  int tableStatus;
+
 
   AuditPdfData({
     required this.date,
@@ -30,6 +33,9 @@ class AuditPdfData {
     this.referenceNo,
     required this.userSignature,
     required this.sectionsData,
+    required this.refName,
+    this.tableStatus =0,
+
   });
 
   /// Converts this object to a map for JSON serialization
@@ -38,6 +44,9 @@ class AuditPdfData {
       'titleForPDF': titleForPDF,
       'date': date,
       'companyLogo': companyLogo,
+      'ref_name': refName,
+      "table_status": tableStatus,
+
       // Note: MemoryImage can't be directly serialized to JSON
       'companyDetails': companyDetails,
       'companyPhoneEmail': companyPhoneEmail,
@@ -53,7 +62,11 @@ class AuditPdfData {
     return AuditPdfData(
       titleForPDF: json['titleForPDF'],
       date: json['date'],
+      refName:  json['ref_name'],
       companyLogo: json['companyLogo'],
+      tableStatus:  json['table_status'],
+
+      
       companyLogoMemoryImage: null, // Can't deserialize MemoryImage
       companyDetails: json['companyDetails'],
       companyPhoneEmail: json['companyPhoneEmail'],
