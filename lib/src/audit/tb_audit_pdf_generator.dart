@@ -97,7 +97,7 @@ class TbAuditPdfGenerator {
     // }
 
     // Add summary table if needed (based on collected chain option data)
-    if (pdfData.tableStatus == 1) {
+    if (pdfData.) {
       _addSummaryTable(pdf);
     }
 
@@ -237,22 +237,22 @@ class TbAuditPdfGenerator {
 
             auditPdfItems.add(chainOptionsForPdf);
 
-            if (chainOptionMap.isEmpty) {
-              chainOptionMap.addEntries({question.answer ?? "": 0}.entries);
-            } else {
-              // this condition is applied to check the question Entity values  is exist  in the map or
-              // if it does not exist  then we update question value in map
-              if (chainOptionMap.keys.contains(question.answer) == false) {
-                chainOptionMap.addEntries({question.answer ?? "": 0}.entries);
-              }
-            }
+            // if (chainOptionMap.isEmpty) {
+            //   chainOptionMap.addEntries({question.answer ?? "": 0}.entries);
+            // } else {
+            //   // this condition is applied to check the question Entity values  is exist  in the map or
+            //   // if it does not exist  then we update question value in map
+            //   if (chainOptionMap.keys.contains(question.answer) == false) {
+            //     chainOptionMap.addEntries({question.answer ?? "": 0}.entries);
+            //   }
+            // }
 
-            // this condition applied to update the value in ChainOptionMap
-            if (question.answer != null) {
-              // in this we update value count on basic of  its key in chainOption
-              chainOptionMap.update(
-                  question.answer ?? "", (value) => value + 1);
-            }
+            // // this condition applied to update the value in ChainOptionMap
+            // if (question.answer != null) {
+            //   // in this we update value count on basic of  its key in chainOption
+            //   chainOptionMap.update(
+            //       question.answer ?? "", (value) => value + 1);
+            // }
 
             // Update the previous chain options to the current one
             previousChainOptions = question.chainOptionsString;
