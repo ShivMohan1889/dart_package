@@ -97,7 +97,7 @@ class TbAuditPdfGenerator {
     // }
 
     // Add summary table if needed (based on collected chain option data)
-    if (pdfData.) {
+    if (pdfData.tableStatus ==1) {
       _addSummaryTable(pdf);
     }
 
