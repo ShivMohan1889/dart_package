@@ -1,4 +1,4 @@
-class IncidentInjuryPersonDto {
+class IrInjuryPersonData{
   int? id;
   String? address1;
   String? address2;
@@ -11,7 +11,7 @@ class IncidentInjuryPersonDto {
   String? incidentUniqueKey;
   String? jobTitle;
 
-  IncidentInjuryPersonDto({
+  IrInjuryPersonData({
     
     this.jobTitle,
     this.id,
@@ -42,8 +42,8 @@ class IncidentInjuryPersonDto {
     };
   }
 
-  factory IncidentInjuryPersonDto.fromJson(Map<String, dynamic> json) {
-    return IncidentInjuryPersonDto(
+  factory IrInjuryPersonData.fromJson(Map<String, dynamic> json) {
+    return IrInjuryPersonData(
       id: json['id'] as int?,
       address1: json['address1'] as String?,
       address2: json['address2'] as String?,

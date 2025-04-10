@@ -1,4 +1,4 @@
-class IncidentReportWitnessDto {
+class IrWitnessData {
   int? id;
   String? address1;
   String? address2;
@@ -9,7 +9,7 @@ class IncidentReportWitnessDto {
   String? postcode;
   String? telephone;
   String? incidentUniqueKey;
-  IncidentReportWitnessDto({
+  IrWitnessData({
     this.id,
     this.address1,
     this.address2,
@@ -25,7 +25,7 @@ class IncidentReportWitnessDto {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is IncidentReportWitnessDto &&
+      other is IrWitnessData &&
           runtimeType == other.runtimeType &&
           address1 == other.address1 &&
           name == other.name &&
@@ -37,8 +37,8 @@ class IncidentReportWitnessDto {
           postcode == other.postcode &&
           email == other.email;
 
-  factory IncidentReportWitnessDto.fromJson(Map<String, dynamic> json) {
-    return IncidentReportWitnessDto(
+  factory IrWitnessData.fromJson(Map<String, dynamic> json) {
+    return IrWitnessData(
       id: json['id'] as int?,
       address1: json['address1'] as String?,
       address2: json['address2'] as String?,

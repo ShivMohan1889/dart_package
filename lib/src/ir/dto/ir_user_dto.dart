@@ -1,4 +1,4 @@
-class IncidentReportUserDto {
+class IrUserData {
   int? id;
   String? userName;
   String? address1;
@@ -9,7 +9,7 @@ class IncidentReportUserDto {
   String? telephone;
   String? incidentUniqueKey;
   String? jobTitle;
-  IncidentReportUserDto({
+  IrUserData({
     this.id,
     this.address1,
     this.address2,
@@ -23,8 +23,8 @@ class IncidentReportUserDto {
   });
 
 
-  factory IncidentReportUserDto.fromJson(Map<String, dynamic> json) {
-    return IncidentReportUserDto(
+  factory IrUserData.fromJson(Map<String, dynamic> json) {
+    return IrUserData(
       id: json['id'] as int?,
       userName: json['userName'] as String?,
       address1: json['address1'] as String?,

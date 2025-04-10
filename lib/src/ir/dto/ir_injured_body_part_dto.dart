@@ -1,8 +1,8 @@
-class IncidentInjuredBodyPartDto {
+class IrInjuredBodyPartData {
   String? injuredBodyName;
   int? isSelected = 0;
 
-  IncidentInjuredBodyPartDto({
+  IrInjuredBodyPartData({
     this.injuredBodyName,
     this.isSelected = 0,
   });
@@ -14,8 +14,8 @@ class IncidentInjuredBodyPartDto {
     };
   }
 
-  factory IncidentInjuredBodyPartDto.fromJson(Map<String, dynamic> json) {
-    return IncidentInjuredBodyPartDto(
+  factory IrInjuredBodyPartData.fromJson(Map<String, dynamic> json) {
+    return IrInjuredBodyPartData(
       injuredBodyName: json['injuredBodyName'] as String?,
       isSelected: json['isSelected'] as int?,
     );

@@ -10,7 +10,7 @@ import 'package:pdf/widgets.dart';
 
 class TbIncidentReportLocationImage extends StatelessWidget {
   final MemoryImage image;
-  final IncidentReportDto? incidentReportDto;
+  final IrPdfData? incidentReportDto;
   final incidentReportPdfTextStyle = TbIncidentReportPdfTextStyle();
 
   TbIncidentReportLocationImage({

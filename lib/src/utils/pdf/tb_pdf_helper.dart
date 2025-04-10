@@ -122,12 +122,12 @@ class TbPdfHelper {
   // GET TEXT FOR INCIDENT REPORT TYPE
   /* ************************************** */
   String returnTextForIncidentReportType({
-    required IncidentReportDto? incidentReportEntity,
-  required String injuryTypeText,
+    required IrPdfData? irPdfData,
+    required String injuryTypeText,
     required String illHealthTypeText,
     required String nearMissType,
   }) {
-    var reportType = incidentReportEntity?.reportingType ?? 0;
+    var reportType = irPdfData?.reportingType ?? 0;
     switch (reportType) {
       case IncidentReport.injuryType:
         return injuryTypeText;

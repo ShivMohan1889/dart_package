@@ -1,7 +1,7 @@
 import 'package:dart_pdf_package/src/ir/dto/company_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
 import 'package:pdf/widgets.dart';
 import 'package:dart_pdf_package/dart_pdf_package.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_contants.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
@@ -10,7 +10,7 @@ class TbIrFooter extends StatelessWidget {
   final int pageNo;
   final CompanyDto? companyEntity;
 
-  final IncidentReportDto? incidentReportEntity;
+  final IrPdfData? incidentReportEntity;
   final incidentReportPdfTextStyle = TbIncidentReportPdfTextStyle();
 
   TbIrFooter({

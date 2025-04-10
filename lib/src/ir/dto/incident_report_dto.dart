@@ -1,18 +1,19 @@
 import 'dart:convert';
 
+import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ir/dto/company_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_injured_body_part_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_injury_person_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_injury_option_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_manager_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_option_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_photo_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_user_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_witness_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/user_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/incident_report_option_data.dart';
+import 'package:dart_pdf_package/src/ir/dto/ir_injured_body_part_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/ir_photo_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/ir_user_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/ir_witness_data.dart';
+
 import 'package:pdf/widgets.dart';
 
-class IncidentReportDto {
+class IrPdfData {
   int? id;
   String? referenceNumber;
   int? access;
@@ -94,13 +95,13 @@ class IncidentReportDto {
   int? isDraft = 1;
 
   // use holds the incident report Manager
-  IncidentReportManagerDto? incidentReportManagerDto;
+  IrManagerData? incidentReportManagerDto;
 
   String? reportingManagerId;
 
   String? reportingTime;
 
-  UserDto? userDto;
+  UserSignatureData? userSignature;
 
   int? buttonSelectedToShow = 0;
 
@@ -114,31 +115,29 @@ class IncidentReportDto {
   /// Determines if incident Report is being edited or is the fresh Incident Report
   int isBeingEdited = 0;
 
-  IncidentReportUserDto? incidentReportUsers;
+  IrUserData? incidentReportUsers;
 
-  IncidentInjuryPersonDto? incidentReportInjuryPerson;
+  IrInjuryPersonData? incidentReportInjuryPerson;
 
   // this list holds the manager
-  List<IncidentReportManagerDto>? listIncidentReportManager =
-      List.empty(growable: true);
+  List<IrManagerData>? listIncidentReportManager = List.empty(growable: true);
 
   // this list holds the selected options
   List<IncidentReportInjuryOptionDto>? listIncidentReportInjuryOptions =
       List.empty(growable: true);
 
   // holds the all the options
-  List<IncidentReportOptionDto>? listIncidentReportOptions =
-      List.empty(growable: true);
+  List<IrOptionData>? listIncidentReportOptions = List.empty(growable: true);
 
   // this list holds the photo related to incident report which having reportingtype injury type and near miss type
-  List<IncidentInjuryPhotoDto>? listIncidentInjuryPhoto = List.empty(
+  List<IrInjuryPhoto>? listIncidentInjuryPhoto = List.empty(
     growable: true,
   );
   // this list holds the witness
-  List<IncidentReportWitnessDto>? listIncidentReportWitness = List.empty(
+  List<IrWitnessData>? listIncidentReportWitness = List.empty(
     growable: true,
   );
-  List<IncidentInjuredBodyPartDto>? listIncidentInjuredBodyParts = List.empty(
+  List<IrInjuredBodyPartData>? listIncidentInjuredBodyParts = List.empty(
     growable: true,
   );
 
@@ -153,7 +152,7 @@ class IncidentReportDto {
 
   String? bodySketchImagePath;
 
-  IncidentReportDto({
+  IrPdfData({
     this.isSubscribed,
     this.id,
     this.referenceNumber,
@@ -211,7 +210,7 @@ class IncidentReportDto {
     this.whatHappen,
     this.whatHappenNext,
     this.companyDto,
-    this.userDto,
+    this.userSignature,
     this.zipCode,
     this.reportingTime,
     this.listIncidentReportManager,
@@ -317,7 +316,7 @@ class IncidentReportDto {
       'pdfName': pdfName,
       'isBeingEdited': isBeingEdited,
       'companyDto': companyDto?.toJson(),
-      'userDto': userDto?.toJson(),
+      'userDto': userSignature?.toJson(),
       'incidentReportManagerDto': incidentReportManagerDto?.toJson(),
       'incidentReportUsers': incidentReportUsers?.toJson(),
       'incidentReportInjuryPerson': incidentReportInjuryPerson?.toJson(),
@@ -336,8 +335,8 @@ class IncidentReportDto {
     };
   }
 
-  factory IncidentReportDto.fromJson(Map<String, dynamic> json) {
-    return IncidentReportDto(
+  factory IrPdfData.fromJson(Map<String, dynamic> json) {
+    return IrPdfData(
       id: json['id'],
       referenceNumber: json['referenceNumber'],
       access: json['access'],
@@ -414,52 +413,49 @@ class IncidentReportDto {
       companyDto: json['companyDto'] != null
           ? CompanyDto.fromJson(json['companyDto'])
           : null,
-      userDto:
-          json['userDto'] != null ? UserDto.fromJson(json['userDto']) : null,
-      incidentReportManagerDto: json['incidentReportManagerDto'] != null
-          ? IncidentReportManagerDto.fromJson(json['incidentReportManagerDto'])
+      userSignature: json['userSignature'] != null
+          ? UserSignatureData.fromJson(json['userDto'])
           : null,
-      incidentReportUsers: json['incidentReportUsers'] != null
-          ? IncidentReportUserDto.fromJson(json['incidentReportUsers'])
+      incidentReportManagerDto: json['irManagerData'] != null
+          ? IrManagerData.fromJson(json['irManagerData'])
           : null,
-      incidentReportInjuryPerson: json['incidentReportInjuryPerson'] != null
-          ? IncidentInjuryPersonDto.fromJson(json['incidentReportInjuryPerson'])
+      incidentReportUsers: json['irUserData'] != null
+          ? IrUserData.fromJson(json['irUserData'])
           : null,
-      listIncidentReportManager:
-          (json['listIncidentReportManager'] as List<dynamic>?)
-                  ?.map((e) => IncidentReportManagerDto.fromJson(e))
-                  .toList() ??
-              [],
+      incidentReportInjuryPerson: json['irInjuryPerson'] != null
+          ? IrInjuryPersonData.fromJson(json['irInjuryPerson'])
+          : null,
+      listIncidentReportManager: (json['irManagerData'] as List<dynamic>?)
+              ?.map((e) => IrManagerData.fromJson(e))
+              .toList() ??
+          [],
       listIncidentReportInjuryOptions:
           (json['listIncidentReportInjuryOptions'] as List<dynamic>?)
                   ?.map((e) => IncidentReportInjuryOptionDto.fromJson(e))
                   .toList() ??
               [],
-      listIncidentReportOptions:
-          (json['listIncidentReportOptions'] as List<dynamic>?)
-                  ?.map((e) => IncidentReportOptionDto.fromJson(e))
-                  .toList() ??
-              [],
-      listIncidentInjuryPhoto:
-          (json['listIncidentInjuryPhoto'] as List<dynamic>?)
-                  ?.map((e) => IncidentInjuryPhotoDto.fromJson(e))
-                  .toList() ??
-              [],
-      listIncidentReportWitness:
-          (json['listIncidentReportWitness'] as List<dynamic>?)
-                  ?.map((e) => IncidentReportWitnessDto.fromJson(e))
-                  .toList() ??
-              [],
+      listIncidentReportOptions: (json['irOptionData'] as List<dynamic>?)
+              ?.map((e) => IrOptionData.fromJson(e))
+              .toList() ??
+          [],
+      listIncidentInjuryPhoto: (json['irInjuryPhoto'] as List<dynamic>?)
+              ?.map((e) => IrInjuryPhoto.fromJson(e))
+              .toList() ??
+          [],
+      listIncidentReportWitness: (json['irWitnessData'] as List<dynamic>?)
+              ?.map((e) => IrWitnessData.fromJson(e))
+              .toList() ??
+          [],
       listIncidentInjuredBodyParts:
-          (json['listIncidentInjuredBodyParts'] as List<dynamic>?)
-                  ?.map((e) => IncidentInjuredBodyPartDto.fromJson(e))
+          (json['irInjuredBodyPart'] as List<dynamic>?)
+                  ?.map((e) => IrInjuredBodyPartData.fromJson(e))
                   .toList() ??
               [],
     );
   }
 
-  factory IncidentReportDto.fromJsonString(String jsonString) {
+  factory IrPdfData.fromJsonString(String jsonString) {
     Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-    return IncidentReportDto.fromJson(jsonMap);
+    return IrPdfData.fromJson(jsonMap);
   }
 }

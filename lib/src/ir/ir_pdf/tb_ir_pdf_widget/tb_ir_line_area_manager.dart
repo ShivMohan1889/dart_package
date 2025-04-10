@@ -11,7 +11,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 
 class TbIrLineAreaManager extends StatelessWidget {
-  final IncidentReportDto? incidentReportEntity;
+  final IrPdfData? incidentReportEntity;
 
   final incidentReportPdfTextStyle = TbIncidentReportPdfTextStyle();
   TbIrLineAreaManager({

@@ -7,7 +7,7 @@ import 'package:pdf/widgets.dart';
 
 class TbIrInjuryOptionTitle extends StatelessWidget {
   final incidentReportTextStyle = TbIncidentReportPdfTextStyle();
-  final IncidentReportDto? incidentReportEntity;
+  final IrPdfData? incidentReportEntity;
 
   TbIrInjuryOptionTitle({
     this.incidentReportEntity,
@@ -50,7 +50,7 @@ class TbIrInjuryOptionTitle extends StatelessWidget {
                       TbIrPdfDimension.spaceUsedForPadding,
                   child: Text(
                     TbPdfHelper().returnTextForIncidentReportType(
-                      incidentReportEntity: incidentReportEntity,
+                      irPdfData: incidentReportEntity,
                       injuryTypeText: "ABOUT THE INJURY OR NEAR MISS",
                       illHealthTypeText: "ABOUT ILL HEALTH",
                       nearMissType: "ABOUT THE INJURY OR NEAR MISS",
@@ -69,7 +69,7 @@ class TbIrInjuryOptionTitle extends StatelessWidget {
                 Container(
                     child: Text(
                   TbPdfHelper().returnTextForIncidentReportType(
-                    incidentReportEntity: incidentReportEntity,
+                    irPdfData: incidentReportEntity,
                     injuryTypeText:
                         "Complete this section to specify what the injury is & which parts of the body are injured. How serious is the injury? If it was a near-miss, how could somebody have been hurt?",
                     illHealthTypeText:

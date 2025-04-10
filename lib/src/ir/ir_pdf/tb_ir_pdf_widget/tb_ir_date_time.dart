@@ -8,7 +8,7 @@ import '../../../../dart_pdf_package.dart';
 
 class TbIrDateTime extends StatelessWidget {
   final incidentReportTextStyle = TbIncidentReportPdfTextStyle();
-  final IncidentReportDto? incidentReportDto;
+  final IrPdfData? incidentReportDto;
   final String localName;
 
   TbIrDateTime({
@@ -41,7 +41,7 @@ class TbIrDateTime extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               TbPdfHelper().returnTextForIncidentReportType(
-                incidentReportEntity: incidentReportDto,
+                irPdfData: incidentReportDto,
                 injuryTypeText: "DETAILS OF THE ACCIDENT",
                 illHealthTypeText: "DETAILS OF THE ILL-HEALTH",
                 nearMissType: "DETAILS OF THE NEAR MISS",

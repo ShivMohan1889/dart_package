@@ -1,4 +1,4 @@
-class IncidentReportManagerDto  {
+class IrManagerData {
   int? id;
   String? email;
   String? managerCloudId;
@@ -9,7 +9,7 @@ class IncidentReportManagerDto  {
   int? userId;
   String? name;
 
-  IncidentReportManagerDto({
+  IrManagerData({
     this.id,
     this.email,
     this.managerCloudId,
@@ -22,8 +22,8 @@ class IncidentReportManagerDto  {
   });
 
 
-  factory IncidentReportManagerDto.fromJson(Map<String, dynamic> json) {
-    return IncidentReportManagerDto(
+  factory IrManagerData.fromJson(Map<String, dynamic> json) {
+    return IrManagerData(
       id: json['id'] as int?,
       email: json['email'] as String?,
       managerCloudId: json['managerCloudId'] as String?,

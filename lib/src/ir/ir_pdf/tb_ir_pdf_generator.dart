@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
 import 'package:dart_pdf_package/src/ir/dto/incident_report_injury_option_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_photo_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_witness_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/ir_photo_dto.dart';
+import 'package:dart_pdf_package/src/ir/dto/ir_witness_data.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_contants.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_incident_report_injury_image_box.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_incident_report_location_image.dart';
@@ -31,7 +31,7 @@ import 'package:pdf/widgets.dart';
 
 class TbIrPdfGenerator {
   final String platFormLocaleName;
-  final IncidentReportDto? incidentReportDto;
+  final IrPdfData? incidentReportDto;
 
   final TbPdfHelper pdfHelper;
 
@@ -78,7 +78,7 @@ class TbIrPdfGenerator {
     //ARE YOU THE PERSON WHO HAD ACCIDENT
     var incidentReportUser = TbIrQuestionRow(
       question: TbPdfHelper().returnTextForIncidentReportType(
-        incidentReportEntity: incidentReportDto,
+        irPdfData: incidentReportDto,
         illHealthTypeText: "ARE YOU THE PERSON WHO HAS ILL-HEALTH?",
         injuryTypeText: "ARE YOU THE PERSON WHO HAD THE ACCIDENT?",
         nearMissType: "ARE YOU THE PERSON WHO HAD THE NEAR MISS?",
@@ -170,7 +170,7 @@ class TbIrPdfGenerator {
 
       var injuredPersonDetails = TbIrUserDetailsTable(
         heading: TbPdfHelper().returnTextForIncidentReportType(
-          incidentReportEntity: incidentReportDto,
+          irPdfData: incidentReportDto,
           injuryTypeText: "Details of the person who had the accident",
           illHealthTypeText: "Details of the person who has ill-health",
           nearMissType: "Details of the person who had the near miss",
@@ -829,7 +829,7 @@ class TbIrPdfGenerator {
       remainingHeight = consumablePageHeight - nextPageHeight;
     }
     // holds the listIncidentInjuryPhoto
-    List<IncidentInjuryPhotoDto> incidentPhotosList =
+    List<IrInjuryPhoto> incidentPhotosList =
         incidentReportDto?.listIncidentInjuryPhoto ?? [];
 
     // holds the particular Image Widget
@@ -840,8 +840,7 @@ class TbIrPdfGenerator {
 
     // // here we are iterating all the iamges
 
-    for (IncidentInjuryPhotoDto incidentInjuryPhotoEntity
-        in incidentPhotosList) {
+    for (IrInjuryPhoto incidentInjuryPhotoEntity in incidentPhotosList) {
       // int index = incidentPhotosList.indexOf(element);
 
       // here we are making memory image and adding to to listImageItem
@@ -995,7 +994,7 @@ class TbIrPdfGenerator {
         ),
       );
     }
-    for (IncidentReportWitnessDto witnessEntity in listWitnessDetails) {
+    for (IrWitnessData witnessEntity in listWitnessDetails) {
       int index = listWitnessDetails.indexOf(witnessEntity) + 1;
 
       var widget = TbIrUserDetailsTable(
@@ -1114,14 +1113,15 @@ class TbIrPdfGenerator {
     }
   }
 
-  Future<IncidentReportDto> preparePdfs({
-    required IncidentReportDto incidentReportDto,
+  Future<IrPdfData> preparePdfs({
+    required IrPdfData incidentReportDto,
   }) async {
     incidentReportDto.companyDto?.companyLogoMemoryImage = await TbPdfHelper()
         .generateMemoryImageForPath(
             incidentReportDto.companyDto?.imagePath ?? "");
-    incidentReportDto.userDto?.signatureMemoryImage = await TbPdfHelper()
-        .generateMemoryImageForPath(incidentReportDto.userDto?.imagePath ?? "");
+    incidentReportDto.userSignature?.signatureMemoryImage = await TbPdfHelper()
+        .generateMemoryImageForPath(
+            incidentReportDto.userSignature?.signature ?? "");
 
     incidentReportDto.memoryLocationMapImage = await TbPdfHelper()
         .generateMemoryImageForPath(
@@ -1133,7 +1133,7 @@ class TbIrPdfGenerator {
     // Section Images
     await Future.forEach(incidentReportDto.listIncidentInjuryPhoto ?? [],
         (element) async {
-      IncidentInjuryPhotoDto incidentInjuryPhoto = element;
+      IrInjuryPhoto incidentInjuryPhoto = element;
       incidentInjuryPhoto.memoryImage = await TbPdfHelper()
           .generateMemoryImageForPath(incidentInjuryPhoto.irImagePath ?? "");
     });

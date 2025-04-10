@@ -8,7 +8,7 @@ import 'package:pdf/widgets.dart';
 class TbIrImageTitle extends StatelessWidget {
   // this widget is used for how show the incident injury Image title
   final incidentReportTextStyle = TbIncidentReportPdfTextStyle();
-  final IncidentReportDto incidentReportEntity;
+  final IrPdfData incidentReportEntity;
 
   TbIrImageTitle({
     required this.incidentReportEntity, 
@@ -41,7 +41,7 @@ class TbIrImageTitle extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 TbPdfHelper().returnTextForIncidentReportType(
-                  incidentReportEntity: incidentReportEntity,
+                  irPdfData: incidentReportEntity,
                   injuryTypeText: "PHOTOS OF THE INCIDENT:",
                   illHealthTypeText: "",
                   nearMissType: "PHOTOS OF THE NEAR MISS:",

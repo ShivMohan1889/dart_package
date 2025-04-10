@@ -1,7 +1,7 @@
 import 'package:pdf/widgets.dart';
 
-class IncidentInjuryPhotoDto {
-  IncidentInjuryPhotoDto({
+class IrInjuryPhoto {
+  IrInjuryPhoto({
     int? id,
     String? name,
     int? order,
@@ -38,8 +38,8 @@ class IncidentInjuryPhotoDto {
 
 
 
-  factory IncidentInjuryPhotoDto.fromJson(Map<String, dynamic> json) {
-    return IncidentInjuryPhotoDto(
+  factory IrInjuryPhoto.fromJson(Map<String, dynamic> json) {
+    return IrInjuryPhoto(
       id: json['id'] as int?,
       name: json['name'] as String?,
       order: json['order'] as int?,

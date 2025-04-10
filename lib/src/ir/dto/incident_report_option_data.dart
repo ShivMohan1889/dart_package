@@ -1,4 +1,4 @@
-class IncidentReportOptionDto {
+class IrOptionData {
   int? id;
   int? type;
   String? name;
@@ -6,7 +6,7 @@ class IncidentReportOptionDto {
   // this property for option selection
   int? isSelected = 0;
 
-  IncidentReportOptionDto({
+  IrOptionData({
     this.id,
     this.type,
     this.name,
@@ -15,8 +15,8 @@ class IncidentReportOptionDto {
   });
 
 
-  factory IncidentReportOptionDto.fromJson(Map<String, dynamic> json) {
-    return IncidentReportOptionDto(
+  factory IrOptionData.fromJson(Map<String, dynamic> json) {
+    return IrOptionData(
       id: json['id'] as int?,
       type: json['type'] as int?,
       name: json['name'] as String?,
