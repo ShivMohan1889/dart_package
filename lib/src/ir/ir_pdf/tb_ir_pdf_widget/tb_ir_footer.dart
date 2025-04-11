@@ -1,5 +1,4 @@
-import 'package:dart_pdf_package/src/ir/dto/company_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
+import 'package:dart_pdf_package/src/ir/model/ir_pdf_data.dart';
 import 'package:pdf/widgets.dart';
 import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_contants.dart';
@@ -8,14 +7,12 @@ import 'package:pdf/widgets.dart';
 
 class TbIrFooter extends StatelessWidget {
   final int pageNo;
-  final CompanyDto? companyEntity;
 
   final IrPdfData? incidentReportEntity;
   final incidentReportPdfTextStyle = TbIncidentReportPdfTextStyle();
 
   TbIrFooter({
     required this.pageNo,
-    required this.companyEntity,
     this.incidentReportEntity,
   });
 
@@ -57,13 +54,13 @@ class TbIrFooter extends StatelessWidget {
                     font: Theme.of(context).header0.font,
                     fontSize: 11,
                   )),
-              Text("${companyEntity?.name ?? ""} ",
-                  // style: incidentReportPdfTextStyle
-                  //     .incidentReportCompanyNameTextStyle(),
-                  style: TbPdfHelper().textStyleGenerator(
-                    font: Theme.of(context).header0.font,
-                    fontSize: 11,
-                  )),
+              // Text("${companyEntity?.name ?? ""} ",
+              //     // style: incidentReportPdfTextStyle
+              //     //     .incidentReportCompanyNameTextStyle(),
+              //     style: TbPdfHelper().textStyleGenerator(
+              //       font: Theme.of(context).header0.font,
+              //       fontSize: 11,
+              //     )),
             ],
           ),
         ],

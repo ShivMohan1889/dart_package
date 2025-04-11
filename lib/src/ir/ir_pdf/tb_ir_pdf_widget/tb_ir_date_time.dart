@@ -1,4 +1,4 @@
-import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
+import 'package:dart_pdf_package/src/ir/model/ir_pdf_data.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_contants.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_ir_table_row.dart';
 import 'package:pdf/pdf.dart';
@@ -8,11 +8,11 @@ import '../../../../dart_pdf_package.dart';
 
 class TbIrDateTime extends StatelessWidget {
   final incidentReportTextStyle = TbIncidentReportPdfTextStyle();
-  final IrPdfData? incidentReportDto;
+  final IrPdfData? incidentReportData;
   final String localName;
 
   TbIrDateTime({
-    this.incidentReportDto,
+    this.incidentReportData,
     required this.localName,
   });
 
@@ -41,7 +41,7 @@ class TbIrDateTime extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Text(
               TbPdfHelper().returnTextForIncidentReportType(
-                irPdfData: incidentReportDto,
+                irPdfData: incidentReportData,
                 injuryTypeText: "DETAILS OF THE ACCIDENT",
                 illHealthTypeText: "DETAILS OF THE ILL-HEALTH",
                 nearMissType: "DETAILS OF THE NEAR MISS",
@@ -58,10 +58,10 @@ class TbIrDateTime extends StatelessWidget {
           TbIrTableRow(
             firstTitle: "Start Date:",
             // firstValue: " ${incidentReportEntity?.reportingDate}",
-            firstValue: incidentReportDto?.reportingDate ?? "",
+            firstValue: incidentReportData?.reportingDate ?? "",
 
             secondTitle: "Time:",
-            secondValue: " ${incidentReportDto?.reportingTime}",
+            secondValue: " ${incidentReportData?.reportingTime}",
             secondContainerWidth: 300,
           ),
           Container(
@@ -89,7 +89,7 @@ class TbIrDateTime extends StatelessWidget {
                         color: TbIncidentReportPdfColor
                             .incidentReportTextlightGreyColor)),
                 Container(width: 5),
-                Text(incidentReportDto?.location ?? "",
+                Text(incidentReportData?.location ?? "",
                     // style: incidentReportTextStyle
                     //     .textStyleForSecondTextInIncidentUser(),
                     style: TbPdfHelper().textStyleGenerator(

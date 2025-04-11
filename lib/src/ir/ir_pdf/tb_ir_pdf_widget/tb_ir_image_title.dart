@@ -1,6 +1,6 @@
 
 import 'package:dart_pdf_package/dart_pdf_package.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
+import 'package:dart_pdf_package/src/ir/model/ir_pdf_data.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_contants.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';

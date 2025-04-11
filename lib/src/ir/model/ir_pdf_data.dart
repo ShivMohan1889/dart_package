@@ -1,44 +1,28 @@
 import 'dart:convert';
 
-import 'package:dart_pdf_package/dart_pdf_package.dart';
-import 'package:dart_pdf_package/src/ir/dto/company_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_injury_person_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_injury_option_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_manager_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_option_data.dart';
-import 'package:dart_pdf_package/src/ir/dto/ir_injured_body_part_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/ir_photo_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/ir_user_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/ir_witness_data.dart';
-
+import 'package:dart_pdf_package/src/ms/ms_pdf_data.dart';
 import 'package:pdf/widgets.dart';
 
 class IrPdfData {
-  int? id;
   String? referenceNumber;
   int? access;
+  String? companyLogo;
   int? accidentRelatedToWork;
-
-  //  use for selection of incident Report entity into the incidentReportList
-  int? isSelected = 0;
-
+  MemoryImage? companyLogoMemoryImage;
+  String? titleForPDF;
+  String? companyPhoneEmail;
+  String companyDetails;
   String? anotherIllHealth;
   String? anotherInjury;
   int? anySubtanceInvolve = 0;
   int? anyWitness = 0;
   String? bodySketchPath;
-
   int? isSubscribed;
 
-  int? companyId;
   int? connectionToIncident;
-
   String? areaManagerName;
-
   String? currentLocation;
-
   String? location;
-
   int? departmentId;
   int? firstAidGiven = 0;
   String? firstAidDetails;
@@ -51,14 +35,6 @@ class IrPdfData {
   int? isInfoBeingShared;
   int? isManagerAware = 0;
   int? isRiddor;
-
-  /// this flag is to check the given incident report is upload on to the or not  server
-  int? isUploaded = 0;
-  int? isUploadedBox;
-  int? isUploadedDropbox;
-  int? isUploadedGoogleDrive;
-  int? isUploadedOneDrive;
-  int? isUploadedProcore;
   double? lattitude;
   double? longitude;
   String? managerName;
@@ -80,22 +56,17 @@ class IrPdfData {
   String? substanceDetails;
   String? uniqueKey;
 
-  int? userId;
-  int? cloudUserId;
   String? whatHappen;
   String? whatHappenNext;
 
   String? zipCode;
-  CompanyDto? companyDto;
   String? otherReasonForPresence;
-
-  int? isGetlocation = 0;
 
   // is draft is for show
   int? isDraft = 1;
 
   // use holds the incident report Manager
-  IrManagerData? incidentReportManagerDto;
+  IrManagerData? incidentReportManagerData;
 
   String? reportingManagerId;
 
@@ -103,17 +74,7 @@ class IrPdfData {
 
   UserSignatureData? userSignature;
 
-  int? buttonSelectedToShow = 0;
-
-  String? dropboxFileId;
-  String? boxnetFileId;
-  String? googleDriveFileId;
-  String? oneDriveFileId;
-  String? procoreFileId;
-  String? pdfName;
-
   /// Determines if incident Report is being edited or is the fresh Incident Report
-  int isBeingEdited = 0;
 
   IrUserData? incidentReportUsers;
 
@@ -123,7 +84,7 @@ class IrPdfData {
   List<IrManagerData>? listIncidentReportManager = List.empty(growable: true);
 
   // this list holds the selected options
-  List<IncidentReportInjuryOptionDto>? listIncidentReportInjuryOptions =
+  List<IrInjuryOptionData>? listIncidentReportInjuryOptions =
       List.empty(growable: true);
 
   // holds the all the options
@@ -153,8 +114,11 @@ class IrPdfData {
   String? bodySketchImagePath;
 
   IrPdfData({
+    this.companyLogo,
+    this.companyLogoMemoryImage,
+    required this.companyDetails,
     this.isSubscribed,
-    this.id,
+    this.companyPhoneEmail,
     this.referenceNumber,
     this.access,
     this.accidentRelatedToWork,
@@ -163,7 +127,6 @@ class IrPdfData {
     this.anySubtanceInvolve = 0,
     this.anyWitness = 0,
     this.bodySketchPath,
-    this.companyId,
     this.connectionToIncident,
     this.currentLocation,
     this.departmentId,
@@ -179,12 +142,6 @@ class IrPdfData {
     this.isInfoBeingShared,
     this.isManagerAware = 0,
     this.isRiddor,
-    this.isUploaded = 0,
-    this.isUploadedBox,
-    this.isUploadedDropbox,
-    this.isUploadedGoogleDrive,
-    this.isUploadedOneDrive,
-    this.isUploadedProcore,
     this.lattitude,
     this.incidentReportInjuryPerson,
     this.longitude,
@@ -205,56 +162,40 @@ class IrPdfData {
     this.reportingUserId,
     this.sameOrganisation = 0,
     this.substanceDetails,
-    this.uniqueKey,
-    this.userId,
     this.whatHappen,
     this.whatHappenNext,
-    this.companyDto,
     this.userSignature,
     this.zipCode,
     this.reportingTime,
     this.listIncidentReportManager,
     this.listIncidentReportOptions,
     this.listIncidentReportInjuryOptions,
-    this.buttonSelectedToShow = 0,
     this.listIncidentInjuryPhoto,
     this.reportingManagerId,
     required this.listIncidentReportWitness,
-    this.incidentReportManagerDto,
-    this.isSelected = 0,
-    this.isGetlocation = 0,
+    this.incidentReportManagerData,
     this.listIncidentInjuredBodyParts,
     this.otherReasonForPresence,
     this.areaManagerName,
     this.location,
-    this.isDraft = 1,
-    this.dropboxFileId,
-    this.boxnetFileId,
-    this.googleDriveFileId,
-    this.oneDriveFileId,
-    this.procoreFileId,
     this.memoryLocationMapImage,
     this.memorySketchImage,
-    this.pdfName,
-    this.cloudUserId,
     this.locationMapImagePath,
     this.bodySketchImagePath,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'referenceNumber': referenceNumber,
       'access': access,
       'accidentRelatedToWork': accidentRelatedToWork,
-      'isSelected': isSelected,
       'anotherIllHealth': anotherIllHealth,
       'anotherInjury': anotherInjury,
       'anySubtanceInvolve': anySubtanceInvolve,
       'anyWitness': anyWitness,
       'bodySketchPath': bodySketchPath,
       'isSubscribed': isSubscribed,
-      'companyId': companyId,
+      // 'companyId': companyId,
       'connectionToIncident': connectionToIncident,
       'areaManagerName': areaManagerName,
       'currentLocation': currentLocation,
@@ -271,12 +212,6 @@ class IrPdfData {
       'isInfoBeingShared': isInfoBeingShared,
       'isManagerAware': isManagerAware,
       'isRiddor': isRiddor,
-      'isUploaded': isUploaded,
-      'isUploadedBox': isUploadedBox,
-      'isUploadedDropbox': isUploadedDropbox,
-      'isUploadedGoogleDrive': isUploadedGoogleDrive,
-      'isUploadedOneDrive': isUploadedOneDrive,
-      'isUploadedProcore': isUploadedProcore,
       'lattitude': lattitude,
       'longitude': longitude,
       'managerName': managerName,
@@ -296,28 +231,15 @@ class IrPdfData {
       'reportingUserId': reportingUserId,
       'sameOrganisation': sameOrganisation,
       'substanceDetails': substanceDetails,
-      'uniqueKey': uniqueKey,
-      'userId': userId,
-      'cloudUserId': cloudUserId,
       'whatHappen': whatHappen,
       'whatHappenNext': whatHappenNext,
       'zipCode': zipCode,
       'otherReasonForPresence': otherReasonForPresence,
-      'isGetlocation': isGetlocation,
       'isDraft': isDraft,
       'reportingManagerId': reportingManagerId,
       'reportingTime': reportingTime,
-      'buttonSelectedToShow': buttonSelectedToShow,
-      'dropboxFileId': dropboxFileId,
-      'boxnetFileId': boxnetFileId,
-      'googleDriveFileId': googleDriveFileId,
-      'oneDriveFileId': oneDriveFileId,
-      'procoreFileId': procoreFileId,
-      'pdfName': pdfName,
-      'isBeingEdited': isBeingEdited,
-      'companyDto': companyDto?.toJson(),
-      'userDto': userSignature?.toJson(),
-      'incidentReportManagerDto': incidentReportManagerDto?.toJson(),
+      'userData': userSignature?.toJson(),
+      'incidentReportManagerData': incidentReportManagerData?.toJson(),
       'incidentReportUsers': incidentReportUsers?.toJson(),
       'incidentReportInjuryPerson': incidentReportInjuryPerson?.toJson(),
       'listIncidentReportManager':
@@ -337,18 +259,17 @@ class IrPdfData {
 
   factory IrPdfData.fromJson(Map<String, dynamic> json) {
     return IrPdfData(
-      id: json['id'],
+      companyDetails: json['companyDetails'],
+      companyPhoneEmail: json['companyPhoneEmail'],
       referenceNumber: json['referenceNumber'],
       access: json['access'],
       accidentRelatedToWork: json['accidentRelatedToWork'],
-      isSelected: json['isSelected'] ?? 0,
       anotherIllHealth: json['anotherIllHealth'],
       anotherInjury: json['anotherInjury'],
       anySubtanceInvolve: json['anySubtanceInvolve'] ?? 0,
       anyWitness: json['anyWitness'] ?? 0,
       bodySketchPath: json['bodySketchPath'],
       isSubscribed: json['isSubscribed'],
-      companyId: json['companyId'],
       connectionToIncident: json['connectionToIncident'],
       areaManagerName: json['areaManagerName'],
       currentLocation: json['currentLocation'],
@@ -365,12 +286,6 @@ class IrPdfData {
       isInfoBeingShared: json['isInfoBeingShared'],
       isManagerAware: json['isManagerAware'] ?? 0,
       isRiddor: json['isRiddor'],
-      isUploaded: json['isUploaded'] ?? 0,
-      isUploadedBox: json['isUploadedBox'],
-      isUploadedDropbox: json['isUploadedDropbox'],
-      isUploadedGoogleDrive: json['isUploadedGoogleDrive'],
-      isUploadedOneDrive: json['isUploadedOneDrive'],
-      isUploadedProcore: json['isUploadedProcore'],
       lattitude: json['lattitude'],
       longitude: json['longitude'],
       managerName: json['managerName'],
@@ -390,33 +305,18 @@ class IrPdfData {
       reportingUserId: json['reportingUserId'],
       sameOrganisation: json['sameOrganisation'] ?? 0,
       substanceDetails: json['substanceDetails'],
-      uniqueKey: json['uniqueKey'],
-      userId: json['userId'],
-      cloudUserId: json['cloudUserId'],
       whatHappen: json['whatHappen'],
       whatHappenNext: json['whatHappenNext'],
       zipCode: json['zipCode'],
       otherReasonForPresence: json['otherReasonForPresence'],
-      isGetlocation: json['isGetlocation'] ?? 0,
-      isDraft: json['isDraft'] ?? 1,
       reportingManagerId: json['reportingManagerId'],
       reportingTime: json['reportingTime'],
-      buttonSelectedToShow: json['buttonSelectedToShow'] ?? 0,
-      dropboxFileId: json['dropboxFileId'],
-      boxnetFileId: json['boxnetFileId'],
-      googleDriveFileId: json['googleDriveFileId'],
-      oneDriveFileId: json['oneDriveFileId'],
-      procoreFileId: json['procoreFileId'],
       locationMapImagePath: json["map_image_path"],
       bodySketchImagePath: json["body_sketch_path"] as String?,
-      pdfName: json['pdfName'],
-      companyDto: json['companyDto'] != null
-          ? CompanyDto.fromJson(json['companyDto'])
-          : null,
       userSignature: json['userSignature'] != null
-          ? UserSignatureData.fromJson(json['userDto'])
+          ? UserSignatureData.fromJson(json['userData'])
           : null,
-      incidentReportManagerDto: json['irManagerData'] != null
+      incidentReportManagerData: json['irManagerData'] != null
           ? IrManagerData.fromJson(json['irManagerData'])
           : null,
       incidentReportUsers: json['irUserData'] != null
@@ -431,7 +331,7 @@ class IrPdfData {
           [],
       listIncidentReportInjuryOptions:
           (json['listIncidentReportInjuryOptions'] as List<dynamic>?)
-                  ?.map((e) => IncidentReportInjuryOptionDto.fromJson(e))
+                  ?.map((e) => IrInjuryOptionData.fromJson(e))
                   .toList() ??
               [],
       listIncidentReportOptions: (json['irOptionData'] as List<dynamic>?)
@@ -457,5 +357,295 @@ class IrPdfData {
   factory IrPdfData.fromJsonString(String jsonString) {
     Map<String, dynamic> jsonMap = jsonDecode(jsonString);
     return IrPdfData.fromJson(jsonMap);
+  }
+}
+
+class IrInjuredBodyPartData {
+  String? injuredBodyName;
+  int? isSelected = 0;
+
+  IrInjuredBodyPartData({
+    this.injuredBodyName,
+    this.isSelected = 0,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'injuredBodyName': injuredBodyName,
+      'isSelected': isSelected,
+    };
+  }
+
+  factory IrInjuredBodyPartData.fromJson(Map<String, dynamic> json) {
+    return IrInjuredBodyPartData(
+      injuredBodyName: json['injuredBodyName'] as String?,
+      isSelected: json['isSelected'] as int?,
+    );
+  }
+}
+
+class IrUserData {
+  String? userName;
+  String? address1;
+  String? address2;
+  String? email;
+  String? position;
+  String? postcode;
+  String? telephone;
+  String? jobTitle;
+
+  IrUserData({
+    this.address1,
+    this.address2,
+    this.email,
+    this.position,
+    this.postcode,
+    this.telephone,
+    this.userName,
+    this.jobTitle,
+  });
+
+  factory IrUserData.fromJson(Map<String, dynamic> json) {
+    return IrUserData(
+      userName: json['userName'] as String?,
+      address1: json['address1'] as String?,
+      address2: json['address2'] as String?,
+      email: json['email'] as String?,
+      position: json['position'] as String?,
+      postcode: json['postcode'] as String?,
+      telephone: json['telephone'] as String?,
+      jobTitle: json['jobTitle'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userName': userName,
+      'address1': address1,
+      'address2': address2,
+      'email': email,
+      'position': position,
+      'postcode': postcode,
+      'telephone': telephone,
+      'jobTitle': jobTitle,
+    };
+  }
+}
+
+class IrInjuryPersonData {
+  String? address1;
+  String? address2;
+  String? address3;
+  String? email;
+  String? name;
+  String? position;
+  String? postcode;
+  String? telephone;
+  String? jobTitle;
+
+  IrInjuryPersonData({
+    this.jobTitle,
+    this.address1,
+    this.address2,
+    this.address3,
+    this.email,
+    this.name,
+    this.position,
+    this.postcode,
+    this.telephone,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'address1': address1,
+      'address2': address2,
+      'address3': address3,
+      'email': email,
+      'name': name,
+      'position': position,
+      'postcode': postcode,
+      'telephone': telephone,
+      'jobTitle': jobTitle,
+    };
+  }
+
+  factory IrInjuryPersonData.fromJson(Map<String, dynamic> json) {
+    return IrInjuryPersonData(
+      address1: json['address1'] as String?,
+      address2: json['address2'] as String?,
+      address3: json['address3'] as String?,
+      email: json['email'] as String?,
+      name: json['name'] as String?,
+      position: json['position'] as String?,
+      postcode: json['postcode'] as String?,
+      telephone: json['telephone'] as String?,
+      jobTitle: json['jobTitle'] as String?,
+    );
+  }
+}
+
+class IrOptionData {
+  int? id;
+  int? type;
+  String? name;
+
+  IrOptionData({
+    this.id,
+    this.type,
+    this.name,
+  });
+
+  factory IrOptionData.fromJson(Map<String, dynamic> json) {
+    return IrOptionData(
+      id: json['id'] as int?,
+      type: json['type'] as int?,
+      name: json['name'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'type': type,
+      'name': name,
+    };
+  }
+}
+
+class IrInjuryPhoto {
+  String? image;
+  int? order;
+
+  MemoryImage? memoryImage;
+
+  IrInjuryPhoto({
+    this.image,
+    this.order,
+    this.memoryImage,
+  });
+
+  factory IrInjuryPhoto.fromJson(Map<String, dynamic> json) {
+    return IrInjuryPhoto(
+      image: json['image'] as String?,
+      order: json['order'] as int?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'image': image,
+      'order': order,
+    };
+  }
+}
+
+class IrWitnessData {
+  String? address1;
+  String? address2;
+  String? address3;
+  String? email;
+  String? name;
+  String? position;
+  String? postcode;
+  String? telephone;
+  String? jobTitle;
+
+  IrWitnessData({
+    this.jobTitle,
+    this.address1,
+    this.address2,
+    this.address3,
+    this.email,
+    this.name,
+    this.position,
+    this.postcode,
+    this.telephone,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'address1': address1,
+      'address2': address2,
+      'address3': address3,
+      'email': email,
+      'name': name,
+      'position': position,
+      'postcode': postcode,
+      'telephone': telephone,
+      'jobTitle': jobTitle,
+    };
+  }
+
+  factory IrWitnessData.fromJson(Map<String, dynamic> json) {
+    return IrWitnessData(
+      address1: json['address1'] as String?,
+      address2: json['address2'] as String?,
+      address3: json['address3'] as String?,
+      email: json['email'] as String?,
+      name: json['name'] as String?,
+      position: json['position'] as String?,
+      postcode: json['postcode'] as String?,
+      telephone: json['telephone'] as String?,
+      jobTitle: json['jobTitle'] as String?,
+    );
+  }
+}
+
+class IrManagerData {
+  String? email;
+  String? jobTitle;
+
+  String? name;
+
+  IrManagerData({
+    this.email,
+    this.jobTitle,
+    this.name,
+  });
+
+  factory IrManagerData.fromJson(Map<String, dynamic> json) {
+    return IrManagerData(
+      email: json['email'] as String?,
+      jobTitle: json['jobTitle'] as String?,
+      name: json['name'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+      'jobTitle': jobTitle,
+    };
+  }
+}
+
+class IrInjuryOptionData {
+  int? id;
+  String? name;
+  int? order;
+  int? type;
+  IrInjuryOptionData({
+    this.id,
+    this.order,
+    this.name,
+    this.type,
+  });
+
+  factory IrInjuryOptionData.fromJson(Map<String, dynamic> json) {
+    return IrInjuryOptionData(
+      id: json['id'] as int?,
+      order: json['order'] as int?,
+      name: json['name'] as String?,
+      type: json['type'] as int?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'order': order,
+      'name': name,
+      'type': type,
+    };
   }
 }

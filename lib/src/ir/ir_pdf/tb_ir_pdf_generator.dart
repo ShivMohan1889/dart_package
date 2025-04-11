@@ -1,10 +1,5 @@
 import 'dart:typed_data';
-
 import 'package:dart_pdf_package/dart_pdf_package.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/incident_report_injury_option_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/ir_photo_dto.dart';
-import 'package:dart_pdf_package/src/ir/dto/ir_witness_data.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_contants.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_incident_report_injury_image_box.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_incident_report_location_image.dart';
@@ -24,6 +19,7 @@ import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_ir_space_box.
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_ir_text_question.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_ir_type.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_pdf_widget/tb_ir_user_details_table.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_header_row.dart';
 import 'package:dart_pdf_package/src/utils/enums/incident_report_enum.dart';
 import 'package:dart_pdf_package/src/utils/enums/yes_and_no_enum.dart';
 import 'package:pdf/pdf.dart';
@@ -31,12 +27,12 @@ import 'package:pdf/widgets.dart';
 
 class TbIrPdfGenerator {
   final String platFormLocaleName;
-  final IrPdfData? incidentReportDto;
+  final IrPdfData incidentReportData;
 
   final TbPdfHelper pdfHelper;
 
   TbIrPdfGenerator({
-    this.incidentReportDto,
+    required this.incidentReportData,
     required this.pdfHelper,
     required this.platFormLocaleName,
   });
@@ -59,14 +55,13 @@ class TbIrPdfGenerator {
     // IMAGES
     final MemoryImage irLogoImage = TbPdfHelper().irLogoImage;
 
-    await preparePdfs(incidentReportDto: incidentReportDto!);
+    await preparePdfs(incidentReportData: incidentReportData);
 
-    MemoryImage? logoImage =
-        incidentReportDto?.companyDto?.companyLogoMemoryImage;
+    MemoryImage? logoImage = incidentReportData.companyLogoMemoryImage;
 
     // REPORT TYPE
     listReportItems.add(TbIrType(
-      incidentReportType: incidentReportDto?.reportingType ?? 0,
+      incidentReportType: incidentReportData.reportingType ?? 0,
     ));
 
     listReportItems.add(
@@ -78,13 +73,13 @@ class TbIrPdfGenerator {
     //ARE YOU THE PERSON WHO HAD ACCIDENT
     var incidentReportUser = TbIrQuestionRow(
       question: TbPdfHelper().returnTextForIncidentReportType(
-        irPdfData: incidentReportDto,
+        irPdfData: incidentReportData,
         illHealthTypeText: "ARE YOU THE PERSON WHO HAS ILL-HEALTH?",
         injuryTypeText: "ARE YOU THE PERSON WHO HAD THE ACCIDENT?",
         nearMissType: "ARE YOU THE PERSON WHO HAD THE NEAR MISS?",
       ),
       middleDistance: 25,
-      answer: incidentReportDto?.reportedRelation ?? 0,
+      answer: incidentReportData.reportedRelation ?? 0,
     );
 
     listReportItems.add(incidentReportUser);
@@ -93,13 +88,13 @@ class TbIrPdfGenerator {
     var yourDetailsTable = TbIrUserDetailsTable(
       heading: "YOUR DETAILS",
       padding: TbIrPadding.paddingForUserDetails,
-      name: incidentReportDto?.incidentReportUsers?.userName ?? "",
-      jobTitle: incidentReportDto?.incidentReportUsers?.jobTitle ?? "",
-      addressLine1: incidentReportDto?.incidentReportUsers?.address1 ?? "",
-      addressLine2: incidentReportDto?.incidentReportUsers?.address2 ?? "",
-      email: incidentReportDto?.incidentReportUsers?.email ?? "",
-      postcode: incidentReportDto?.incidentReportUsers?.postcode ?? "",
-      telephone: incidentReportDto?.incidentReportUsers?.telephone ?? "",
+      name: incidentReportData.incidentReportUsers?.userName ?? "",
+      jobTitle: incidentReportData.incidentReportUsers?.jobTitle ?? "",
+      addressLine1: incidentReportData.incidentReportUsers?.address1 ?? "",
+      addressLine2: incidentReportData.incidentReportUsers?.address2 ?? "",
+      email: incidentReportData.incidentReportUsers?.email ?? "",
+      postcode: incidentReportData.incidentReportUsers?.postcode ?? "",
+      telephone: incidentReportData.incidentReportUsers?.telephone ?? "",
     );
     listReportItems.add(yourDetailsTable);
 
@@ -109,7 +104,7 @@ class TbIrPdfGenerator {
 
     // YOUR CONNECTION TO THE INJURED PARTY
     // WILL BE SHOWN ONLY IF USER HAS SELECTED NO IN (ARE YOU THE PERSON WHO HAD ACCIDENT)
-    if (incidentReportDto?.reportedRelation == YesAndNoOptions.no.index) {
+    if (incidentReportData.reportedRelation == YesAndNoOptions.no.index) {
       var connectWidget = TbIrTextQuestion(
         question: "YOUR CONNECTION:",
         answer: returnTextForConnection(),
@@ -124,10 +119,10 @@ class TbIrPdfGenerator {
       );
 
       // SHOW OTHER CONNECTION OF THE PERSON
-      if ((incidentReportDto?.otherConnection ?? "").isNotEmpty) {
+      if ((incidentReportData.otherConnection ?? "").isNotEmpty) {
         var otherConnectionWidget = TbIrInfoBox(
           title: "CONNECTION",
-          value: incidentReportDto?.otherConnection ?? "",
+          value: incidentReportData.otherConnection ?? "",
         );
         listReportItems.add(otherConnectionWidget);
 
@@ -141,7 +136,7 @@ class TbIrPdfGenerator {
       var incidentReportYesNoOptions = TbIrQuestionRow(
         question:
             "DOES THE PERSON INVOLVED IN THE INCIDENT WORK IN YOUR ORGANISATION?",
-        answer: incidentReportDto?.sameOrganisation ?? 0,
+        answer: incidentReportData.sameOrganisation ?? 0,
       );
       listReportItems.add(incidentReportYesNoOptions);
 
@@ -151,10 +146,10 @@ class TbIrPdfGenerator {
         ),
       );
 
-      if (incidentReportDto?.sameOrganisation == YesAndNoOptions.no.index) {
+      if (incidentReportData.sameOrganisation == YesAndNoOptions.no.index) {
         var reasonForPresence = TbIrTextQuestion(
           question:
-              incidentReportDto?.reportingType == IncidentReport.nearMissType
+              incidentReportData.reportingType == IncidentReport.nearMissType
                   ? "WHO COULD BE AT RISK?"
                   : "WHY WERE THEY THERE?",
           answer: returnTextForReasonOfPressence(),
@@ -170,21 +165,23 @@ class TbIrPdfGenerator {
 
       var injuredPersonDetails = TbIrUserDetailsTable(
         heading: TbPdfHelper().returnTextForIncidentReportType(
-          irPdfData: incidentReportDto,
+          irPdfData: incidentReportData,
           injuryTypeText: "Details of the person who had the accident",
           illHealthTypeText: "Details of the person who has ill-health",
           nearMissType: "Details of the person who had the near miss",
         ),
-        jobTitle: incidentReportDto?.incidentReportInjuryPerson?.jobTitle ?? "",
+        jobTitle:
+            incidentReportData.incidentReportInjuryPerson?.jobTitle ?? "",
         addressLine1:
-            incidentReportDto?.incidentReportInjuryPerson?.address1 ?? "",
+            incidentReportData.incidentReportInjuryPerson?.address1 ?? "",
         addressLine2:
-            incidentReportDto?.incidentReportInjuryPerson?.address2 ?? "",
-        email: incidentReportDto?.incidentReportInjuryPerson?.email ?? "",
-        name: incidentReportDto?.incidentReportInjuryPerson?.name ?? "",
-        postcode: incidentReportDto?.incidentReportInjuryPerson?.postcode ?? "",
+            incidentReportData.incidentReportInjuryPerson?.address2 ?? "",
+        email: incidentReportData.incidentReportInjuryPerson?.email ?? "",
+        name: incidentReportData.incidentReportInjuryPerson?.name ?? "",
+        postcode:
+            incidentReportData.incidentReportInjuryPerson?.postcode ?? "",
         telephone:
-            incidentReportDto?.incidentReportInjuryPerson?.telephone ?? "",
+            incidentReportData.incidentReportInjuryPerson?.telephone ?? "",
       );
 
       listReportItems.add(injuredPersonDetails);
@@ -192,7 +189,7 @@ class TbIrPdfGenerator {
 
     // update the widget incidentReportAreaManagerRow
     var incidentReportAreaManager =
-        TbIrLineAreaManager(incidentReportEntity: incidentReportDto);
+        TbIrLineAreaManager(incidentReportEntity: incidentReportData);
     listReportItems.add(
       TbIrSpaceBox(
         height: 15,
@@ -209,7 +206,7 @@ class TbIrPdfGenerator {
     // DATE TIME ALONG WITH LOCATION
     var dateTimeRow = TbIrDateTime(
       localName: platFormLocaleName,
-      incidentReportDto: incidentReportDto,
+      incidentReportData: incidentReportData,
     );
     listReportItems.add(dateTimeRow);
 
@@ -220,10 +217,10 @@ class TbIrPdfGenerator {
     );
 
     var incidentReportDescription = TbIrInfoBox(
-      title: incidentReportDto?.reportingType == IncidentReport.nearMissType
+      title: incidentReportData.reportingType == IncidentReport.nearMissType
           ? "What could have happened?"
           : "What happened?",
-      value: incidentReportDto?.whatHappen ?? "",
+      value: incidentReportData.whatHappen ?? "",
     );
 
     listReportItems.add(incidentReportDescription);
@@ -234,16 +231,16 @@ class TbIrPdfGenerator {
       ),
     );
 
-    if (incidentReportDto?.reportingType != IncidentReport.illHealthType) {
+    if (incidentReportData.reportingType != IncidentReport.illHealthType) {
       var subtanceInvoled = TbIrQuestionRow(
-        question: incidentReportDto?.reportingType == IncidentReport.injuryType
+        question: incidentReportData.reportingType == IncidentReport.injuryType
             ? "WAS ANY EQUIPMENT OR SUBSTANCE INVOLVED?"
             : "IS ANY EQUIPMENT OR SUBSTANCE INVOLVED?",
-        answer: incidentReportDto?.anySubtanceInvolve ?? 0,
+        answer: incidentReportData.anySubtanceInvolve ?? 0,
       );
       listReportItems.add(subtanceInvoled);
 
-      if (incidentReportDto?.anySubtanceInvolve == YesAndNoOptions.yes.index) {
+      if (incidentReportData.anySubtanceInvolve == YesAndNoOptions.yes.index) {
         listReportItems.add(
           TbIrSpaceBox(
             height: 8,
@@ -251,14 +248,14 @@ class TbIrPdfGenerator {
         );
         var incidentReportSubtanceDescriptionWidget = TbIrInfoBox(
           title: "WHAT WAS THE EQUIPMENT OR SUBSTANCE?",
-          value: incidentReportDto?.substanceDetails ?? "",
+          value: incidentReportData.substanceDetails ?? "",
         );
         listReportItems.add(incidentReportSubtanceDescriptionWidget);
       }
     }
 
-    if (incidentReportDto?.reportingType != IncidentReport.illHealthType) {
-      if ((incidentReportDto?.listIncidentInjuryPhoto ?? []).isNotEmpty) {
+    if (incidentReportData.reportingType != IncidentReport.illHealthType) {
+      if ((incidentReportData.listIncidentInjuryPhoto ?? []).isNotEmpty) {
         listReportItems.add(
           TbIrSpaceBox(
             height: 8,
@@ -300,7 +297,7 @@ class TbIrPdfGenerator {
 
     var anyWitenss = TbIrQuestionRow(
       question: "WERE THERE ANY WITNESSES?",
-      answer: incidentReportDto?.anyWitness ?? 0,
+      answer: incidentReportData.anyWitness ?? 0,
     );
 
     listReportItems.add(anyWitenss);
@@ -324,11 +321,11 @@ class TbIrPdfGenerator {
     );
     var isInfoBeingSharedWidget = TbIrQuestionRow(
       question: "I CONSENT TO MY PERSONAL INFORMATION BEING SHARED.",
-      answer: incidentReportDto?.isInfoBeingShared ?? 0,
+      answer: incidentReportData.isInfoBeingShared ?? 0,
     );
     listReportItems.add(isInfoBeingSharedWidget);
 
-    if (incidentReportDto?.mapImagePath != null) {
+    if (incidentReportData.mapImagePath != null) {
       listReportItems.add(TbIrSpaceBox(
         height: 10,
       ));
@@ -349,16 +346,22 @@ class TbIrPdfGenerator {
           return listReportItems;
         },
         header: (context) {
-          return TbIrHeader(
-            incidentReportLogoImage: irLogoImage,
-            companyLogoImage: logoImage,
+          return MsHeaderRow(
+            pagesNo: context.pageNumber,
+            companyDetails: incidentReportData.companyDetails,
+            companyPhoneEmail: incidentReportData.companyPhoneEmail ?? "",
+            titleForPdf: incidentReportData.titleForPDF ?? "",
+            companyLogoMemoryImage: incidentReportData.companyLogoMemoryImage,
           );
+          // return TbIrHeader(
+          //   incidentReportLogoImage: irLogoImage,
+          //   companyLogoImage: logoImage,
+          // );
         },
         footer: (context) {
           return TbIrFooter(
-            companyEntity: incidentReportDto?.companyDto,
             pageNo: context.pageNumber,
-            incidentReportEntity: incidentReportDto,
+            incidentReportEntity: incidentReportData,
           );
         },
       ),
@@ -377,7 +380,7 @@ class TbIrPdfGenerator {
   /* ************************************** */
   void showIncidentReportOption(MemoryImage irLogoImage) {
     var listIncidentInjuryOptions =
-        incidentReportDto?.listIncidentReportInjuryOptions ?? [];
+        incidentReportData.listIncidentReportInjuryOptions ?? [];
 
     // if list is empty we don't need to add anything
     if (listIncidentInjuryOptions.isEmpty) {
@@ -391,8 +394,7 @@ class TbIrPdfGenerator {
     );
 
     var footerHeight = TbPdfHelper().calculateHeightOfWidget(
-      widget:
-          TbIrFooter(companyEntity: incidentReportDto?.companyDto, pageNo: 0),
+      widget: TbIrFooter(pageNo: 0),
       width: TbIrPdfDimension.pageWidth,
     );
 
@@ -413,7 +415,7 @@ class TbIrPdfGenerator {
 
     // calcuale height of the title
     var titleWidget = TbIrInjuryOptionTitle(
-      incidentReportEntity: incidentReportDto,
+      incidentReportEntity: incidentReportData,
     );
     var titleHeight = TbPdfHelper().calculateHeightOfWidget(
         widget: titleWidget, width: TbIrPdfDimension.pageWidth);
@@ -467,7 +469,7 @@ class TbIrPdfGenerator {
       remainingHeight = consumablePageHeight - nextPageHeight;
     }
 
-    List<IncidentReportInjuryOptionDto> listOptions = listIncidentInjuryOptions;
+    List<IrInjuryOptionData> listOptions = listIncidentInjuryOptions;
 
     // here we are iterating all the iamges
     for (var optionEntity in listOptions) {
@@ -481,7 +483,7 @@ class TbIrPdfGenerator {
         isTitleRendered = 1;
         listReportItems.add(
           TbIrInjuryOptionTitle(
-            incidentReportEntity: incidentReportDto,
+            incidentReportEntity: incidentReportData,
           ),
         );
         remainingHeight = remainingHeight - titleHeight;
@@ -515,7 +517,7 @@ class TbIrPdfGenerator {
         if (isTitleRendered == 0) {
           isTitleRendered = 1;
           listReportItems.add(TbIrInjuryOptionTitle(
-            incidentReportEntity: incidentReportDto,
+            incidentReportEntity: incidentReportData,
           ));
           remainingHeight = remainingHeight - titleHeight;
         }
@@ -525,7 +527,7 @@ class TbIrPdfGenerator {
       }
     }
 
-    if ((incidentReportDto?.anotherInjury ?? "").isNotEmpty) {
+    if ((incidentReportData.anotherInjury ?? "").isNotEmpty) {
       // update the incidentReportDescription Widget to show
 
       /// adding the extra Space
@@ -536,10 +538,10 @@ class TbIrPdfGenerator {
       );
 
       var irOtherInjuryWidget = TbIrInfoBox(
-        title: incidentReportDto?.reportingType != IncidentReport.illHealthType
+        title: incidentReportData.reportingType != IncidentReport.illHealthType
             ? "Specify Other Injury?"
             : "Specify Other Ill- Health?",
-        value: "${incidentReportDto?.anotherInjury}",
+        value: "${incidentReportData.anotherInjury}",
       );
 
       listReportItems.add(irOtherInjuryWidget);
@@ -552,10 +554,10 @@ class TbIrPdfGenerator {
   /* ************************************** */
 
   void showWidgetForIncidentReportType() async {
-    if (incidentReportDto?.reportingType == IncidentReport.injuryType) {
+    if (incidentReportData.reportingType == IncidentReport.injuryType) {
       showInjuryData();
       showCourseOfActionAndOffTime();
-    } else if (incidentReportDto?.reportingType ==
+    } else if (incidentReportData.reportingType ==
         IncidentReport.illHealthType) {
       listReportItems.add(
         TbIrSpaceBox(
@@ -564,7 +566,7 @@ class TbIrPdfGenerator {
       );
       var irIllHealthComment = TbIrInfoBox(
         title: "ANY OTHER COMMENT ABOUT ILL HEALTH",
-        value: incidentReportDto?.illHealthComment ?? "",
+        value: incidentReportData.illHealthComment ?? "",
       );
       listReportItems.add(irIllHealthComment);
       showCourseOfActionAndOffTime();
@@ -579,7 +581,7 @@ class TbIrPdfGenerator {
   /// injury comment on incidentReport pdf
   /* ************************************** */
   void showInjuryCommentAndSeriourness() {
-    if (incidentReportDto?.injurySeriousness != null) {
+    if (incidentReportData.injurySeriousness != null) {
       /// adding the extra Space
       listReportItems.add(
         TbIrSpaceBox(
@@ -589,7 +591,7 @@ class TbIrPdfGenerator {
       var seriousnessRow = TbIrTextQuestion(
           textWidth: TbIrPdfDimension.injurySeriousNessQuestionWidth,
           question:
-              incidentReportDto?.reportingType == IncidentReport.injuryType
+              incidentReportData.reportingType == IncidentReport.injuryType
                   ? "HOW SERIOUS WAS THE INJURY?"
                   : "HOW SERIOUS COULD THE POSSIBLE INJURY BE ?",
           answer: returnTextForInjurySeriousNess(),
@@ -608,10 +610,10 @@ class TbIrPdfGenerator {
     );
 
     var injuryCommentBox = TbIrInfoBox(
-      title: incidentReportDto?.reportingType == IncidentReport.injuryType
+      title: incidentReportData.reportingType == IncidentReport.injuryType
           ? "ANY FURTHER COMMENTS ABOUT THE INJURY?"
           : "ANY FURTHER COMMENTS ABOUT THE POSSIBLE INJURY?",
-      value: incidentReportDto?.injuryComment ?? "",
+      value: incidentReportData.injuryComment ?? "",
     );
 
     listReportItems.add(injuryCommentBox);
@@ -659,9 +661,9 @@ class TbIrPdfGenerator {
     );
     listReportItems.add(timeTakenOffWidgetRow);
 
-    if (incidentReportDto?.offWorkNeed == IrOffWorkNeedType.moreThan3days ||
-        incidentReportDto?.offWorkNeed == IrOffWorkNeedType.moreThan7days) {
-      if (incidentReportDto?.numberOfDaysOffWork != null) {
+    if (incidentReportData.offWorkNeed == IrOffWorkNeedType.moreThan3days ||
+        incidentReportData.offWorkNeed == IrOffWorkNeedType.moreThan7days) {
+      if (incidentReportData.numberOfDaysOffWork != null) {
         /// adding the extra Space
         listReportItems.add(
           TbIrSpaceBox(
@@ -670,7 +672,7 @@ class TbIrPdfGenerator {
         );
         var incidentReportNumberOfDays = TbIrInfoBox(
           title: "NUMBER OF DAYS OFF FROM WORK?",
-          value: (incidentReportDto?.numberOfDaysOffWork).toString(),
+          value: (incidentReportData.numberOfDaysOffWork).toString(),
         );
         listReportItems.add(incidentReportNumberOfDays);
       }
@@ -682,9 +684,9 @@ class TbIrPdfGenerator {
   /* ************************************** */
 
   void showInjuryData() async {
-    if (incidentReportDto?.injuredBodyPart != null) {
-      String? bodyPart = (incidentReportDto?.injuredBodyPart ?? "")
-          .replaceAll("Other", "${incidentReportDto?.otherBodyPart}");
+    if (incidentReportData.injuredBodyPart != null) {
+      String? bodyPart = (incidentReportData.injuredBodyPart ?? "")
+          .replaceAll("Other", "${incidentReportData.otherBodyPart}");
 
       // add the extra space in string
       String? injuredBodyPart = bodyPart.replaceAll(",", ", ");
@@ -701,11 +703,11 @@ class TbIrPdfGenerator {
       );
       listReportItems.add(incidentReportDescription);
     }
-    if (incidentReportDto?.bodySketchPath != null) {
+    if (incidentReportData.bodySketchPath != null) {
       listReportItems.add(
         TbIrSpaceBox(height: 10),
       );
-      MemoryImage? image = incidentReportDto?.memorySketchImage;
+      MemoryImage? image = incidentReportData.memorySketchImage;
       if (image != null) {
         var w = TbIncidentReportSketchImage(
           image: image,
@@ -724,12 +726,12 @@ class TbIrPdfGenerator {
     );
     var incidentReportYesNoOptions = TbIrQuestionRow(
       question: "WAS ANY FIRST ADD GIVEN?",
-      answer: incidentReportDto?.firstAidGiven ?? 0,
+      answer: incidentReportData.firstAidGiven ?? 0,
     );
     listReportItems.add(incidentReportYesNoOptions);
     // show the first add given details on pdf
 
-    if (incidentReportDto?.firstAidGiven == YesAndNoOptions.yes.index) {
+    if (incidentReportData.firstAidGiven == YesAndNoOptions.yes.index) {
       /// adding the extra Space
       listReportItems.add(
         TbIrSpaceBox(
@@ -738,7 +740,7 @@ class TbIrPdfGenerator {
       );
       var firstBox = TbIrInfoBox(
         title: "WHO GAVE THE FIRST AID?",
-        value: incidentReportDto?.firstAidDetails ?? "",
+        value: incidentReportData.firstAidDetails ?? "",
       );
       listReportItems.add(firstBox);
     }
@@ -761,8 +763,7 @@ class TbIrPdfGenerator {
     );
 
     var footerHeight = TbPdfHelper().calculateHeightOfWidget(
-      widget:
-          TbIrFooter(companyEntity: incidentReportDto?.companyDto, pageNo: 0),
+      widget: TbIrFooter(pageNo: 0),
       width: TbIrPdfDimension.pageWidth,
     );
 
@@ -781,7 +782,7 @@ class TbIrPdfGenerator {
     // render it till its not next page
     int imageTitleRendered = 0;
 
-    var titleWidget = TbIrImageTitle(incidentReportEntity: incidentReportDto!);
+    var titleWidget = TbIrImageTitle(incidentReportEntity: incidentReportData!);
     var titleHeight = TbPdfHelper().calculateHeightOfWidget(
         widget: titleWidget, width: TbIrPdfDimension.pageWidth);
 
@@ -830,7 +831,7 @@ class TbIrPdfGenerator {
     }
     // holds the listIncidentInjuryPhoto
     List<IrInjuryPhoto> incidentPhotosList =
-        incidentReportDto?.listIncidentInjuryPhoto ?? [];
+        incidentReportData.listIncidentInjuryPhoto ?? [];
 
     // holds the particular Image Widget
     List<Widget> listImageItem = [];
@@ -855,9 +856,9 @@ class TbIrPdfGenerator {
       // title yet on this page
       if (imageTitleRendered == 0) {
         imageTitleRendered = 1;
-        if (incidentReportDto != null) {
+        if (incidentReportData != null) {
           listReportItems
-              .add(TbIrImageTitle(incidentReportEntity: incidentReportDto!));
+              .add(TbIrImageTitle(incidentReportEntity: incidentReportData!));
         }
 
         remainingHeight = remainingHeight - titleHeight;
@@ -930,11 +931,11 @@ class TbIrPdfGenerator {
       remainingHeight = consumablePageHeight;
 
       if (imageTitleWidget !=
-          TbIrImageTitle(incidentReportEntity: incidentReportDto!)) {
+          TbIrImageTitle(incidentReportEntity: incidentReportData!)) {
         if (imageTitleRendered == 0) {
           imageTitleRendered = 1;
           listReportItems
-              .add(TbIrImageTitle(incidentReportEntity: incidentReportDto!));
+              .add(TbIrImageTitle(incidentReportEntity: incidentReportData!));
           remainingHeight = remainingHeight - titleHeight;
         }
       }
@@ -954,10 +955,10 @@ class TbIrPdfGenerator {
 //   /* ************************************** */
 //   Future<MemoryImage?> returnTbIncidentReportSketchImage() async {
 //     MemoryImage? irSketchImage;
-//     if (incidentReportDto?.uniqueKey != null &&
-//         incidentReportDto?.uniqueKey != "") {
+//     if (incidentReportData?.uniqueKey != null &&
+//         incidentReportData?.uniqueKey != "") {
 //       String sketchImagePath = FileManager.returnIncidentReportSketchPath(
-//         uniqueKey: incidentReportDto?.uniqueKey ?? '',
+//         uniqueKey: incidentReportData?.uniqueKey ?? '',
 //       );
 //       irSketchImage = await TbPdfHelper().image(sketchImagePath);
 //     }
@@ -985,7 +986,8 @@ class TbIrPdfGenerator {
   /* ************************************** */
 
   void showWitnessDetails() {
-    var listWitnessDetails = incidentReportDto?.listIncidentReportWitness ?? [];
+    var listWitnessDetails =
+        incidentReportData.listIncidentReportWitness ?? [];
 
     if (listWitnessDetails.isNotEmpty) {
       listReportItems.add(
@@ -1019,9 +1021,9 @@ class TbIrPdfGenerator {
   /* ************************************** */
 
   String returnTextForTimeOffWork() {
-    if (incidentReportDto?.offWorkNeed == IrOffWorkNeedType.lessThan3days) {
+    if (incidentReportData.offWorkNeed == IrOffWorkNeedType.lessThan3days) {
       return "Less than 3 days";
-    } else if (incidentReportDto?.offWorkNeed ==
+    } else if (incidentReportData.offWorkNeed ==
         IrOffWorkNeedType.moreThan3days) {
       return "More than 3 days";
     } else {
@@ -1034,12 +1036,13 @@ class TbIrPdfGenerator {
   /* ************************************** */
 
   String returnTextForConnection() {
-    if (incidentReportDto?.connectionToIncident == IrConnectionType.colleague) {
+    if (incidentReportData.connectionToIncident ==
+        IrConnectionType.colleague) {
       return "Colleague";
-    } else if (incidentReportDto?.connectionToIncident ==
+    } else if (incidentReportData.connectionToIncident ==
         IrConnectionType.firstAider) {
       return "First Aider";
-    } else if (incidentReportDto?.connectionToIncident ==
+    } else if (incidentReportData.connectionToIncident ==
         IrConnectionType.witness) {
       return "Witness";
     } else {
@@ -1048,16 +1051,16 @@ class TbIrPdfGenerator {
   }
 
   String returnTextForReasonOfPressence() {
-    if (incidentReportDto?.reasonForPresence ==
+    if (incidentReportData.reasonForPresence ==
         IrReasonForPresenceType.customer) {
       return "Customer";
-    } else if (incidentReportDto?.reasonForPresence ==
+    } else if (incidentReportData.reasonForPresence ==
         IrReasonForPresenceType.deliveryDriver) {
       return "Delivery Driver";
-    } else if (incidentReportDto?.reasonForPresence ==
+    } else if (incidentReportData.reasonForPresence ==
         IrReasonForPresenceType.subContractor) {
       return "Sub Contractor";
-    } else if (incidentReportDto?.reasonForPresence ==
+    } else if (incidentReportData.reasonForPresence ==
         IrReasonForPresenceType.vistor) {
       return "Visitor";
     } else {
@@ -1066,11 +1069,11 @@ class TbIrPdfGenerator {
   }
 
   String returnTextForWhatHappenNext() {
-    if (incidentReportDto?.whatHappenNext == "0") {
+    if (incidentReportData.whatHappenNext == "0") {
       return "Back to Work";
-    } else if (incidentReportDto?.whatHappenNext == "1") {
+    } else if (incidentReportData.whatHappenNext == "1") {
       return "Doctor";
-    } else if (incidentReportDto?.whatHappenNext == "2") {
+    } else if (incidentReportData.whatHappenNext == "2") {
       return "Hospital";
     } else {
       return "Other";
@@ -1078,16 +1081,16 @@ class TbIrPdfGenerator {
   }
 
   String returnTextForInjurySeriousNess() {
-    if (incidentReportDto?.injurySeriousness ==
+    if (incidentReportData.injurySeriousness ==
         IrInjurySeriousNessType.noInjury) {
       return "No Injury";
-    } else if (incidentReportDto?.injurySeriousness ==
+    } else if (incidentReportData.injurySeriousness ==
         IrInjurySeriousNessType.minorInjury) {
       return "Minor Injury";
-    } else if (incidentReportDto?.injurySeriousness ==
+    } else if (incidentReportData.injurySeriousness ==
         IrInjurySeriousNessType.lostTimeInjury) {
       return "Lost Time Injury";
-    } else if (incidentReportDto?.injurySeriousness ==
+    } else if (incidentReportData.injurySeriousness ==
         IrInjurySeriousNessType.severeInjury) {
       return "Severe Injury";
     } else {
@@ -1102,49 +1105,48 @@ class TbIrPdfGenerator {
   /* ************************************** */
 
   void showIncidentReportMapLocationImage() {
-    MemoryImage? mapImage = incidentReportDto?.memoryLocationMapImage;
+    MemoryImage? mapImage = incidentReportData.memoryLocationMapImage;
 
     if (mapImage != null) {
       var mapImageWidget = TbIncidentReportLocationImage(
         image: mapImage,
-        incidentReportDto: incidentReportDto,
+        incidentReportData: incidentReportData,
       );
       listReportItems.add(mapImageWidget);
     }
   }
 
   Future<IrPdfData> preparePdfs({
-    required IrPdfData incidentReportDto,
+    required IrPdfData incidentReportData,
   }) async {
-    incidentReportDto.companyDto?.companyLogoMemoryImage = await TbPdfHelper()
+    incidentReportData.companyLogoMemoryImage = await TbPdfHelper()
+        .generateMemoryImageForPath(incidentReportData.companyLogo ?? "");
+    incidentReportData.userSignature?.signatureMemoryImage = await TbPdfHelper()
         .generateMemoryImageForPath(
-            incidentReportDto.companyDto?.imagePath ?? "");
-    incidentReportDto.userSignature?.signatureMemoryImage = await TbPdfHelper()
-        .generateMemoryImageForPath(
-            incidentReportDto.userSignature?.signature ?? "");
+            incidentReportData.userSignature?.signature ?? "");
 
-    incidentReportDto.memoryLocationMapImage = await TbPdfHelper()
+    incidentReportData.memoryLocationMapImage = await TbPdfHelper()
         .generateMemoryImageForPath(
-            incidentReportDto.locationMapImagePath ?? "");
+            incidentReportData.locationMapImagePath ?? "");
 
-    incidentReportDto.memorySketchImage = await TbPdfHelper()
+    incidentReportData.memorySketchImage = await TbPdfHelper()
         .generateMemoryImageForPath(
-            incidentReportDto.bodySketchImagePath ?? "");
+            incidentReportData.bodySketchImagePath ?? "");
     // Section Images
-    await Future.forEach(incidentReportDto.listIncidentInjuryPhoto ?? [],
+    await Future.forEach(incidentReportData.listIncidentInjuryPhoto ?? [],
         (element) async {
       IrInjuryPhoto incidentInjuryPhoto = element;
       incidentInjuryPhoto.memoryImage = await TbPdfHelper()
-          .generateMemoryImageForPath(incidentInjuryPhoto.irImagePath ?? "");
+          .generateMemoryImageForPath(incidentInjuryPhoto.image ?? "");
     });
 
-    return incidentReportDto;
+    return incidentReportData;
     // Section Images
-    // await Future.forEach(incidentReportDto.listIncidentInjuryPhoto ?? [],
+    // await Future.forEach(incidentReportData.listIncidentInjuryPhoto ?? [],
     //     (element) async {
-    //   IncidentInjuryPhotoDto sectionEntity = element;
+    //   IncidentInjuryPhotoData sectionEntity = element;
     //   await Future.forEach(sectionEntity.image ?? [], (imageEntity) async {
-    //     SectionImageDto sectionImageDto = imageEntity;
+    //     SectionImageData sectionImageData = imageEntity;
     //   });
     // });
   }

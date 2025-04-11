@@ -20,7 +20,6 @@ class AuditPdfData {
   String refName;
   int tableStatus;
 
-
   AuditPdfData({
     required this.date,
     required this.titleForPDF,
@@ -34,8 +33,7 @@ class AuditPdfData {
     required this.userSignature,
     required this.sectionsData,
     required this.refName,
-    this.tableStatus =0,
-
+    this.tableStatus = 0,
   });
 
   /// Converts this object to a map for JSON serialization
@@ -46,8 +44,6 @@ class AuditPdfData {
       'companyLogo': companyLogo,
       'ref_name': refName,
       "table_status": tableStatus,
-
-      // Note: MemoryImage can't be directly serialized to JSON
       'companyDetails': companyDetails,
       'companyPhoneEmail': companyPhoneEmail,
       'projectDetails': projectDetails.map((x) => x.toJson()).toList(),
@@ -62,11 +58,9 @@ class AuditPdfData {
     return AuditPdfData(
       titleForPDF: json['titleForPDF'],
       date: json['date'],
-      refName:  json['ref_name'],
+      refName: json['ref_name'],
       companyLogo: json['companyLogo'],
-      tableStatus:  json['table_status'],
-
-      
+      tableStatus: json['table_status'],
       companyLogoMemoryImage: null, // Can't deserialize MemoryImage
       companyDetails: json['companyDetails'],
       companyPhoneEmail: json['companyPhoneEmail'],
@@ -91,7 +85,8 @@ class AuditPdfSection {
 
   /// Images attached to this section
   final List<String>? images;
-  final List<MemoryImage>? memoryImages;
+  // final List<MemoryImage>? memoryImages;
+  final List<SectionImageData>? sectionImages;
 
   /// Questions contained in this section
   final List<AuditPdfQuestion> questions;
@@ -100,8 +95,9 @@ class AuditPdfSection {
   AuditPdfSection({
     this.name,
     this.description,
+    this.sectionImages,
     this.images,
-    this.memoryImages,
+    // this.memoryImages,
     this.questions = const [],
   });
 
@@ -110,7 +106,7 @@ class AuditPdfSection {
     return {
       'name': name,
       'description': description,
-      'images': images,
+      'images': sectionImages,
       // Note: MemoryImage can't be directly serialized to JSON
       'questions': questions.map((x) => x.toJson()).toList(),
     };
@@ -123,8 +119,12 @@ class AuditPdfSection {
     return AuditPdfSection(
       name: json['name'],
       description: json['description'],
-      images: json['images'] != null ? List<String>.from(json['images']) : null,
-      memoryImages: null, // Can't deserialize MemoryImage
+      // images: json['images'] != null ? List<String>.from(json['images']) : null,
+      sectionImages: (json["images"] as List<dynamic>?)
+          ?.map(
+            (item) => SectionImageData.fromJson(item as Map<String, dynamic>),
+          )
+          .toList(), // Can't deserialize MemoryImage
       questions: json['questions'] != null
           ? List<AuditPdfQuestion>.from((json['questions'] as List)
               .map((x) => AuditPdfQuestion.fromJson(x)))
@@ -161,6 +161,8 @@ class AuditPdfQuestion {
   final List<String>? images;
   final List<MemoryImage>? memoryImages;
 
+  final List<QuestionImageData>? questionImages;
+
   /// Creates a new [AuditPdfQuestion]
   AuditPdfQuestion({
     this.listChainOption,
@@ -173,6 +175,7 @@ class AuditPdfQuestion {
     this.images,
     this.memoryImages,
     required this.questionLevel,
+    this.questionImages,
   });
 
   /// Converts this object to a map for JSON serialization
@@ -206,8 +209,60 @@ class AuditPdfQuestion {
           ? List<String>.from(json['listChainOption'])
           : null,
       chainOptionsString: json['chainOptionsString'],
-      images: json['images'] != null ? List<String>.from(json['images']) : null,
+      // images: json['images'] != null ? List<String>.from(json['images']) : null,
+      // images:  ,
+      questionImages: (json["images"] as List<dynamic>?)
+          ?.map(
+            (item) => QuestionImageData.fromJson(item as Map<String, dynamic>),
+          )
+          .toList(),
       memoryImages: null, // Can't deserialize MemoryImage
+    );
+  }
+}
+
+class SectionImageData {
+  MemoryImage? memoryImage;
+  String? image;
+  String? referenceNo;
+
+  SectionImageData({
+    this.image,
+    this.referenceNo,
+    this.memoryImage,
+  });
+  Map<String, dynamic> toJson() {
+    return {
+      'image': image,
+      'referenceNo': referenceNo,
+    };
+  }
+
+  factory SectionImageData.fromJson(Map<String, dynamic> json) {
+    return SectionImageData(
+      image: json['image'],
+      referenceNo: json['referenceNo'] as String?,
+    );
+  }
+}
+
+class QuestionImageData {
+  MemoryImage? memoryImage;
+
+  String? image;
+
+  QuestionImageData({
+    this.image,
+    this.memoryImage,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {"image": image};
+  }
+
+  factory QuestionImageData.fromJson(Map<String, dynamic> json) {
+    return QuestionImageData(
+      image: json['image'],
     );
   }
 }

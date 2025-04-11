@@ -43,6 +43,11 @@ class TbAuditPdfGenerator {
 
   /// Generates a PDF document from the provided [pdfData].
   Future<Uint8List> generatePDF() async {
+    /// update the audit pdf images
+    await prepareAuditPDFImages(
+      auditPdfData: pdfData,
+    );
+
     final pdf = pw.Document();
 
     // Add company details section
@@ -189,9 +194,15 @@ class TbAuditPdfGenerator {
       // }
       // auditPdfItems.add(Container(height: 5));
 
+      List<pw.MemoryImage> listSectionImages = [];
+
       // Add section images if available
-      if ((section.memoryImages?.isNotEmpty ?? false)) {
-        auditPdfItems.add(_buildSectionImagesRow(section.memoryImages!));
+      if ((section.sectionImages?.isNotEmpty ?? false)) {
+        for (SectionImageData sectionImageData in section.sectionImages ?? []) {
+          listSectionImages.add(sectionImageData.memoryImage!);
+        }
+
+        auditPdfItems.add(_buildSectionImagesRow(listSectionImages));
       }
 
       // Variables to track chain options
@@ -279,11 +290,11 @@ class TbAuditPdfGenerator {
 
         List<MemoryImage> listQuestionImage = [];
         // Process question images if available
-        if (question.memoryImages != null &&
-            question.memoryImages!.isNotEmpty) {
-          for (final image in question.memoryImages!) {
+        if (question.questionImages != null &&
+            question.questionImages!.isNotEmpty) {
+          for (QuestionImageData image in question.questionImages ?? []) {
             // auditImageList.add(image);
-            listQuestionImage.add(image);
+            listQuestionImage.add(image.memoryImage!);
 
             // auditPdfItems.add(
             //   Container(
@@ -600,5 +611,52 @@ class TbAuditPdfGenerator {
         },
       ),
     );
+  }
+
+  /* *********************************** / 
+   // PREPARE AUDIT PDF IMAGES
+   
+   /// 
+  / ************************************ */
+  Future<void> prepareAuditPDFImages({
+    required AuditPdfData auditPdfData,
+  }) async {
+    // Process company logo
+    if (auditPdfData.companyLogo != null) {
+      auditPdfData.companyLogoMemoryImage = await TbPdfHelper()
+          .generateMemoryImageForPath(auditPdfData.companyLogo!);
+    }
+
+    // Process user signature
+    if (auditPdfData.userSignature.signature != null) {
+      auditPdfData.userSignature.signatureMemoryImage =
+          await TbPdfHelper().generateMemoryImageForPath(
+        auditPdfData.userSignature.signature!,
+      );
+    }
+
+    // Process section images
+    for (var section in auditPdfData.sectionsData) {
+      if (section.sectionImages != null) {
+        for (var sectionImage in section.sectionImages!) {
+          if (sectionImage.image != null) {
+            sectionImage.memoryImage = await TbPdfHelper()
+                .generateMemoryImageForPath(sectionImage.image!);
+          }
+        }
+      }
+
+      // Process question images within sections
+      for (var question in section.questions) {
+        if (question.questionImages != null) {
+          for (var questionImage in question.questionImages!) {
+            if (questionImage.image != null) {
+              questionImage.memoryImage = await TbPdfHelper()
+                  .generateMemoryImageForPath(questionImage.image!);
+            }
+          }
+        }
+      }
+    }
   }
 }

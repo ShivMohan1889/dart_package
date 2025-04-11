@@ -13,5 +13,6 @@ export 'src/ms/ms_pdf_data.dart';
 export 'src/ra/ra_pdf_data.dart';
 export 'src/ra/tb_ra_pdf_generator.dart';
 export 'src/audit/audit_pdf_data.dart';
+export 'src/ir/model/ir_pdf_data.dart';
 
 export 'src/utils/utils.dart';

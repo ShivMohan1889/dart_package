@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:dart_pdf_package/src/ir/dto/incident_report_dto.dart';
+import 'package:dart_pdf_package/src/ir/model/ir_pdf_data.dart';
 import 'package:dart_pdf_package/src/utils/enums/incident_report_enum.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial.dart';
 import 'package:dart_pdf_package/src/utils/pdf/assets/fonts/arial_1.dart';

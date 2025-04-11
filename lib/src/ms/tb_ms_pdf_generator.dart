@@ -1087,7 +1087,9 @@ class TbMsPdfGenerator {
   }
 
   /// Process hazard icons
-  Future<void> _processHazardIcons(List<HazardIconData> hazardIcons) async {
+  Future<void> _processHazardIcons(
+    List<HazardIconData> hazardIcons,
+  ) async {
     for (var hazardIcon in hazardIcons) {
       if (hazardIcon.icon != null) {
         hazardIcon.iconMemoryImage =
@@ -1096,8 +1098,9 @@ class TbMsPdfGenerator {
     }
   }
 
-  Future<void> _processReviewSignOff(
-      {required List<ReviewSignOffSignatureData> signOffSignatures}) async {
+  Future<void> _processReviewSignOff({
+    required List<ReviewSignOffSignatureData> signOffSignatures,
+  }) async {
     for (ReviewSignOffSignatureData signOff in signOffSignatures) {
       if ((signOff.signature ?? "").isNotEmpty) {
         signOff.signatureMemoryImage =
