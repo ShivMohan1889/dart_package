@@ -13,6 +13,7 @@ class MsHeaderRow extends StatelessWidget {
   final String companyDetails;
   final String companyPhoneEmail;
   final String titleForPdf;
+  final EdgeInsets? paddingForHorizontal;
 
   /// holds the pages number
   final int? pagesNo;
@@ -23,6 +24,7 @@ class MsHeaderRow extends StatelessWidget {
     this.companyLogoMemoryImage,
     required this.companyPhoneEmail,
     required this.titleForPdf,
+    this.paddingForHorizontal,
   });
 
   @override
@@ -38,7 +40,7 @@ class MsHeaderRow extends StatelessWidget {
             width: TbMsPdfWidth.pageWidth,
 
             // color: PdfColors.amber,
-            padding: MsPdfPaddings.rightPadding,
+            padding: paddingForHorizontal ?? MsPdfPaddings.rightPadding,
             // padding: MsPdfPaddings.pageHorizontalPadding,
             height: MsPdfHeights.blankSpaceContainerHeight,
             child: Row(

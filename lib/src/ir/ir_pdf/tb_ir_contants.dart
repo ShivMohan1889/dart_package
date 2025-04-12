@@ -98,7 +98,9 @@ class TbIncidentReportPdfColor {
   static PdfColor black = PdfColor.fromHex("#000");
   static PdfColor white = PdfColor.fromHex("#fff");
 
-  static PdfColor incidentReportThemeColor = PdfColor.fromHex("#23a070");
+  // static PdfColor incidentReportThemeColor = PdfColor.fromHex("#23a070");
+
+  static PdfColor incidentReportThemeColor = PdfColor.fromHex("#acacac");
 
   static PdfColor incidentReportGreyColor = PdfColor.fromHex("#cccccc");
 
@@ -114,7 +116,6 @@ class TbIncidentReportPdfColor {
       // PdfColor.fromHex("#555555");
       PdfColor.fromHex("#666666");
 }
-
 
 /// padding for audit pdf
 class TbIrPadding {
@@ -151,7 +152,7 @@ class TbIrPadding {
   static EdgeInsets paddingForLocationImage = const EdgeInsets.only(
     left: 20,
     right: 20,
-    top: 5,
+    top: 10,
   );
 
   static EdgeInsets paddingForIrPdfImageRow = const EdgeInsets.only(

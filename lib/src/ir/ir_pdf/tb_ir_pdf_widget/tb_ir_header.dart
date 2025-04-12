@@ -1,51 +1,91 @@
+import 'package:dart_pdf_package/src/audit/audit_pdf_constants.dart';
 import 'package:dart_pdf_package/src/ir/ir_pdf/tb_ir_contants.dart';
+import 'package:dart_pdf_package/src/ms/ms_pdf_widget/ms_company_details_row.dart';
+import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
+import 'package:dart_pdf_package/src/utils/pdf/tb_pdf_helper.dart';
 import 'package:pdf/pdf.dart';
+
 import 'package:pdf/widgets.dart';
 
-class TbIrHeader extends StatelessWidget {
-  final MemoryImage incidentReportLogoImage;
-  final MemoryImage? companyLogoImage;
+/// this widget is use to show  header   of the pdf
+class IrHeaderRow extends StatelessWidget {
+  final MemoryImage? companyLogoMemoryImage;
+  final String companyDetails;
+  final String companyPhoneEmail;
+  final String titleForPdf;
+  final EdgeInsets? paddingForHorizontal;
 
-  TbIrHeader({
-    required this.incidentReportLogoImage,
-    this.companyLogoImage,
+  /// holds the pages number
+  final int? pagesNo;
+
+  IrHeaderRow({
+    this.pagesNo,
+    required this.companyDetails,
+    this.companyLogoMemoryImage,
+    required this.companyPhoneEmail,
+    required this.titleForPdf,
+    this.paddingForHorizontal,
   });
 
   @override
   Widget build(Context context) {
     return Container(
-      height: TbIrPdfDimension.headerHeight,
-      padding: TbIrPadding.headerPadding,
-      width: TbIrPdfDimension.pageWidth,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      // color: PdfColors.amber,
+      // padding: EdgeInsets.only(
+      //   bottom: 10,
+      // ),
+      child: Column(
         children: [
           Container(
-            height: TbIrPdfDimension.irLogoImageHeight,
-            width: TbIrPdfDimension.irLogoWidth,
-            child: Image(
-              incidentReportLogoImage,
+            width: TbIrPdfDimension.pageWidth,
+            height: MsPdfHeights.blankSpaceContainerHeight,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                textWidget(
+                  context: context,
+                ),
+                companyLogoMemoryImage != null
+                    ? Container(
+                        // color: RaPdfColors.black,
+                        height: 80,
+                        width: 80,
+                        child: Image(
+                          companyLogoMemoryImage!,
+                          height: 60,
+                          width: 80,
+                        ),
+                      )
+                    : Container()
+              ],
             ),
           ),
-          Container(
-            width: TbIrPdfDimension.pageWidth -
-                79 -
-                80 -
-                TbIrPdfDimension.spaceUsedForPadding,
+          MsCompanyDetailsRow(
+            companyDetails: companyDetails,
+            companyPhoneEmail: companyPhoneEmail,
+            horizontalPadding: EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
           ),
-          companyLogoImage != null
-              ? Container(
-                  color: PdfColors.purple,
-                  height: 100,
-                  width: 100,
-                  child: Image(
-                    companyLogoImage!,
-                    height: TbIrPdfDimension.companyLogoImageHeight,
-                    width: TbIrPdfDimension.companyLogoImageWidth,
-                  ))
-              : Container()
         ],
+      ),
+    );
+  }
+
+  Widget textWidget({
+    required Context context,
+  }) {
+    return Container(
+      padding: MsPdfPaddings.pageHorizontalPadding,
+      child: Text(
+        titleForPdf,
+        // style: raPdfTextStyles.headerTextStyle(),
+        style: TbPdfHelper().textStyleGenerator(
+          font: Theme.of(context).header0.fontBold,
+          color: TbMsPdfColors.black,
+          fontSize: 13,
+        ),
       ),
     );
   }

@@ -18,15 +18,13 @@ class IrPdfData {
   int? anyWitness = 0;
   String? bodySketchPath;
   int? isSubscribed;
-
   int? connectionToIncident;
   String? areaManagerName;
   String? currentLocation;
   String? location;
-  int? departmentId;
   int? firstAidGiven = 0;
   String? firstAidDetails;
-  int? folderId;
+
   String? howRelatedToWork;
   String? illHealthComment;
   String? injuredBodyPart;
@@ -129,10 +127,8 @@ class IrPdfData {
     this.bodySketchPath,
     this.connectionToIncident,
     this.currentLocation,
-    this.departmentId,
     this.firstAidGiven = 0,
     this.firstAidDetails,
-    this.folderId,
     this.howRelatedToWork,
     this.illHealthComment,
     this.injuredBodyPart,
@@ -156,6 +152,7 @@ class IrPdfData {
     this.procoreId,
     this.reasonForPresence,
     this.refNo,
+    this.titleForPDF,
     this.reportedRelation = 0,
     this.reportingDate,
     this.reportingType,
@@ -195,15 +192,12 @@ class IrPdfData {
       'anyWitness': anyWitness,
       'bodySketchPath': bodySketchPath,
       'isSubscribed': isSubscribed,
-      // 'companyId': companyId,
       'connectionToIncident': connectionToIncident,
       'areaManagerName': areaManagerName,
       'currentLocation': currentLocation,
       'location': location,
-      'departmentId': departmentId,
       'firstAidGiven': firstAidGiven,
       'firstAidDetails': firstAidDetails,
-      'folderId': folderId,
       'howRelatedToWork': howRelatedToWork,
       'illHealthComment': illHealthComment,
       'injuredBodyPart': injuredBodyPart,
@@ -220,9 +214,7 @@ class IrPdfData {
       'offWorkNeed': offWorkNeed,
       'otherBodyPart': otherBodyPart,
       'otherConnection': otherConnection,
-      'pdfPath': pdfPath,
       'preventionOfIncident': preventionOfIncident,
-      'procoreId': procoreId,
       'reasonForPresence': reasonForPresence,
       'refNo': refNo,
       'reportedRelation': reportedRelation,
@@ -235,24 +227,27 @@ class IrPdfData {
       'whatHappenNext': whatHappenNext,
       'zipCode': zipCode,
       'otherReasonForPresence': otherReasonForPresence,
-      'isDraft': isDraft,
       'reportingManagerId': reportingManagerId,
       'reportingTime': reportingTime,
       'userData': userSignature?.toJson(),
-      'incidentReportManagerData': incidentReportManagerData?.toJson(),
-      'incidentReportUsers': incidentReportUsers?.toJson(),
-      'incidentReportInjuryPerson': incidentReportInjuryPerson?.toJson(),
-      'listIncidentReportManager':
-          listIncidentReportManager?.map((e) => e.toJson()).toList(),
-      'listIncidentReportInjuryOptions':
+      'irManagerData': incidentReportManagerData?.toJson(),
+      'irUsers': incidentReportUsers?.toJson(),
+      'irInjuryPerson': incidentReportInjuryPerson?.toJson(),
+      'irManager': listIncidentReportManager?.map((e) => e.toJson()).toList(),
+      // 'listIncidentReportInjuryOptions':
+      "irInjuryOptionsData":
           listIncidentReportInjuryOptions?.map((e) => e.toJson()).toList(),
-      'listIncidentReportOptions':
-          listIncidentReportOptions?.map((e) => e.toJson()).toList(),
-      'listIncidentInjuryPhoto':
-          listIncidentInjuryPhoto?.map((e) => e.toJson()).toList(),
-      'listIncidentReportWitness':
+      // 'listIncidentReportOptions':
+      // "irOptionsData":
+      //     listIncidentReportOptions?.map((e) => e.toJson()).toList(),
+      // 'listIncidentInjuryPhoto':
+      "irInjuryPhoto": listIncidentInjuryPhoto?.map((e) => e.toJson()).toList(),
+      // 'listIncidentReportWitness':
+
+      "irWitnessData":
           listIncidentReportWitness?.map((e) => e.toJson()).toList(),
-      'listIncidentInjuredBodyParts':
+      // 'listIncidentInjuredBodyParts':
+      "irInjuredBodyPart":
           listIncidentInjuredBodyParts?.map((e) => e.toJson()).toList(),
     };
   }
@@ -274,10 +269,8 @@ class IrPdfData {
       areaManagerName: json['areaManagerName'],
       currentLocation: json['currentLocation'],
       location: json['location'],
-      departmentId: json['departmentId'],
       firstAidGiven: json['firstAidGiven'] ?? 0,
       firstAidDetails: json['firstAidDetails'],
-      folderId: json['folderId'],
       howRelatedToWork: json['howRelatedToWork'],
       illHealthComment: json['illHealthComment'],
       injuredBodyPart: json['injuredBodyPart'],
@@ -294,7 +287,6 @@ class IrPdfData {
       offWorkNeed: json['offWorkNeed'],
       otherBodyPart: json['otherBodyPart'],
       otherConnection: json['otherConnection'],
-      pdfPath: json['pdfPath'],
       preventionOfIncident: json['preventionOfIncident'],
       procoreId: json['procoreId'],
       reasonForPresence: json['reasonForPresence'],
@@ -330,7 +322,7 @@ class IrPdfData {
               .toList() ??
           [],
       listIncidentReportInjuryOptions:
-          (json['listIncidentReportInjuryOptions'] as List<dynamic>?)
+          (json['irInjuryOptionsData'] as List<dynamic>?)
                   ?.map((e) => IrInjuryOptionData.fromJson(e))
                   .toList() ??
               [],

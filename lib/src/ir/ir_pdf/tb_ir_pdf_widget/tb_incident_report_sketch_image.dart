@@ -14,7 +14,12 @@ class TbIncidentReportSketchImage extends StatelessWidget {
   @override
   Widget build(Context context) {
     return Container(
-      padding: TbIrPadding.defaultPadding,
+      // padding: TbIrPadding.defaultPadding,
+      padding: EdgeInsets.only(
+        top: 10,
+        left: 20,
+        right: 20,
+      ),
       child: Row(
         children: [
           Column(

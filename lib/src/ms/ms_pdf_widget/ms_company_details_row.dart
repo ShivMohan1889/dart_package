@@ -7,10 +7,12 @@ import '../../utils/pdf/tb_pdf_helper.dart';
 class MsCompanyDetailsRow extends StatelessWidget {
   final String? companyDetails;
   final String? companyPhoneEmail;
+  final EdgeInsets? horizontalPadding;
 
   MsCompanyDetailsRow({
     this.companyDetails,
     this.companyPhoneEmail,
+    this.horizontalPadding,
   });
 
   final raPdfTextStyles = MsPdfTextStyles();
@@ -21,7 +23,7 @@ class MsCompanyDetailsRow extends StatelessWidget {
       width: double.infinity,
       color: MsPdfColors.greyCompanyDetailsBackground,
       child: Container(
-        padding: MsPdfPaddings.pageHorizontalPadding,
+        padding: horizontalPadding ?? MsPdfPaddings.pageHorizontalPadding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
