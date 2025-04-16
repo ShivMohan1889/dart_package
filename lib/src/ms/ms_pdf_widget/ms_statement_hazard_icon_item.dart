@@ -1,3 +1,4 @@
+import 'package:dart_pdf_package/dart_pdf_package.dart';
 import 'package:dart_pdf_package/src/ms/tb_ms_pdf_constants.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
@@ -51,9 +52,10 @@ class MsStatementHazardIconItem extends StatelessWidget {
               child: Text(
                 iconText!,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: PdfColors.white,
-                  fontSize: 7, // Slightly smaller text
+                style: TbPdfHelper().textStyleGenerator(
+                  font: Theme.of(context).header0.fontBold,
+                  color: TbMsPdfColors.white,
+                  fontSize: 12,
                 ),
               ),
             ),

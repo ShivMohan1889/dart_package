@@ -36,7 +36,8 @@ class MsTitleRow extends StatelessWidget {
                     font: Theme.of(context).header0.fontBold,
                     color: TbMsPdfColors.white,
                     fontSize: 14,
-                  )),
+                  ),
+                  ),
             ),
           ),
           Container(
