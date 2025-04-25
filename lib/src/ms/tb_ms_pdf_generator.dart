@@ -201,7 +201,7 @@ class TbMsPdfGenerator {
             pagesNo: context.pageNumber,
             companyDetails: pdfData.companyDetails,
             companyPhoneEmail: pdfData.companyPhoneEmail ?? "",
-            titleForPdf: "METHOD ASSESSMENT",
+            titleForPdf: pdfData.titleForPDF,
             companyLogoMemoryImage: pdfData.companyLogoMemoryImage,
           );
         },

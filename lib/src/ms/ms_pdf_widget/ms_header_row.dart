@@ -78,7 +78,7 @@ class MsHeaderRow extends StatelessWidget {
     return Container(
       padding: MsPdfPaddings.pageHorizontalPadding,
       child: Text(
-        titleForPdf,
+        titleForPdf.toUpperCase(),
         // style: raPdfTextStyles.headerTextStyle(),
         style: TbPdfHelper().textStyleGenerator(
           font: Theme.of(context).header0.fontBold,
