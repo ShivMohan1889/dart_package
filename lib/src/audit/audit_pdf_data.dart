@@ -51,6 +51,7 @@ class AuditPdfData {
       'referenceNo': referenceNo,
       'isSubscribed': isSubscribed,
       'sectionsData': sectionsData.map((x) => x.toJson()).toList(),
+      "auditSummary": []
     };
   }
 
@@ -162,6 +163,7 @@ class AuditPdfQuestion {
   final List<MemoryImage>? memoryImages;
 
   final List<QuestionImageData>? questionImages;
+  final int? answerType;
 
   /// Creates a new [AuditPdfQuestion]
   AuditPdfQuestion({
@@ -176,6 +178,7 @@ class AuditPdfQuestion {
     this.memoryImages,
     required this.questionLevel,
     this.questionImages,
+    this.answerType,
   });
 
   /// Converts this object to a map for JSON serialization
@@ -190,6 +193,8 @@ class AuditPdfQuestion {
       'listChainOption': listChainOption,
       'chainOptionsString': chainOptionsString,
       'images': images,
+      "answerType":answerType,
+
       // Note: MemoryImage can't be directly serialized to JSON
     };
   }

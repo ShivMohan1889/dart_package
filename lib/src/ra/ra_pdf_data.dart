@@ -53,7 +53,6 @@ class RaPdfData {
     this.msPdfData,
     required this.signOffStatementReport,
     this.mapImagePath,
-
   });
   final String titleForPDF;
   String? companyLogo;
@@ -94,7 +93,7 @@ class RaPdfData {
   final int? hazardIconOpacity;
   String? mapImagePath;
 
-   MemoryImage? mapMemoryImage;
+  MemoryImage? mapMemoryImage;
   final List<HazardPdfModel> hazards;
   final List<String>? keyStaff;
   final List<AssessmentImagePdfModel>? assessmentImages;
@@ -195,8 +194,7 @@ class RaPdfData {
       approvalMode: json['approvalMode'],
       numberOfSigneeRequired: json['numberOfSigneeRequired'],
       hazardIconOpacity: json['hazardIconOpacity'],
-      mapImagePath:   json["mapImagePath"] as String?,
-      
+      mapImagePath: json["mapImagePath"] as String?,
       hazards: (json['hazards'] as List)
           .map((h) => HazardPdfModel.fromJson(h))
           .toList(),
@@ -248,8 +246,6 @@ class HazardPdfModel {
     this.additionalControls,
     this.memoryImage,
     this.imageURL,
-
-
   });
 
   final String name;
@@ -267,7 +263,7 @@ class HazardPdfModel {
   MemoryImage? memoryImage;
   final List<String>? existingControls;
   final List<String>? additionalControls;
-  
+
   /// Convert the model to a JSON map, ignoring MemoryImage fields
   Map<String, dynamic> toJson() {
     return {
@@ -297,10 +293,10 @@ class HazardPdfModel {
       worstCase: json['worstCase'] as String,
       likelihoods: json['likelihoods'],
       // additionalLikelihood: json['additionalLikelihood'],
-      additionalLikelihood:  json['additionalLiklihood'],
+      additionalLikelihood: json['additionalLiklihood'],
       score: json['score'],
       rating: json['rating'],
-      
+
       additionalRating: json['additionalRating'],
       additionalScore: json['additionalScore'],
       cellRiskNumber: json['cellRiskNumber'],
