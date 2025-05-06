@@ -19,6 +19,7 @@ class AuditPdfData {
   final List<AuditPdfSection> sectionsData;
   String refName;
   int tableStatus;
+  List<AuditSummaryTableData>? auditSummary;
 
   AuditPdfData({
     required this.date,
@@ -34,6 +35,7 @@ class AuditPdfData {
     required this.sectionsData,
     required this.refName,
     this.tableStatus = 0,
+    this.auditSummary,
   });
 
   /// Converts this object to a map for JSON serialization
@@ -51,7 +53,7 @@ class AuditPdfData {
       'referenceNo': referenceNo,
       'isSubscribed': isSubscribed,
       'sectionsData': sectionsData.map((x) => x.toJson()).toList(),
-      "auditSummary": []
+      "auditSummary": auditSummary?.map((x) => x.toJson()).toList(),
     };
   }
 
@@ -73,6 +75,37 @@ class AuditPdfData {
       isSubscribed: json['isSubscribed'],
       sectionsData: List<AuditPdfSection>.from((json['sectionsData'] as List)
           .map((x) => AuditPdfSection.fromJson(x))),
+      auditSummary: (json["auditSummary"] as List<dynamic>?)
+          ?.map(
+            (e) => AuditSummaryTableData.fromJson(
+              json,
+            ),
+          )
+          .toList(),
+    );
+  }
+}
+
+class AuditSummaryTableData {
+  String? key;
+  String? value;
+
+  AuditSummaryTableData({
+    this.key,
+    this.value,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'key': key,
+      'value': value,
+    };
+  }
+
+  factory AuditSummaryTableData.fromJson(Map<String, dynamic> json) {
+    return AuditSummaryTableData(
+      key: json['key'],
+      value: json['value'],
     );
   }
 }
@@ -193,7 +226,7 @@ class AuditPdfQuestion {
       'listChainOption': listChainOption,
       'chainOptionsString': chainOptionsString,
       'images': images,
-      "answerType":answerType,
+      "answerType": answerType,
 
       // Note: MemoryImage can't be directly serialized to JSON
     };

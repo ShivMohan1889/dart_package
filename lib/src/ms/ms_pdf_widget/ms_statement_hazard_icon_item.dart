@@ -17,6 +17,9 @@ class MsStatementHazardIconItem extends StatelessWidget {
     // Calculate the actual width based on the container
     double containerWidth =
         (TbMsPdfWidth.pageWidth - 90) / 6; // Account for margins and spacing
+    print("Image Height:${iconImage.height}");
+    print("Image Width:${iconImage.width}");
+    print(iconText);
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
@@ -34,6 +37,10 @@ class MsStatementHazardIconItem extends StatelessWidget {
         children: [
           // Image container
           Container(
+            // color: PdfColors.red,
+            // height: 70,
+            height: 80,
+            alignment: Alignment.center,
             padding: const EdgeInsets.all(5),
             child: Image(
               iconImage,
@@ -47,15 +54,28 @@ class MsStatementHazardIconItem extends StatelessWidget {
           if ((iconText ?? "").isNotEmpty)
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              color: PdfColors.grey600,
+              height: 30,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              decoration: BoxDecoration(
+                  color: PdfColors.grey600,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(3),
+                    bottomRight: Radius.circular(3),
+                  )),
               child: Text(
                 iconText!,
+                // "Technology continues to evolve rapidly",
                 textAlign: TextAlign.center,
+                // style: TbPdfHelper().textStyleGenerator(
+                //   font: Theme.of(context).header0.fontBold,
+                //   color: TbMsPdfColors.white,
+                //   fontSize: 12,
+                // ),
                 style: TbPdfHelper().textStyleGenerator(
-                  font: Theme.of(context).header0.fontBold,
+                  font: Theme.of(context).header0.fontNormal,
                   color: TbMsPdfColors.white,
-                  fontSize: 12,
+                  fontSize: 7,
                 ),
               ),
             ),

@@ -205,9 +205,7 @@ class IrPdfData {
       'injurySeriousness': injurySeriousness,
       'isInfoBeingShared': isInfoBeingShared,
       'isManagerAware': isManagerAware,
-      'isRiddor': isRiddor,
-      'lattitude': lattitude,
-      'longitude': longitude,
+
       'managerName': managerName,
       'mapImagePath': mapImagePath,
       'numberOfDaysOffWork': numberOfDaysOffWork,
@@ -354,24 +352,20 @@ class IrPdfData {
 
 class IrInjuredBodyPartData {
   String? injuredBodyName;
-  int? isSelected = 0;
 
   IrInjuredBodyPartData({
     this.injuredBodyName,
-    this.isSelected = 0,
   });
 
   Map<String, dynamic> toJson() {
     return {
       'injuredBodyName': injuredBodyName,
-      'isSelected': isSelected,
     };
   }
 
   factory IrInjuredBodyPartData.fromJson(Map<String, dynamic> json) {
     return IrInjuredBodyPartData(
       injuredBodyName: json['injuredBodyName'] as String?,
-      isSelected: json['isSelected'] as int?,
     );
   }
 }
@@ -634,7 +628,6 @@ class IrInjuryOptionData {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'order': order,
       'name': name,
       'type': type,
