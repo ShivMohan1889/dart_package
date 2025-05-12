@@ -492,7 +492,8 @@ class TbAuditPdfGenerator {
             pagesNo: context.pageNumber,
             companyDetails: pdfData.companyDetails,
             companyPhoneEmail: pdfData.companyPhoneEmail ?? "",
-            titleForPdf: "METHOD ASSESSMENT",
+            // titleForPdf: "METHOD ASSESSMENT",
+            titleForPdf: pdfData.titleForPDF,
             companyLogoMemoryImage: pdfData.companyLogoMemoryImage,
           );
         },
@@ -598,7 +599,7 @@ class TbAuditPdfGenerator {
             pagesNo: context.pageNumber,
             companyDetails: pdfData.companyDetails,
             companyPhoneEmail: pdfData.companyPhoneEmail ?? "",
-            titleForPdf: "METHOD ASSESSMENT",
+            titleForPdf: pdfData.titleForPDF,
             companyLogoMemoryImage: pdfData.companyLogoMemoryImage,
           );
         },
