@@ -13,7 +13,7 @@ class MsProjectDetailsSection extends StatelessWidget {
     required this.projectDetailsSideRight,
   });
 
-  @override
+@override
   Widget build(Context context) {
     return Container(
       color: PdfColors.white,

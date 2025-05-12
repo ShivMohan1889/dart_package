@@ -183,6 +183,7 @@ class IrPdfData {
 
   Map<String, dynamic> toJson() {
     return {
+      "companyLogo":companyLogo,
       'referenceNumber': referenceNumber,
       'access': access,
       'accidentRelatedToWork': accidentRelatedToWork,
@@ -205,7 +206,6 @@ class IrPdfData {
       'injurySeriousness': injurySeriousness,
       'isInfoBeingShared': isInfoBeingShared,
       'isManagerAware': isManagerAware,
-
       'managerName': managerName,
       'mapImagePath': mapImagePath,
       'numberOfDaysOffWork': numberOfDaysOffWork,
